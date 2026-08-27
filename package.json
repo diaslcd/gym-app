@@ -1,0 +1,17 @@
+{
+  "name": "gym-app",
+  "version": "1.0.0",
+  "description": "Aplicativo de treino de academia — empacotamento Android com Capacitor",
+  "private": true,
+  "scripts": {
+    "www": "node scripts/preparar-www.mjs",
+    "android:add": "npm run www && npx cap add android",
+    "android:sync": "npm run www && npx cap sync android",
+    "android:open": "npx cap open android"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/core": "^7.0.0"
+  }
+}

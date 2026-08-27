@@ -1,0 +1,11 @@
+{
+  "appId": "com.diaslcd.gym",
+  "appName": "GYM",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#E9E4FF"
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

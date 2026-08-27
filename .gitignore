@@ -1,6 +1,12 @@
 # Configuração local de ferramentas
 .claude/
 
+# Empacotamento Android (gerado por npm run android:add)
+node_modules/
+www/
+android/
+package-lock.json
+
 # Sistema operacional
 Thumbs.db
 desktop.ini

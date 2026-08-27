@@ -110,9 +110,32 @@ O app é um PWA: abra a URL publicada no navegador do celular e use
 próprio, e o service worker guarda os arquivos — funciona na academia mesmo
 sem sinal.
 
-Não existe APK: é um app web. Se você precisar de um `.apk` de verdade para
-instalar ou publicar na Play Store, o [PWABuilder](https://www.pwabuilder.com)
-gera um a partir da URL pública.
+## Gerar o APK
+
+O empacotamento Android usa [Capacitor](https://capacitorjs.com). O APK é
+compilado no GitHub Actions, então não é preciso instalar Node, JDK nem
+Android SDK na sua máquina:
+
+1. Aba **Actions** do repositório → workflow **APK** → **Run workflow**
+2. No fim da execução, baixe o arquivo em **Artifacts**
+3. Transfira para o celular e instale permitindo "fontes desconhecidas"
+
+É um APK de depuração, assinado com a chave de debug — serve para testar, não
+para publicar na Play Store.
+
+Para compilar na própria máquina, com Node 20, JDK 21 e Android SDK instalados:
+
+```bash
+npm install
+npm run android:add     # só na primeira vez
+npm run android:sync
+cd android && ./gradlew assembleDebug
+```
+
+O app mora na raiz do repositório para o GitHub Pages servi-lo direto;
+`npm run www` copia os arquivos para `www/`, que é a pasta que o Capacitor
+empacota. As pastas `www/`, `android/` e `node_modules/` são geradas e não
+entram no versionamento.
 
 ## Estado do projeto
 
