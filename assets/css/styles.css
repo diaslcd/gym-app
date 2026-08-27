@@ -1,0 +1,2158 @@
+/* ── Tokens ───────────────────────────────────────────── */
+:root {
+  /* Base */
+  --bg:        #000000;
+  --surface:   #141416;
+  --surface-2: #1F1F22;
+  --line:      #2A2A2E;
+  --text:      #FFFFFF;
+  --text-dim:  #8E8E93;
+
+  /* Cores das telas internas */
+  --vermelho:  #FF375F;
+  --verde:     #30D158;
+  --azul:      #0A84FF;
+  --roxo:      #BF5AF2;
+
+  --r-md: 16px;
+  --r-lg: 22px;
+
+  --gap: 14px;
+  --pad: 18px;
+}
+
+/* ── Base ─────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.app {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 22px var(--pad) calc(28px + env(safe-area-inset-bottom));
+}
+
+.tela {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  animation: entrar 0.18s ease-out;
+}
+
+@keyframes entrar {
+  from { opacity: 0; transform: translateY(6px); }
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--pad);
+}
+
+/* ══════════════════════════════════════════════════════════
+   PAINEL — direção Arcade
+   Tudo escopado em .arcade: as demais telas seguem intactas.
+   ══════════════════════════════════════════════════════════ */
+.arcade {
+  --papel: #E9E4FF;
+  --traco: #12101A;
+  --rosa:  #FF3D81;
+  --azul3: #2B4BFF;
+  --sol:   #FFD23F;
+  --menta: #00E5A0;
+  --apagado: #8B85A0;
+  --gelo: #A5E4FF;
+
+  gap: 16px;
+  color: var(--traco);
+  font-family: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-weight: 600;
+}
+
+/* Pinta o fundo claro enquanto o painel está montado. */
+.arcade::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: var(--papel);
+  z-index: -1;
+}
+
+.arcade button { color: inherit; }
+
+/* ── Marca ────────────────────────────────────────────── */
+.arcade .brand {
+  margin: 0;
+  align-self: flex-start;
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-indent: 0;
+  text-align: left;
+  padding: 2px 12px 4px;
+  background: var(--sol);
+  border: 3px solid var(--traco);
+  transform: rotate(-2deg);
+  box-shadow: 5px 5px 0 var(--traco);
+}
+
+/* ── Adesivo da sequência ─────────────────────────────── */
+.arcade .metricas {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.arcade .metrica--hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 18px 16px;
+  background: var(--rosa);
+  color: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 20px;
+  box-shadow: 7px 7px 0 var(--traco);
+  transform: rotate(-1deg);
+}
+
+.arcade .metrica__icone {
+  flex: 0 0 auto;
+  width: 54px;
+  height: 54px;
+}
+
+.arcade .metrica__icone svg { width: 100%; height: 100%; display: block; }
+
+.arcade .metrica__dados { display: flex; flex-direction: column; min-width: 0; }
+
+.arcade .metrica__num {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 62px;
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+}
+
+.arcade .metrica__rotulo {
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Medalha do título conquistado */
+.arcade .titulo {
+  position: absolute;
+  top: -14px;
+  right: -8px;
+  background: var(--sol);
+  color: var(--traco);
+  border: 3px solid var(--traco);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transform: rotate(6deg);
+}
+
+/* ── Blocos de recorde e total ────────────────────────── */
+.arcade .metricas__par {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 12px;
+}
+
+.arcade .metrica--recorde,
+.arcade .metrica--total {
+  padding: 12px 14px;
+  border: 3px solid var(--traco);
+  border-radius: 16px;
+  box-shadow: 5px 5px 0 var(--traco);
+}
+
+.arcade .metrica--recorde {
+  background: var(--azul3);
+  color: #FFFFFF;
+  transform: rotate(1deg);
+}
+
+.arcade .metrica--total {
+  background: var(--menta);
+  transform: rotate(-1.5deg);
+}
+
+.arcade .metricas__par .metrica__icone { display: none; }
+
+.arcade .metricas__par .metrica__num {
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.arcade .metricas__par .metrica__rotulo {
+  margin-top: 3px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+/* ── Bilhete do próximo marco ─────────────────────────── */
+.arcade .metrica__proximo {
+  align-self: stretch;
+  text-align: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4B4460;
+  background: #FFFFFF;
+  border: 2.5px dashed var(--traco);
+  border-radius: 12px;
+  padding: 8px 10px;
+}
+
+/* ── Tabuleiro do mês ─────────────────────────────────── */
+.arcade .cal {
+  background: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 18px;
+  box-shadow: 6px 6px 0 var(--traco);
+  padding: 14px 12px 12px;
+}
+
+.arcade .cal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.arcade .cal__title {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.arcade .cal__nav { display: flex; gap: 6px; }
+
+.arcade .cal__btn {
+  width: 26px;
+  height: 26px;
+  border: 2.5px solid var(--traco);
+  border-radius: 8px;
+  background: var(--sol);
+  color: var(--traco);
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  box-shadow: 2px 2px 0 var(--traco);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .cal__btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.arcade .cal__btn:disabled {
+  background: #E4E1EC;
+  box-shadow: none;
+  opacity: 1;
+  cursor: default;
+}
+
+.arcade .cal__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.arcade .cal__wd {
+  text-align: center;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6B6480;
+  padding-bottom: 3px;
+}
+
+.arcade .cal__day {
+  position: relative;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.arcade .cal__day--out { visibility: hidden; }
+
+.arcade .cal__dot {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--apagado);
+  border: 2.5px solid transparent;
+  animation: arc-pop 0.36s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 13ms);
+}
+
+@keyframes arc-pop {
+  from { opacity: 0; transform: scale(0.55); }
+}
+
+/* Amarelo = treinou */
+.arcade .cal__day--treino .cal__dot {
+  background: var(--sol);
+  color: var(--traco);
+  border-color: var(--traco);
+  box-shadow: 2px 2px 0 var(--traco);
+}
+
+/* Trilho preto = sequência viva, correndo por baixo dos dias */
+.arcade .cal__faixa {
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  top: 50%;
+  height: 9px;
+  margin-top: -4.5px;
+  background: var(--traco);
+  z-index: 0;
+  animation: arc-surgir 0.3s ease-out backwards;
+  animation-delay: calc(var(--i, 0) * 13ms);
+}
+
+@keyframes arc-surgir {
+  from { opacity: 0; }
+}
+
+.arcade .cal__day--inicio .cal__faixa { left: 50%; }
+.arcade .cal__day--fim .cal__faixa { right: 50%; }
+
+/* Descanso dentro da sequência: casa vazia sobre o trilho */
+.arcade .cal__day--descanso .cal__dot {
+  background: #FFFFFF;
+  color: #8B85A0;
+  border-color: var(--traco);
+  box-shadow: 2px 2px 0 var(--traco);
+}
+
+/* Gelo = falta numa semana que derrubou a sequência */
+.arcade .cal__day--gelou .cal__dot {
+  background: var(--gelo);
+  color: #0E4256;
+  border-color: var(--traco);
+  border-style: dashed;
+}
+
+/* Anel verde = hoje */
+.arcade .cal__day--today .cal__dot {
+  box-shadow: 3px 3px 0 var(--traco), 0 0 0 3px var(--menta);
+}
+
+/* Chama e floco */
+.arcade .cal__fogo,
+.arcade .cal__floco {
+  position: absolute;
+  z-index: 2;
+  top: 2px;
+  right: 2px;
+  pointer-events: none;
+}
+
+.arcade .cal__fogo svg,
+.arcade .cal__floco svg { width: 100%; height: 100%; display: block; }
+
+.arcade .cal__fogo {
+  width: 15px;
+  height: 15px;
+  transform-origin: bottom center;
+  animation: arc-tremular 1.7s ease-in-out infinite;
+}
+
+@keyframes arc-tremular {
+  0%, 100% { transform: scale(1) rotate(-4deg); }
+  50%      { transform: scale(1.12) rotate(4deg); }
+}
+
+.arcade .cal__floco {
+  width: 15px;
+  height: 15px;
+}
+
+
+/* ── Barra superior das telas Arcade ──────────────────── */
+.arcade .topo {
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.arcade .topo__voltar {
+  width: 42px;
+  height: 42px;
+  border: 3px solid var(--traco);
+  border-radius: 12px;
+  background: var(--sol);
+  color: var(--traco);
+  font-size: 22px;
+  font-weight: 800;
+  box-shadow: 4px 4px 0 var(--traco);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .topo__voltar:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--traco);
+  background: var(--sol);
+}
+
+.arcade .topo__titulo {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--traco);
+}
+
+.arcade .topo__sub {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #4B4460;
+}
+
+/* ── Cartazes de treino ───────────────────────────────── */
+.arcade .opcoes { gap: 16px; }
+
+.arcade .opcao {
+  gap: 14px;
+  padding: 16px;
+  background: var(--cor);
+  color: var(--tinta);
+  border: 3px solid var(--traco);
+  border-radius: 20px;
+  box-shadow: 6px 6px 0 var(--traco);
+  transform: rotate(var(--giro, 0deg));
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .opcao:active {
+  transform: rotate(var(--giro, 0deg)) translate(4px, 4px);
+  box-shadow: 2px 2px 0 var(--traco);
+  border-color: var(--traco);
+}
+
+.arcade .opcao__icone {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #FFFFFF;
+  border: 3px solid var(--traco);
+  color: var(--traco);
+  color: color-mix(in srgb, var(--cor) 45%, #12101A);
+}
+
+.arcade .opcao__icone svg {
+  width: 38px;
+  height: 38px;
+  display: block;
+}
+
+.arcade .opcao__texto { gap: 4px; }
+
+.arcade .opcao__nome {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+
+.arcade .opcao__desc {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: inherit;
+  opacity: 0.82;
+}
+
+.arcade .opcao__tag {
+  align-self: flex-start;
+  margin-top: 5px;
+  padding: 3px 9px;
+  border: 2.5px solid var(--traco);
+  border-radius: 999px;
+  background: #FFFFFF;
+  color: var(--traco);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.arcade .opcao__seta {
+  color: var(--tinta);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* ── Lista de exercícios em Arcade ────────────────────── */
+.arcade .lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  background: none;
+  border: 0;
+}
+
+.arcade .item__img {
+  width: 54px;
+  height: 54px;
+  border-radius: 13px;
+  background: #FFFFFF;
+  border: 3px solid var(--traco);
+  /* Tom fechado da cor do treino: mantém a identidade e continua
+     legível sobre branco, o que o tom puro não fazia. */
+  color: var(--traco);
+  color: color-mix(in srgb, var(--cor) 45%, #12101A);
+}
+
+.arcade .item__img svg { width: 38px; height: 38px; }
+
+.arcade .item__texto { gap: 3px; }
+
+.arcade .item__nome {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.arcade .item__meta {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #6B6480;
+}
+
+
+/* ── Marcador do treino feito no dia ──────────────────── */
+.arcade .cal__tipo {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 3px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--tipo);
+  border: 1.5px solid var(--traco);
+}
+
+.arcade .cal__day--treino .cal__dot { padding-bottom: 6px; }
+
+.arcade button.cal__day { cursor: pointer; }
+
+/* ── Folha do dia treinado ────────────────────────────── */
+.dia__treino {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 16px;
+  padding: 12px 14px;
+  border: 3px solid var(--traco);
+  border-radius: 16px;
+  box-shadow: 4px 4px 0 var(--traco);
+}
+
+.dia__icone {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  background: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 13px;
+  color: var(--traco);
+  color: color-mix(in srgb, var(--cor) 45%, #12101A);
+}
+
+.dia__icone svg { width: 34px; height: 34px; display: block; }
+
+.dia__dados { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+
+.dia__nome {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: 16px;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.dia__resumo {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dia__exercicios {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dia__ex {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 8px 10px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+}
+
+.dia__exImg {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border: 2.5px solid var(--traco);
+  border-radius: 10px;
+  color: var(--traco);
+  color: color-mix(in srgb, var(--cor) 45%, #12101A);
+}
+
+.dia__exImg svg { width: 28px; height: 28px; display: block; }
+
+.dia__exTexto { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+.dia__exNome {
+  font-size: 12.5px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--traco);
+}
+
+.dia__exMeta {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #6B6480;
+}
+/* ── Ficha do exercício com ações ─────────────────────── */
+.arcade .lista { list-style: none; margin: 0; }
+
+.arcade .item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 10px 10px 12px;
+  background: #FFFFFF;
+  color: var(--traco);
+  border: 3px solid var(--traco);
+  border-radius: 16px;
+  box-shadow: 4px 4px 0 var(--traco);
+}
+
+.arcade .item__abrir {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  padding: 0;
+  transition: transform 0.1s;
+}
+
+.arcade .item__abrir:active { transform: scale(0.98); }
+
+.arcade .item__trocado {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--traco);
+  background: var(--sol);
+  border: 2px solid var(--traco);
+  border-radius: 999px;
+  padding: 1px 7px;
+  margin-top: 4px;
+  align-self: flex-start;
+}
+
+.arcade .item__acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.arcade .item__acao {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 2.5px solid var(--traco);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 var(--traco);
+  color: var(--traco);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .item__acao svg { width: 19px; height: 19px; display: block; }
+
+.arcade .item__acao:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.arcade .item__acao--trocar { background: var(--sol); }
+.arcade .item__acao--remover { background: var(--gelo); }
+
+/* Confirmação de remoção, na própria ficha */
+.arcade .item--confirma {
+  background: var(--gelo);
+  padding: 12px;
+}
+
+.arcade .item--confirma .item__texto { flex: 1; min-width: 0; }
+
+.arcade .item--confirma .item__acoes {
+  flex-direction: row;
+  gap: 8px;
+}
+
+.arcade .item__acao--nao,
+.arcade .item__acao--sim {
+  width: auto;
+  height: 34px;
+  padding: 0 14px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.arcade .item__acao--nao { background: #FFFFFF; }
+.arcade .item__acao--sim { background: var(--rosa); color: #FFFFFF; }
+
+/* ── Restaurar o treino programado ────────────────────── */
+.arcade .restaurar {
+  align-self: center;
+  margin-top: 2px;
+  padding: 9px 16px;
+  background: #FFFFFF;
+  border: 2.5px dashed var(--traco);
+  border-radius: 999px;
+  color: #4B4460;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+
+/* ── Acrescentar exercício ────────────────────────────── */
+.arcade .adicionar {
+  width: 100%;
+  padding: 13px;
+  background: #FFFFFF;
+  border: 3px dashed var(--traco);
+  border-radius: 16px;
+  color: var(--traco);
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: transform 0.1s;
+}
+
+.arcade .adicionar:active { transform: scale(0.98); }
+
+/* ── Barra do treino em andamento ─────────────────────── */
+.barra {
+  position: sticky;
+  bottom: calc(10px + env(safe-area-inset-bottom));
+  z-index: 10;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.barra__comecar {
+  width: 100%;
+  padding: 16px;
+  background: var(--menta);
+  color: var(--traco);
+  border: 3px solid var(--traco);
+  border-radius: 16px;
+  box-shadow: 5px 5px 0 var(--traco);
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.barra__comecar:active {
+  transform: translate(4px, 4px);
+  box-shadow: 1px 1px 0 var(--traco);
+}
+
+.barra--ativa {
+  padding: 10px 12px;
+  background: var(--traco);
+  border: 3px solid var(--traco);
+  border-radius: 16px;
+  box-shadow: 5px 5px 0 var(--menta);
+}
+
+.barra__tempo {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--menta);
+  font-variant-numeric: tabular-nums;
+}
+
+.barra__rotulo {
+  flex: 1;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9A93B0;
+}
+
+.barra__encerrar {
+  flex: 0 0 auto;
+  padding: 11px 15px;
+  background: var(--rosa);
+  color: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 var(--papel);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.barra__encerrar:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+
+/* Botão do painel enquanto o treino está rodando */
+.arcade .btn--andamento {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 15px 18px;
+  background: var(--traco);
+  color: var(--menta);
+  border: 3px solid var(--traco);
+  border-radius: 16px;
+  box-shadow: 6px 6px 0 var(--menta);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .btn--andamento:active {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0 var(--menta);
+}
+
+.btn__rotulo {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.btn__tempo {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: 24px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Detalhes do exercício ────────────────────────────── */
+.arcade .demo {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 210px;
+  padding: 18px;
+  background: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 20px;
+  box-shadow: 6px 6px 0 var(--traco);
+  overflow: hidden;
+}
+
+/* Faixas diagonais discretas, para o pictograma não flutuar no vazio */
+.arcade .demo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, var(--cor) 12%, #FFFFFF) 0 10px,
+    #FFFFFF 10px 22px
+  );
+}
+
+.arcade .demo__selo {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 3px 10px;
+  background: var(--sol);
+  border: 2.5px solid var(--traco);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--traco);
+}
+
+.arcade .demo__pictograma,
+.arcade .demo__midia {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  display: block;
+  color: var(--traco);
+  color: color-mix(in srgb, var(--cor) 45%, #12101A);
+}
+
+.arcade .demo__pictograma svg { width: 100%; height: 100%; display: block; }
+
+.arcade .demo__midia {
+  width: 100%;
+  height: auto;
+  max-height: 260px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+/* O pictograma respira na direção do esforço */
+.arcade .demo__pictograma {
+  animation: demo-pulsa 2.4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes demo-pulsa {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+/* ── Blocos de conteúdo ───────────────────────────────── */
+.arcade .bloco {
+  background: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 18px;
+  box-shadow: 4px 4px 0 var(--traco);
+  padding: 14px 16px 16px;
+}
+
+.arcade .bloco--erro { background: var(--gelo); }
+
+.arcade .bloco__titulo {
+  margin: 0 0 12px;
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--traco);
+}
+
+/* Passos numerados */
+.arcade .passos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.arcade .passo { display: flex; gap: 11px; align-items: flex-start; }
+
+.arcade .passo__num {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  background: var(--sol);
+  border: 2.5px solid var(--traco);
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--traco);
+}
+
+.arcade .passo__texto { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+
+.arcade .passo__titulo {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4B4460;
+}
+
+.arcade .passo__desc {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--traco);
+}
+
+/* Músculos */
+.arcade .musculos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.arcade .musculo {
+  padding: 5px 11px;
+  background: color-mix(in srgb, var(--cor) 22%, #FFFFFF);
+  border: 2.5px solid var(--traco);
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--traco);
+}
+
+/* Listas de dicas e erros */
+.arcade .dicas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.arcade .dicas li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--traco);
+}
+
+.arcade .dicas li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 11px;
+  height: 11px;
+  border: 2.5px solid var(--traco);
+  border-radius: 4px;
+  background: var(--menta);
+}
+
+.arcade .dicas--erro li::before {
+  background: var(--rosa);
+  border-radius: 999px;
+}
+
+.arcade .acaoFim { margin-top: 2px; }
+
+.arcade .acaoFim__botao {
+  width: 100%;
+  padding: 16px;
+  background: var(--menta);
+  color: var(--traco);
+  border: 3px solid var(--traco);
+  border-radius: 16px;
+  box-shadow: 5px 5px 0 var(--traco);
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .acaoFim__botao:active {
+  transform: translate(4px, 4px);
+  box-shadow: 1px 1px 0 var(--traco);
+}
+
+.arcade .detalhe__jaTem {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  text-align: center;
+  background: #FFFFFF;
+  border: 3px dashed var(--traco);
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #4B4460;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arcade .demo__pictograma { animation: none; }
+}
+
+
+
+/* ── Séries dentro da folha do dia ────────────────────── */
+.dia__exTopo { display: flex; align-items: center; gap: 10px; }
+
+.dia__series {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.linhaSerie {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background: var(--papel);
+  border: 2px solid var(--traco);
+  border-radius: 9px;
+}
+
+.linhaSerie__num {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  background: var(--sol);
+  border: 1.5px solid var(--traco);
+  border-radius: 6px;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--traco);
+}
+
+.linhaSerie__valor {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--traco);
+  font-variant-numeric: tabular-nums;
+}
+
+.linhaSerie__pulada {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6B6480;
+}
+
+.dia__obs {
+  margin: 7px 0 0;
+  padding: 6px 9px;
+  background: var(--papel);
+  border: 2px dashed var(--traco);
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #4B4460;
+}
+
+
+/* ── Volume por treino ────────────────────────────────── */
+.arcade .vol__resumo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.arcade .vol__numero {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--traco);
+  font-variant-numeric: tabular-nums;
+}
+
+.arcade .vol__numero small {
+  margin-left: 4px;
+  font-family: "Archivo", sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  color: #6B6480;
+}
+
+.arcade .vol__delta {
+  padding: 4px 10px;
+  border: 2.5px solid var(--traco);
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--traco);
+}
+
+.arcade .vol__delta--sobe { background: var(--menta); }
+.arcade .vol__delta--desce { background: var(--gelo); }
+
+.arcade .vol__grafico {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 78px;
+  padding: 5px 7px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+}
+
+.arcade .vol__barra {
+  flex: 1;
+  min-width: 6px;
+  border: 2px solid var(--traco);
+  border-radius: 4px 4px 0 0;
+}
+
+/* Aviso de treino aberto em outro tipo */
+.arcade .barra__outro {
+  width: 100%;
+  padding: 14px;
+  background: var(--sol);
+  color: var(--traco);
+  border: 3px solid var(--traco);
+  border-radius: 16px;
+  box-shadow: 5px 5px 0 var(--traco);
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .barra__outro:active {
+  transform: translate(4px, 4px);
+  box-shadow: 1px 1px 0 var(--traco);
+}
+/* ── Evolução de carga ────────────────────────────────── */
+.arcade .evo__legenda {
+  margin: -6px 0 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6B6480;
+}
+
+.arcade .evo__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.arcade .evo {
+  padding: 9px 10px;
+  background: var(--papel);
+  border: 2.5px solid var(--traco);
+  border-radius: 13px;
+}
+
+.arcade .evo__topo { display: flex; align-items: center; gap: 9px; }
+
+.arcade .evo__img {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 10px;
+  color: var(--traco);
+}
+
+.arcade .evo__img svg { width: 26px; height: 26px; display: block; }
+
+.arcade .evo__texto { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+
+.arcade .evo__nome {
+  font-size: 12.5px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--traco);
+}
+
+.arcade .evo__meta {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #6B6480;
+}
+
+.arcade .evo__delta {
+  flex: 0 0 auto;
+  padding: 4px 9px;
+  border: 2.5px solid var(--traco);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--traco);
+  font-variant-numeric: tabular-nums;
+}
+
+.arcade .evo__delta--sobe { background: var(--menta); }
+.arcade .evo__delta--desce { background: var(--gelo); }
+.arcade .evo__delta--igual { background: #FFFFFF; }
+
+.arcade .evo__grafico {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 44px;
+  margin-top: 9px;
+  padding: 4px 6px;
+  background: #FFFFFF;
+  border: 2px solid var(--traco);
+  border-radius: 10px;
+}
+
+.arcade .evo__barra {
+  flex: 1;
+  min-width: 6px;
+  background: var(--sol);
+  border: 2px solid var(--traco);
+  border-radius: 4px 4px 0 0;
+}
+
+.arcade .evo__barra:last-child { background: var(--menta); }
+
+/* ── Lista de treinos realizados ──────────────────────── */
+.arcade .hist__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.arcade .hist__abrir {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  text-align: left;
+  background: var(--papel);
+  border: 2.5px solid var(--traco);
+  border-radius: 13px;
+  transition: transform 0.1s;
+}
+
+.arcade .hist__abrir:active { transform: scale(0.99); }
+
+.arcade .hist__faixa {
+  flex: 0 0 auto;
+  width: 10px;
+  align-self: stretch;
+  min-height: 42px;
+  border: 2px solid var(--traco);
+  border-radius: 6px;
+}
+
+.arcade .hist__texto { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+
+.arcade .hist__data {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6B6480;
+}
+
+.arcade .hist__nome {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: 13px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--traco);
+}
+
+.arcade .hist__meta {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #4B4460;
+}
+
+.arcade .hist__seta {
+  flex: 0 0 auto;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--traco);
+}
+
+/* Card de total vira botão para o histórico */
+.arcade .metrica--total { position: relative; }
+
+.arcade button.metrica--total::after {
+  content: "→";
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--traco);
+}
+/* ── Registro de séries ───────────────────────────────── */
+.arcade .exec { background: color-mix(in srgb, var(--menta) 16%, #FFFFFF); }
+.arcade .exec--pronto { background: color-mix(in srgb, var(--menta) 38%, #FFFFFF); }
+
+.arcade .exec__series {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.arcade .serie {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+}
+
+.arcade .serie--feita { background: var(--menta); }
+
+.arcade .serie__num {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  background: var(--sol);
+  border: 2px solid var(--traco);
+  border-radius: 8px;
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: 12px;
+  color: var(--traco);
+}
+
+.arcade .campo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  padding: 4px 7px;
+  background: var(--papel);
+  border: 2px solid var(--traco);
+  border-radius: 9px;
+}
+
+.arcade .campo__valor {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: 15px;
+  line-height: 1.2;
+  color: var(--traco);
+  font-variant-numeric: tabular-nums;
+  -moz-appearance: textfield;
+}
+
+.arcade .campo__valor::-webkit-outer-spin-button,
+.arcade .campo__valor::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.arcade .campo__valor:focus { outline: 2px solid var(--traco); outline-offset: 2px; }
+
+.arcade .campo__un {
+  flex: 0 0 auto;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #6B6480;
+}
+
+.arcade .serie__ok {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 var(--traco);
+  font-size: 15px;
+  font-weight: 800;
+  color: #B9B1D6;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .serie--feita .serie__ok {
+  background: var(--traco);
+  color: var(--menta);
+  box-shadow: none;
+  transform: translate(2px, 2px);
+}
+
+.arcade .exec__quantas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.arcade .exec__quantasRotulo {
+  min-width: 84px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4B4460;
+}
+
+.arcade .conta__btn {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  background: var(--sol);
+  border: 2.5px solid var(--traco);
+  border-radius: 9px;
+  box-shadow: 2px 2px 0 var(--traco);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--traco);
+}
+
+.arcade .conta__btn:active { transform: translate(2px, 2px); box-shadow: none; }
+
+.arcade .exec__obs {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--traco);
+  resize: vertical;
+}
+
+.arcade .exec__obs::placeholder { color: #8B85A0; }
+
+/* Descanso */
+.arcade .descanso__ajuste {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.arcade .descanso__iniciar {
+  flex: 1;
+  padding: 12px;
+  background: var(--sol);
+  border: 3px solid var(--traco);
+  border-radius: 14px;
+  box-shadow: 3px 3px 0 var(--traco);
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--traco);
+}
+
+.arcade .descanso__iniciar:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--traco); }
+
+.arcade .descanso {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 9px 12px;
+  background: var(--traco);
+  border: 3px solid var(--traco);
+  border-radius: 14px;
+}
+
+.arcade .descanso__rotulo {
+  flex: 1;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9A93B0;
+}
+
+.arcade .descanso__tempo {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--sol);
+  font-variant-numeric: tabular-nums;
+}
+
+.arcade .descanso__pular {
+  padding: 7px 11px;
+  background: var(--papel);
+  border: 2.5px solid var(--papel);
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--traco);
+}
+
+.arcade .exec__fim {
+  width: 100%;
+  padding: 13px;
+  background: var(--traco);
+  color: var(--menta);
+  border: 3px solid var(--traco);
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 var(--menta);
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .exec__fim:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--menta);
+}
+
+.arcade .acaoFim__encerrar {
+  width: 100%;
+  padding: 16px;
+  background: var(--rosa);
+  color: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 16px;
+  box-shadow: 5px 5px 0 var(--traco);
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .acaoFim__encerrar:active {
+  transform: translate(4px, 4px);
+  box-shadow: 1px 1px 0 var(--traco);
+}
+
+/* Marca de exercício já feito na lista */
+.arcade .item__ok {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 1px 7px;
+  background: var(--menta);
+  border: 2px solid var(--traco);
+  border-radius: 999px;
+  font-family: "Archivo", sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+/* ── Folha de substituição ────────────────────────────── */
+.folha {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.folha__fundo {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 16, 26, 0.45);
+}
+
+.folha__painel {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  max-height: 82vh;
+  overflow-y: auto;
+  background: var(--papel);
+  border: 3px solid var(--traco);
+  border-bottom: 0;
+  border-radius: 24px 24px 0 0;
+  padding: 18px 16px calc(20px + env(safe-area-inset-bottom));
+  animation: folha-sobe 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes folha-sobe {
+  from { transform: translateY(14%); opacity: 0; }
+}
+
+.folha__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.folha__titulo {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: 18px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--traco);
+}
+
+.folha__fechar {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 var(--traco);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--traco);
+}
+
+.folha__sub {
+  margin: 8px 0 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #4B4460;
+}
+
+.folha__sub strong { color: var(--traco); }
+
+.folha__opcoes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alt {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 10px;
+  background: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 14px;
+  box-shadow: 3px 3px 0 var(--traco);
+}
+
+.alt__img {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border: 2.5px solid var(--traco);
+  border-radius: 11px;
+  color: var(--traco);
+  color: color-mix(in srgb, var(--cor) 45%, #12101A);
+}
+
+.alt__img svg { width: 32px; height: 32px; display: block; }
+
+.alt__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.alt__nome {
+  font-size: 12.5px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--traco);
+}
+
+.alt__meta {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #6B6480;
+}
+
+.alt__btn {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  background: var(--sol);
+  border: 2.5px solid var(--traco);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 var(--traco);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--traco);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.alt__btn:active { transform: translate(2px, 2px); box-shadow: none; }
+
+.folha__original {
+  width: 100%;
+  margin-top: 14px;
+  padding: 11px;
+  background: #FFFFFF;
+  border: 2.5px dashed var(--traco);
+  border-radius: 12px;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #4B4460;
+}
+
+/* ── Aviso rápido ─────────────────────────────────────── */
+.aviso {
+  position: fixed;
+  left: 50%;
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--traco);
+  color: var(--sol);
+  border: 3px solid var(--traco);
+  border-radius: 999px;
+  box-shadow: 4px 4px 0 var(--menta);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  animation: aviso-entra 0.2s ease-out;
+}
+
+@keyframes aviso-entra {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+}
+
+.aviso button {
+  color: var(--menta);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folha__painel,
+  .aviso { animation: none; }
+}
+/* ── Ação principal ───────────────────────────────────── */
+.arcade .btn--primary {
+  width: 100%;
+  padding: 17px;
+  background: var(--traco);
+  color: var(--sol);
+  border: 3px solid var(--traco);
+  border-radius: 16px;
+  box-shadow: 6px 6px 0 var(--rosa);
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .btn--primary:active {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0 var(--rosa);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arcade .cal__dot,
+  .arcade .cal__faixa,
+  .arcade .cal__fogo { animation: none; }
+}
+
+/* ── Barra superior das telas internas ────────────────── */
+.topo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.topo__voltar {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text-dim);
+  transition: background 0.15s, color 0.15s;
+}
+
+.topo__voltar:active { background: var(--surface-2); color: var(--text); }
+
+.topo__texto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topo__titulo {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.topo__sub {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* ── Opções de treino ─────────────────────────────────── */
+.opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.opcao {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  transition: border-color 0.15s, transform 0.12s;
+}
+
+.opcao:active {
+  transform: scale(0.99);
+  border-color: var(--text-dim);
+}
+
+.opcao__icone {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 auto;
+  border-radius: var(--r-md);
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+}
+
+.opcao__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.opcao__nome {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.opcao__desc {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  line-height: 1.35;
+}
+
+.opcao__tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+.opcao__seta {
+  color: var(--text-dim);
+  font-size: 22px;
+  flex: 0 0 auto;
+}
+
+/* ── Lista de exercícios ──────────────────────────────── */
+.lista {
+  padding: 6px var(--pad);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 12px 0;
+  text-align: left;
+}
+
+.item + .item {
+  border-top: 1px solid var(--line);
+}
+
+.item:active { opacity: 0.7; }
+
+.item__img {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+}
+
+.item__img svg {
+  width: 40px;
+  height: 40px;
+}
+
+.item__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.item__nome {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.item__meta {
+  font-size: 12px;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
