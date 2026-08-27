@@ -103,6 +103,17 @@ registra de verdade ficam no `localStorage` e entram por cima:
 Todo acesso ao storage é protegido: em navegação privada o app funciona igual,
 só não persiste.
 
+## Instalar no celular
+
+O app é um PWA: abra a URL publicada no navegador do celular e use
+**Adicionar à tela inicial**. Ele passa a abrir em tela cheia, com ícone
+próprio, e o service worker guarda os arquivos — funciona na academia mesmo
+sem sinal.
+
+Não existe APK: é um app web. Se você precisar de um `.apk` de verdade para
+instalar ou publicar na Play Store, o [PWABuilder](https://www.pwabuilder.com)
+gera um a partir da URL pública.
+
 ## Estado do projeto
 
 Protótipo funcional. Não tem back-end, autenticação nem sincronização entre

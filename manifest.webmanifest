@@ -1,0 +1,26 @@
+{
+  "name": "GYM — treino de academia",
+  "short_name": "GYM",
+  "description": "Acompanhe a sequência de treinos, adapte o treino do dia e registre séries e cargas.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#E9E4FF",
+  "theme_color": "#E9E4FF",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "assets/icone.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icone-mascara.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "maskable"
+    }
+  ]
+}
