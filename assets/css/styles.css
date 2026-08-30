@@ -556,8 +556,8 @@ button {
 }
 
 .arcade .opcao__icone {
-  width: 56px;
-  height: 56px;
+  width: 72px;
+  height: 72px;
   border-radius: 14px;
   background: #FFFFFF;
   border: 3px solid var(--traco);
@@ -566,8 +566,8 @@ button {
 }
 
 .arcade .opcao__icone svg {
-  width: 38px;
-  height: 38px;
+  width: 46px;
+  height: 46px;
   display: block;
 }
 
@@ -1050,21 +1050,6 @@ button {
   );
 }
 
-.arcade .demo__selo {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 3px 10px;
-  background: var(--sol);
-  border: 2.5px solid var(--traco);
-  border-radius: 999px;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--traco);
-}
-
 .arcade .demo__pictograma,
 .arcade .demo__midia {
   position: relative;
@@ -1115,6 +1100,46 @@ button {
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--traco);
+}
+
+/* ── Bloco que abre no toque ──────────────────────────── */
+.arcade .bloco__abrir {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  text-align: left;
+}
+
+/* Fechado, o título é a única coisa no bloco: sem a folga de baixo. */
+.arcade .bloco__abrir .bloco__titulo { margin: 0; }
+.arcade .bloco:has(.passos) .bloco__abrir,
+.arcade .bloco:has(.dicas) .bloco__abrir { margin-bottom: 12px; }
+
+.arcade .bloco__seta {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  background: var(--sol);
+  border: 2.5px solid var(--traco);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--traco);
+  transition: transform 0.15s ease-out;
+}
+
+.arcade .bloco__seta--on { transform: rotate(180deg); }
+
+.arcade .bloco--erro .bloco__seta { background: var(--gelo); }
+
+/* Fecho do "Como fazer": as dicas soltas depois dos passos. */
+.arcade .dicas--fecho {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 2.5px dashed var(--traco);
 }
 
 /* Passos numerados */

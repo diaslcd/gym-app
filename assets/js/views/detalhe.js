@@ -6,6 +6,8 @@ const Detalhe = (() => {
   let tipoId = null;
   let exercicio = null;
   let aviso = null;
+  // Como fazer e Erros comuns chegam fechados: a tela abre no que importa.
+  const aberto = { fazer: false, erros: false };
   let relogio = null;
 
   function executando() {
@@ -100,6 +102,19 @@ const Detalhe = (() => {
       </section>`;
   }
 
+
+  /** Bloco que só mostra o conteúdo depois do toque. */
+  function sanfona(chave, titulo, conteudo, modificador) {
+    const on = aberto[chave];
+    return `
+      <section class="bloco${modificador ? ' bloco--' + modificador : ''}">
+        <button class="bloco__abrir" data-secao="${chave}" type="button" aria-expanded="${on}">
+          <span class="bloco__titulo">${titulo}</span>
+          <span class="bloco__seta${on ? ' bloco__seta--on' : ''}" aria-hidden="true">▾</span>
+        </button>
+        ${on ? conteudo : ''}
+      </section>`;
+  }
   function acao() {
     if (executando()) {
       return `
@@ -126,29 +141,28 @@ const Detalhe = (() => {
 
       `<section class="demo" style="--cor:${tipo ? tipo.cor : '#FFD23F'}">
         ${Demonstracao.render(exercicio)}
-        <span class="demo__selo">Execução</span>
       </section>` +
 
       (executando() ? painelDeExecucao() : '') +
 
-      bloco('Como fazer', `
+      // Instruções eram outra lista de dicas sobre o mesmo movimento:
+      // viraram o fecho do "Como fazer", depois dos três passos.
+      sanfona('fazer', 'Como fazer', `
         <ol class="passos">
           ${passo(1, 'Posição inicial', guia.inicial)}
           ${passo(2, 'Movimento', guia.movimento)}
           ${passo(3, 'Posição final', guia.final)}
-        </ol>`) +
+        </ol>
+        <ul class="dicas dicas--fecho">
+          ${guia.instrucoes.map((i) => `<li>${i}</li>`).join('')}
+        </ul>`) +
 
       bloco('Músculos trabalhados', `
         <ul class="musculos">
           ${guia.musculos.map((m) => `<li class="musculo">${m}</li>`).join('')}
         </ul>`) +
 
-      bloco('Instruções', `
-        <ul class="dicas">
-          ${guia.instrucoes.map((i) => `<li>${i}</li>`).join('')}
-        </ul>`) +
-
-      bloco('Erros comuns', `
+      sanfona('erros', 'Erros comuns', `
         <ul class="dicas dicas--erro">
           ${guia.erros.map((e) => `<li>${e}</li>`).join('')}
         </ul>`, 'erro') +
@@ -184,6 +198,13 @@ const Detalhe = (() => {
 
     if (alvo('[data-voltar]')) {
       Router.ir('exercicios', { tipoId: tipoId });
+      return;
+    }
+
+    const secao = alvo('[data-secao]');
+    if (secao) {
+      aberto[secao.dataset.secao] = !aberto[secao.dataset.secao];
+      render();
       return;
     }
 
@@ -283,6 +304,8 @@ const Detalhe = (() => {
     // exercicioGlobal também acha substitutos, que não estão na lista do treino.
     exercicio = Dados.exercicioGlobal(params.exercicioId);
     aviso = null;
+    aberto.fazer = false;
+    aberto.erros = false;
     clearTimeout(relogio);
     raiz.classList.add('arcade');
     raiz.addEventListener('click', aoClicar);
