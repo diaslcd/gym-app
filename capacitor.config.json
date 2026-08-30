@@ -1,6 +1,6 @@
 {
   "appId": "com.diaslcd.gym",
-  "appName": "GYM",
+  "appName": "BunnyGym",
   "webDir": "www",
   "android": {
     "backgroundColor": "#E9E4FF"

@@ -1,8 +1,12 @@
 /* Histórico de treinos e evolução de carga.
    Lê o que já foi registrado — não guarda nada por conta própria. */
 const Historico = (() => {
+  const PREVIA = 4;
+
   let raiz = null;
   let diaAberto = null;
+  let filtro = null;      // tipo de treino escolhido nas fichas
+  let aberta = false;     // lista inteira ou só a prévia
 
   /* ── Evolução de carga ─────────────────────────────── */
 
@@ -147,6 +151,49 @@ const Historico = (() => {
       </li>`;
   }
 
+
+  /* ── Treinos realizados ────────────────────────────── */
+
+  /** Fichas por tipo de treino, para o usuário achar o que procura. */
+  function filtros(lista) {
+    const contagem = {};
+    lista.forEach((r) => { contagem[r.tipoId] = (contagem[r.tipoId] || 0) + 1; });
+
+    const ficha = (id, nome, total, cor) => `
+      <button class="chip${filtro === id ? ' chip--on' : ''}"
+              data-filtro="${id || ''}" type="button"
+              style="--chip:${cor}">
+        ${nome}<span class="chip__n">${total}</span>
+      </button>`;
+
+    const porTipo = Dados.tipos
+      .filter((t) => contagem[t.id])
+      .map((t) => ficha(t.id, t.nome, contagem[t.id], t.cor))
+      .join('');
+
+    return `<div class="chips">${ficha(null, 'Todos', lista.length, '#12101A')}${porTipo}</div>`;
+  }
+
+  /** A lista chega fechada: só os últimos treinos, o resto sob demanda. */
+  function blocoDeTreinos(lista) {
+    const filtrada = filtro ? lista.filter((r) => r.tipoId === filtro) : lista;
+    const visiveis = aberta ? filtrada : filtrada.slice(0, PREVIA);
+    const restam = filtrada.length - visiveis.length;
+
+    const botao = (restam > 0 || aberta)
+      ? `<button class="hist__mais" data-lista type="button">
+           ${aberta ? 'Mostrar menos' : `Ver mais ${restam}`}
+         </button>`
+      : '';
+
+    return `
+      <section class="bloco">
+        <h2 class="bloco__titulo">Treinos realizados</h2>
+        ${filtros(lista)}
+        <ul class="hist__lista">${visiveis.map(treino).join('')}</ul>
+        ${botao}
+      </section>`;
+  }
   /* ── Render ────────────────────────────────────────── */
 
   function render() {
@@ -156,16 +203,27 @@ const Historico = (() => {
       Componentes.topo('Histórico', `${lista.length} treinos realizados`) +
       blocoDeVolume(lista) +
       blocoDeEvolucao() +
-      `<section class="bloco">
-        <h2 class="bloco__titulo">Treinos realizados</h2>
-        <ul class="hist__lista">${lista.map(treino).join('')}</ul>
-      </section>` +
+      blocoDeTreinos(lista) +
       (diaAberto ? Componentes.folhaDoDia(diaAberto) : '');
   }
 
   function aoClicar(evento) {
     if (evento.target.closest('[data-voltar]')) {
       Router.ir('dashboard');
+      return;
+    }
+
+    const ficha = evento.target.closest('[data-filtro]');
+    if (ficha) {
+      filtro = ficha.dataset.filtro || null;
+      aberta = false;
+      render();
+      return;
+    }
+
+    if (evento.target.closest('[data-lista]')) {
+      aberta = !aberta;
+      render();
       return;
     }
 
@@ -185,6 +243,8 @@ const Historico = (() => {
   function montar(elemento) {
     raiz = elemento;
     diaAberto = null;
+    filtro = null;
+    aberta = false;
     raiz.classList.add('arcade');
     raiz.addEventListener('click', aoClicar);
     render();

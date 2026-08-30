@@ -16,3 +16,6 @@ desktop.ini
 .vscode/
 .idea/
 *.swp
+
+# APK baixado do Actions
+apk/

@@ -1,8 +1,8 @@
 name: APK
 
 # Gera o APK de teste sem precisar de Node, JDK ou Android SDK na máquina:
-# o runner do GitHub já traz tudo. Rode pela aba Actions ("Run workflow")
-# e baixe o arquivo em "Artifacts", no fim da execução.
+# o runner do GitHub já traz tudo. Rode pela aba Actions ("Run workflow"),
+# ou marque uma versão com uma tag v* — o artefato sai com o número dela.
 on:
   workflow_dispatch:
   push:
@@ -31,6 +31,11 @@ jobs:
       - name: Instalar o Capacitor
         run: npm install
 
+      # A versão vem do package.json, para o arquivo baixado já dizer qual é.
+      - name: Ler a versão
+        id: versao
+        run: echo "v=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
       - name: Montar a pasta www
         run: npm run www
 
@@ -46,9 +51,12 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
 
+      - name: Nomear o APK com a versão
+        run: mv android/app/build/outputs/apk/debug/app-debug.apk bunnygym-${{ steps.versao.outputs.v }}.apk
+
       - name: Publicar o APK
         uses: actions/upload-artifact@v4
         with:
-          name: gym-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: bunnygym-${{ steps.versao.outputs.v }}
+          path: bunnygym-${{ steps.versao.outputs.v }}.apk
           if-no-files-found: error

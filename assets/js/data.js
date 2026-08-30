@@ -1,6 +1,6 @@
 /* Dados mock — serão substituídos por armazenamento real depois. */
 const Dados = (() => {
-  const app = { nome: 'GYM' };
+  const app = { nome: 'BunnyGym' };
 
   // Dias com treino, em quantidade de dias atrás a partir de hoje.
   // Ritmo de 5 treinos por semana com 2 descansos. Duas semanas quebram

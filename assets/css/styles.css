@@ -1544,6 +1544,75 @@ button {
   color: var(--traco);
 }
 
+/* ── Fichas de filtro do histórico ────────────────────── */
+.arcade .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 11px;
+}
+
+.arcade .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--traco);
+  transition: transform 0.1s;
+}
+
+.arcade .chip:active { transform: scale(0.96); }
+
+/* A escolhida veste a cor do próprio treino. */
+.arcade .chip--on {
+  background: var(--chip);
+  color: #FFFFFF;
+  box-shadow: 3px 3px 0 var(--traco);
+}
+
+.arcade .chip__n {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background: var(--traco);
+  color: var(--sol);
+  border-radius: 999px;
+  font-size: 9.5px;
+  letter-spacing: 0;
+}
+
+.arcade .chip--on .chip__n {
+  background: #FFFFFF;
+  color: var(--traco);
+}
+
+/* Abre e fecha o resto da lista */
+.arcade .hist__mais {
+  width: 100%;
+  margin-top: 10px;
+  padding: 11px;
+  background: #FFFFFF;
+  border: 2.5px dashed var(--traco);
+  border-radius: 13px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #4B4460;
+  transition: transform 0.1s;
+}
+
+.arcade .hist__mais:active { transform: scale(0.99); }
+
 /* Card de total vira botão para o histórico */
 .arcade .metrica--total { position: relative; }
 

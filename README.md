@@ -1,4 +1,4 @@
-# GYM
+# BunnyGym
 
 Aplicativo web de treino de academia, feito para uso no celular. Acompanha a
 sequência de treinos, adapta o treino do dia ao que a academia tem livre,
@@ -119,6 +119,10 @@ Android SDK na sua máquina:
 1. Aba **Actions** do repositório → workflow **APK** → **Run workflow**
 2. No fim da execução, baixe o arquivo em **Artifacts**
 3. Transfira para o celular e instale permitindo "fontes desconhecidas"
+
+O artefato sai com o número da versão do `package.json` no nome
+(`bunnygym-1.1.0.apk`). Marcar uma tag `v*` também dispara a compilação,
+que é como cada versão fica registrada.
 
 É um APK de depuração, assinado com a chave de debug — serve para testar, não
 para publicar na Play Store.

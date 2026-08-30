@@ -1,6 +1,6 @@
 {
-  "name": "GYM — treino de academia",
-  "short_name": "GYM",
+  "name": "BunnyGym — treino de academia",
+  "short_name": "BunnyGym",
   "description": "Acompanhe a sequência de treinos, adapte o treino do dia e registre séries e cargas.",
   "start_url": "./",
   "scope": "./",
