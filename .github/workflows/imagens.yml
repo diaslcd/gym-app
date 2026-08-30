@@ -38,10 +38,11 @@ jobs:
             ));
           "
 
-      # O ícone chega como um PNG chapado. O Android quer duas camadas
-      # separadas, então elas saem daqui: o fundo é o próprio degradê
-      # ampliado até os cantos arredondados caírem para fora, e a frente é
-      # a marca branca recortada por limiar de luminosidade.
+      # O ícone chega como um PNG chapado. O Android quer duas camadas que
+      # ele compõe sozinho, então elas saem daqui: o fundo é o degradê
+      # refeito a partir das cores das pontas do original (sem a marca, que
+      # senão apareceria duas vezes), e a frente é só a marca branca,
+      # recortada por limiar depois de achatar os cantos transparentes.
       - name: Montar as camadas do ícone
         run: |
           node -e "
@@ -51,29 +52,41 @@ jobs:
             const MARCA = Math.round(L * 0.62); // folga que o recorte do lançador come
             const margem = Math.round((L - MARCA) / 2);
 
-            // Fundo: amplia e corta o miolo, para não sobrar canto transparente.
-            const fundo = sharp(fonte).resize(Math.round(L * 1.18), Math.round(L * 1.18))
-              .extract({ left: Math.round(L * 0.09), top: Math.round(L * 0.09), width: L, height: L })
-              .png();
+            const corEm = (x, y) => sharp(fonte)
+              .extract({ left: x, top: y, width: 16, height: 16 })
+              .stats()
+              .then((s) => 'rgb(' + s.channels.slice(0, 3).map((c) => Math.round(c.mean)).join(',') + ')');
 
-            // Frente: branco vira opaco, azul vira transparente.
-            const alfa = sharp(fonte).resize(MARCA, MARCA).greyscale().threshold(190).raw().toBuffer();
+            Promise.all([corEm(160, 160), corEm(848, 848)]).then(([claro, escuro]) => {
+              const degrade = Buffer.from(
+                '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"' + L + '\" height=\"' + L + '\">' +
+                '<defs><linearGradient id=\"g\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\">' +
+                '<stop offset=\"0\" stop-color=\"' + claro + '\"/>' +
+                '<stop offset=\"1\" stop-color=\"' + escuro + '\"/>' +
+                '</linearGradient></defs><rect width=\"' + L + '\" height=\"' + L + '\" fill=\"url(#g)\"/></svg>'
+              );
+              console.log('degradê de ' + claro + ' a ' + escuro);
 
-            Promise.all([
-              sharp(fonte).resize(L, L).png().toFile('saida/fonte-completo.png'),
-              fundo.clone().toFile('saida/fonte-fundo.png'),
-              alfa.then((dados) =>
-                sharp({ create: { width: MARCA, height: MARCA, channels: 3, background: '#ffffff' } })
-                  .joinChannel(dados, { raw: { width: MARCA, height: MARCA, channels: 1 } })
-                  .png().toBuffer()
-              ).then((marca) =>
-                sharp({ create: { width: L, height: L, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
-                  .composite([{ input: marca, top: margem, left: margem }])
-                  .png().toFile('saida/fonte-frente.png')
-              ),
-              // Web: o ícone comum e o mascarável já composto.
-              sharp(fonte).resize(512, 512).png().toFile('saida/icone.png')
-            ]).then(() => Promise.all([
+              // Achata sobre o azul primeiro: sem isso o canto transparente
+              // entra no limiar como se fosse branco e vira quina opaca.
+              const alfa = sharp(fonte).flatten({ background: escuro })
+                .resize(MARCA, MARCA).greyscale().threshold(190).raw().toBuffer();
+
+              return Promise.all([
+                sharp(fonte).resize(L, L).png().toFile('saida/fonte-completo.png'),
+                sharp(degrade).png().toFile('saida/fonte-fundo.png'),
+                alfa.then((dados) =>
+                  sharp({ create: { width: MARCA, height: MARCA, channels: 3, background: '#ffffff' } })
+                    .joinChannel(dados, { raw: { width: MARCA, height: MARCA, channels: 1 } })
+                    .png().toBuffer()
+                ).then((marca) =>
+                  sharp({ create: { width: L, height: L, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+                    .composite([{ input: marca, top: margem, left: margem }])
+                    .png().toFile('saida/fonte-frente.png')
+                ),
+                sharp(fonte).resize(512, 512).png().toFile('saida/icone.png')
+              ]);
+            }).then(() => Promise.all([
               sharp('saida/fonte-fundo.png').resize(512, 512).toBuffer(),
               sharp('saida/fonte-frente.png').resize(512, 512).toBuffer()
             ])).then(([fundo512, frente512]) =>
