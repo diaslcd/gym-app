@@ -206,8 +206,9 @@ const Dashboard = (() => {
             <button class="folha__fechar" data-fechar-titulos aria-label="Fechar">✕</button>
           </div>
           <p class="folha__sub">
-            <strong>${conquistados} de ${lista.length}</strong> conquistados ·
-            maior sequência: <strong>${recorde} dias</strong>
+            <strong>${conquistados} de ${lista.length}</strong> já alcançados ·
+            sequência agora: <strong>${atual}</strong> ·
+            recorde: <strong>${recorde}</strong>
           </p>
           <ul class="folha__opcoes">${linhas}</ul>
         </div>
