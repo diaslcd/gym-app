@@ -145,17 +145,12 @@ const Detalhe = (() => {
 
       (executando() ? painelDeExecucao() : '') +
 
-      // Instruções eram outra lista de dicas sobre o mesmo movimento:
-      // viraram o fecho do "Como fazer", depois dos três passos.
       sanfona('fazer', 'Como fazer', `
         <ol class="passos">
           ${passo(1, 'Posição inicial', guia.inicial)}
           ${passo(2, 'Movimento', guia.movimento)}
           ${passo(3, 'Posição final', guia.final)}
-        </ol>
-        <ul class="dicas dicas--fecho">
-          ${guia.instrucoes.map((i) => `<li>${i}</li>`).join('')}
-        </ul>`) +
+        </ol>`) +
 
       bloco('Músculos trabalhados', `
         <ul class="musculos">

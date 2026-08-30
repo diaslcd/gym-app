@@ -1070,17 +1070,6 @@ button {
   border-radius: 12px;
 }
 
-/* O pictograma respira na direção do esforço */
-.arcade .demo__pictograma {
-  animation: demo-pulsa 2.4s ease-in-out infinite;
-  transform-origin: center bottom;
-}
-
-@keyframes demo-pulsa {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.06); }
-}
-
 /* ── Blocos de conteúdo ───────────────────────────────── */
 .arcade .bloco {
   background: #FFFFFF;
@@ -1134,13 +1123,6 @@ button {
 .arcade .bloco__seta--on { transform: rotate(180deg); }
 
 .arcade .bloco--erro .bloco__seta { background: var(--gelo); }
-
-/* Fecho do "Como fazer": as dicas soltas depois dos passos. */
-.arcade .dicas--fecho {
-  margin-top: 18px;
-  padding-top: 16px;
-  border-top: 2.5px dashed var(--traco);
-}
 
 /* Passos numerados */
 .arcade .passos {
