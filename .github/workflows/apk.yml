@@ -42,6 +42,27 @@ jobs:
       - name: Criar o projeto Android
         run: npx cap add android
 
+      # O ícone do lançador do Android não vem do manifest da web: é uma
+      # pilha de PNGs em res/mipmap. Estes passos desenham essa pilha a
+      # partir do mesmo SVG do coelho, para não haver dois ícones no
+      # projeto podendo divergir.
+      - name: Rasterizar o ícone
+        run: |
+          npm install --no-save sharp
+          node -e "
+            const sharp = require('sharp');
+            const svg = (arquivo) => sharp(arquivo, { density: 600 }).resize(1024, 1024);
+            Promise.all([
+              svg('assets-android/icone-completo.svg').png().toFile('assets-android/icon-only.png'),
+              svg('assets-android/icone-frente.svg').png().toFile('assets-android/icon-foreground.png'),
+              sharp({ create: { width: 1024, height: 1024, channels: 4,
+                                background: '#FFD23F' } }).png().toFile('assets-android/icon-background.png')
+            ]).then(() => console.log('PNGs do ícone prontos'));
+          "
+
+      - name: Gerar os ícones do Android
+        run: npx @capacitor/assets generate --android --assetPath assets-android
+
       - name: Sincronizar os arquivos do app
         run: npx cap sync android
 

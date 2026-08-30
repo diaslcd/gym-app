@@ -19,3 +19,6 @@ desktop.ini
 
 # APK baixado do Actions
 apk/
+
+# Fontes do ícone do Android (os PNGs saem delas na compilação)
+assets-android/*.png
