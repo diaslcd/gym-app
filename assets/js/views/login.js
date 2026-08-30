@@ -3,102 +3,87 @@
 const Login = (() => {
   let raiz = null;
   let erro = null;
+  let comPin = false;   // a chave do PIN está ligada?
+  // O que já foi digitado sobrevive ao repintar da tela.
+  let rascunho = { nome: '', pin: '' };
 
-  function boasVindas() {
-    return `
-      <div class="entrada__marca">
-        <img class="entrada__coelho" src="assets/icone.png" alt="" width="96" height="96">
-        <h1 class="brand">${Dados.app.nome}</h1>
-      </div>`;
+  function marca() {
+    return `<h1 class="entrada__marca">Bunny<span>Gym</span></h1>`;
   }
 
-  /** Primeira vez: escolhe o nome e, se quiser, um PIN. */
+  function campoPin(rotulo) {
+    return `
+      <input class="entrada__pin" type="password" data-pin inputmode="numeric"
+             maxlength="4" value="${rascunho.pin}" placeholder="${rotulo}"
+             autocomplete="current-password">`;
+  }
+
+  /** Primeira vez: nome e, se a chave estiver ligada, um PIN. */
   function formularioNovo() {
     return `
-      <section class="bloco entrada__cartao">
-        <h2 class="bloco__titulo">Quem vai treinar?</h2>
+      <p class="entrada__pergunta">Quem vai treinar hoje?</p>
 
-        <label class="entrada__campo">
-          <span class="entrada__rotulo">Seu nome</span>
-          <input class="entrada__valor" type="text" data-nome maxlength="24"
-                 placeholder="Como quer ser chamado" autocomplete="given-name">
-        </label>
+      <input class="entrada__nome" type="text" data-nome maxlength="24"
+             value="${rascunho.nome}" placeholder="Seu nome" autocomplete="given-name">
 
-        <label class="entrada__campo">
-          <span class="entrada__rotulo">PIN de 4 dígitos · opcional</span>
-          <input class="entrada__valor" type="password" data-pin inputmode="numeric"
-                 maxlength="4" placeholder="Deixe vazio para entrar direto"
-                 autocomplete="new-password">
-        </label>
+      <button class="entrada__trava" data-trava type="button" aria-pressed="${comPin}">
+        <span class="entrada__chave${comPin ? ' entrada__chave--on' : ''}"></span>
+        Proteger com um PIN
+      </button>
 
-        ${erro ? `<p class="entrada__erro">${erro}</p>` : ''}
+      ${comPin ? campoPin('4 dígitos') : ''}
+      ${erro ? `<p class="entrada__erro">${erro}</p>` : ''}
 
-        <button class="entrada__botao" data-criar type="button">Começar</button>
-      </section>`;
+      <button class="entrada__ir" data-criar type="button">Bora</button>`;
   }
 
   /** Já tem perfil: pede o PIN se houver, senão é só confirmar. */
   function formularioVolta() {
-    const trava = Perfil.temPin()
-      ? `<label class="entrada__campo">
-           <span class="entrada__rotulo">Seu PIN</span>
-           <input class="entrada__valor" type="password" data-pin inputmode="numeric"
-                  maxlength="4" placeholder="4 dígitos" autocomplete="current-password">
-         </label>`
-      : '';
-
     return `
-      <section class="bloco entrada__cartao">
-        <h2 class="bloco__titulo">Olá de novo, ${Perfil.nome()}</h2>
-        ${trava}
-        ${erro ? `<p class="entrada__erro">${erro}</p>` : ''}
-        <button class="entrada__botao" data-entrar type="button">Entrar</button>
-        <button class="entrada__trocar" data-esquecer type="button">Usar outro perfil</button>
-      </section>`;
+      <p class="entrada__pergunta">Olá de novo, ${Perfil.nome()}.</p>
+
+      ${Perfil.temPin() ? campoPin('Seu PIN') : ''}
+      ${erro ? `<p class="entrada__erro">${erro}</p>` : ''}
+
+      <button class="entrada__ir" data-entrar type="button">Bora</button>
+      <button class="entrada__trocar" data-esquecer type="button">Usar outro perfil</button>`;
   }
 
   function render() {
-    raiz.innerHTML =
-      `<div class="entrada">
-        ${boasVindas()}
+    raiz.innerHTML = `
+      <div class="entrada">
+        ${marca()}
         ${Perfil.existe() ? formularioVolta() : formularioNovo()}
-        <p class="entrada__nota">
-          Fica tudo neste aparelho. O app não manda nada para lugar nenhum.
-        </p>
+        <p class="entrada__nota">Fica tudo neste aparelho.</p>
       </div>`;
 
-    const primeiro = raiz.querySelector('[data-nome], [data-pin]');
-    if (primeiro) primeiro.focus();
-  }
-
-  function valor(seletor) {
-    const campo = raiz.querySelector(seletor);
-    return campo ? campo.value.trim() : '';
+    // Depois de ligar a chave, o dedo já está indo para o PIN.
+    const alvo = raiz.querySelector(comPin || Perfil.temPin() ? '[data-pin]' : '[data-nome]');
+    if (alvo) alvo.focus();
   }
 
   function criar() {
-    const nome = valor('[data-nome]');
-    if (!nome) {
+    if (!rascunho.nome) {
       erro = 'Escreva um nome para continuar.';
       render();
       return;
     }
-    const pin = valor('[data-pin]');
-    if (pin && pin.length < 4) {
-      erro = 'O PIN precisa ter 4 dígitos — ou deixe vazio.';
+    if (comPin && rascunho.pin.length < 4) {
+      erro = 'O PIN precisa ter 4 dígitos — ou desligue a chave.';
       render();
       return;
     }
-    Perfil.criar(nome, pin);
+    Perfil.criar(rascunho.nome, comPin ? rascunho.pin : '');
     Router.ir('dashboard');
   }
 
   function entrar() {
-    if (Perfil.entrar(valor('[data-pin]'))) {
+    if (Perfil.entrar(rascunho.pin)) {
       Router.ir('dashboard');
       return;
     }
     erro = 'PIN errado. Tente de novo.';
+    rascunho.pin = '';
     render();
   }
 
@@ -106,11 +91,27 @@ const Login = (() => {
     if (evento.target.closest('[data-criar]')) return criar();
     if (evento.target.closest('[data-entrar]')) return entrar();
 
+    if (evento.target.closest('[data-trava]')) {
+      comPin = !comPin;
+      if (!comPin) rascunho.pin = '';
+      erro = null;
+      render();
+      return;
+    }
+
     if (evento.target.closest('[data-esquecer]')) {
       Perfil.esquecer();
       erro = null;
+      comPin = false;
+      rascunho = { nome: '', pin: '' };
       render();
     }
+  }
+
+  function aoDigitar(evento) {
+    const campo = evento.target;
+    if (campo.matches('[data-nome]')) rascunho.nome = campo.value.trim();
+    if (campo.matches('[data-pin]')) rascunho.pin = campo.value.trim();
   }
 
   // Enter no campo faz o mesmo que o botão.
@@ -124,8 +125,11 @@ const Login = (() => {
   function montar(elemento) {
     raiz = elemento;
     erro = null;
+    comPin = false;
+    rascunho = { nome: '', pin: '' };
     raiz.classList.add('arcade');
     raiz.addEventListener('click', aoClicar);
+    raiz.addEventListener('input', aoDigitar);
     raiz.addEventListener('keydown', aoTeclar);
     render();
   }

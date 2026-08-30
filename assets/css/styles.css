@@ -2403,105 +2403,154 @@ button {
 }
 
 
-/* ── Tela de entrada ──────────────────────────────────── */
+/* ── Tela de entrada ──────────────────────────────────────
+   Marca no alto, o resto empurrado para baixo: o que se toca fica
+   na altura do polegar. */
 .arcade .entrada {
   display: flex;
   flex-direction: column;
-  gap: 22px;
-  /* Empurra o cartão para o meio da tela quando sobra espaço. */
-  min-height: 74vh;
-  justify-content: center;
+  justify-content: flex-end;
+  gap: 20px;
+  min-height: calc(100vh - 120px);
+  min-height: calc(100dvh - 120px);
 }
 
 .arcade .entrada__marca {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-}
-
-.arcade .entrada__coelho {
-  width: 96px;
-  height: 96px;
-  border: 3px solid var(--traco);
-  border-radius: 24px;
-  box-shadow: 6px 6px 0 var(--traco);
-  transform: rotate(-3deg);
-}
-
-.arcade .entrada__cartao {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.arcade .entrada__campo {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.arcade .entrada__rotulo {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #6E6880;
-}
-
-.arcade .entrada__valor {
-  width: 100%;
-  padding: 13px 14px;
-  background: var(--papel);
-  border: 2.5px solid var(--traco);
-  border-radius: 13px;
-  font-family: "Archivo", sans-serif;
-  font-size: 15px;
-  font-weight: 700;
+  margin: 0 0 auto;
+  padding-top: 24px;
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 46px;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
   color: var(--traco);
 }
 
-.arcade .entrada__valor::placeholder {
-  font-weight: 600;
+.arcade .entrada__marca span {
+  display: block;
+  color: var(--rosa);
+}
+
+.arcade .entrada__pergunta {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #4B4460;
+}
+
+.arcade .entrada__nome {
+  width: 100%;
+  padding: 0 0 10px;
+  background: none;
+  border: 0;
+  border-bottom: 4px solid var(--traco);
+  border-radius: 0;
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 30px;
+  color: var(--traco);
+}
+
+.arcade .entrada__nome::placeholder { color: #C4BEDA; }
+.arcade .entrada__nome:focus { outline: 0; border-bottom-color: var(--rosa); }
+
+/* Chave do PIN: quem não quer PIN nunca vê o campo. */
+.arcade .entrada__trava {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #4B4460;
+}
+
+.arcade .entrada__chave {
+  position: relative;
+  width: 44px;
+  height: 26px;
+  flex: 0 0 auto;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 999px;
+  transition: background 0.15s;
+}
+
+.arcade .entrada__chave::after {
+  content: '';
+  position: absolute;
+  top: 2.5px;
+  left: 2.5px;
+  width: 16px;
+  height: 16px;
+  background: var(--apagado);
+  border-radius: 999px;
+  transition: transform 0.15s ease-out, background 0.15s;
+}
+
+.arcade .entrada__chave--on { background: var(--menta); }
+.arcade .entrada__chave--on::after {
+  background: var(--traco);
+  transform: translateX(18px);
+}
+
+.arcade .entrada__pin {
+  width: 100%;
+  padding: 13px 16px;
+  background: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 14px;
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: 0.3em;
+  color: var(--traco);
+}
+
+.arcade .entrada__pin::placeholder {
+  font-family: "Archivo", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   color: var(--apagado);
 }
 
-.arcade .entrada__valor:focus { outline: 3px solid var(--rosa); outline-offset: 2px; }
+.arcade .entrada__pin:focus { outline: 3px solid var(--rosa); outline-offset: 2px; }
 
 .arcade .entrada__erro {
   margin: 0;
-  padding: 9px 11px;
+  padding: 10px 12px;
   background: var(--gelo);
   border: 2.5px solid var(--traco);
-  border-radius: 11px;
-  font-size: 12px;
+  border-radius: 12px;
+  font-size: 12.5px;
   font-weight: 700;
   color: #0E4256;
 }
 
-.arcade .entrada__botao {
+.arcade .entrada__ir {
   width: 100%;
-  padding: 15px;
-  background: var(--traco);
-  color: var(--sol);
+  padding: 19px;
+  background: var(--rosa);
+  color: #FFFFFF;
   border: 3px solid var(--traco);
-  border-radius: 15px;
-  box-shadow: 5px 5px 0 var(--rosa);
+  border-radius: 999px;
+  box-shadow: 5px 5px 0 var(--traco);
   font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
-  font-size: 15px;
+  font-weight: 400;
+  font-size: 18px;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   transition: transform 0.1s, box-shadow 0.1s;
 }
 
-.arcade .entrada__botao:active {
+.arcade .entrada__ir:active {
   transform: translate(3px, 3px);
-  box-shadow: 2px 2px 0 var(--rosa);
+  box-shadow: 2px 2px 0 var(--traco);
 }
 
 .arcade .entrada__trocar {
   width: 100%;
-  padding: 10px;
+  padding: 4px;
   font-size: 10.5px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -2513,9 +2562,8 @@ button {
 .arcade .entrada__nota {
   margin: 0;
   text-align: center;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 600;
-  line-height: 1.5;
   color: #6E6880;
 }
 
