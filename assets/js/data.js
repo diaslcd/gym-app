@@ -53,6 +53,48 @@ const Dados = (() => {
       cor: '#00E5A0',
       tinta: '#12101A',
       descricao: 'Ombros, braços e core num treino único.'
+    },
+    {
+      id: 'empurrar',
+      nome: 'Empurrar',
+      cor: '#FF7A00',
+      tinta: '#12101A',
+      descricao: 'O push do push/pull/legs: peito, ombro e tríceps.'
+    },
+    {
+      id: 'puxar',
+      nome: 'Puxar',
+      cor: '#00B0F0',
+      tinta: '#12101A',
+      descricao: 'O pull do push/pull/legs: dorsais, bíceps e trapézio.'
+    },
+    {
+      id: 'ombro-trapezio',
+      nome: 'Ombro e Trapézio',
+      cor: '#E63946',
+      tinta: '#FFFFFF',
+      descricao: 'O dia extra do ABCD: as três porções do deltoide e o trapézio.'
+    },
+    {
+      id: 'bracos',
+      nome: 'Braços',
+      cor: '#8AC926',
+      tinta: '#12101A',
+      descricao: 'Bíceps e tríceps juntos, o dia clássico do ABCDE.'
+    },
+    {
+      id: 'gluteos-posterior',
+      nome: 'Glúteos e Posterior',
+      cor: '#B5179E',
+      tinta: '#FFFFFF',
+      descricao: 'Quadril e cadeia posterior: elevação pélvica, stiff e flexoras.'
+    },
+    {
+      id: 'corpo-inteiro',
+      nome: 'Corpo Inteiro',
+      cor: '#457B9D',
+      tinta: '#FFFFFF',
+      descricao: 'Full body: um movimento por padrão, para treinar 3x na semana.'
     }
   ];
 
@@ -93,6 +135,66 @@ const Dados = (() => {
       { id: 'elevacao-lateral', nome: 'Elevação lateral', grupo: 'Ombros',  equipamento: 'Halteres',           icone: 'halteres' },
       { id: 'rosca',            nome: 'Rosca',            grupo: 'Bíceps',  equipamento: 'Barra W',            icone: 'barra' },
       { id: 'triceps',          nome: 'Tríceps',          grupo: 'Tríceps', equipamento: 'Polia alta',         icone: 'polia' }
+    ],
+    // Push do PPL: peito, ombro e tríceps na mesma sessão.
+    'empurrar': [
+      { id: 'supino-reto',        nome: 'Supino reto',        grupo: 'Peito',   equipamento: 'Barra e banco reto',   icone: 'barra' },
+      { id: 'supino-incl-halter', nome: 'Supino inclinado com halteres', grupo: 'Peito', equipamento: 'Halteres e banco inclinado', icone: 'halteres' },
+      { id: 'crossover',          nome: 'Crossover',          grupo: 'Peito',   equipamento: 'Polia alta',           icone: 'polia' },
+      { id: 'desenvolvimento',    nome: 'Desenvolvimento',    grupo: 'Ombros',  equipamento: 'Halteres',             icone: 'halteres' },
+      { id: 'elevacao-lateral',   nome: 'Elevação lateral',   grupo: 'Ombros',  equipamento: 'Halteres',             icone: 'halteres' },
+      { id: 'triceps-pulley',     nome: 'Tríceps pulley',     grupo: 'Tríceps', equipamento: 'Polia alta com barra', icone: 'polia' },
+      { id: 'triceps-frances',    nome: 'Tríceps francês',    grupo: 'Tríceps', equipamento: 'Halter',               icone: 'halteres' }
+    ],
+    // Pull do PPL: tudo que puxa, incluindo o trapézio.
+    'puxar': [
+      { id: 'barra-fixa',      nome: 'Barra fixa',      grupo: 'Dorsais',  equipamento: 'Barra fixa',     icone: 'barra' },
+      { id: 'puxada-frontal',  nome: 'Puxada frontal',  grupo: 'Dorsais',  equipamento: 'Polia alta',     icone: 'polia' },
+      { id: 'remada-baixa',    nome: 'Remada baixa',    grupo: 'Dorsais',  equipamento: 'Polia baixa',    icone: 'polia' },
+      { id: 'remada-serrote',  nome: 'Remada serrote',  grupo: 'Dorsais',  equipamento: 'Halter e banco', icone: 'halteres' },
+      { id: 'encolhimento',    nome: 'Encolhimento',    grupo: 'Trapézio', equipamento: 'Halteres',       icone: 'halteres' },
+      { id: 'rosca-direta',    nome: 'Rosca direta',    grupo: 'Bíceps',   equipamento: 'Barra W',        icone: 'barra' },
+      { id: 'rosca-martelo',   nome: 'Rosca martelo',   grupo: 'Bíceps',   equipamento: 'Halteres',       icone: 'halteres' }
+    ],
+    // O quarto dia do ABCD: as três porções do deltoide, e o trapézio no fim.
+    'ombro-trapezio': [
+      { id: 'desenvolvimento-barra', nome: 'Desenvolvimento com barra', grupo: 'Ombros', equipamento: 'Barra e banco', icone: 'barra' },
+      { id: 'elevacao-lateral',    nome: 'Elevação lateral',   grupo: 'Ombros',   equipamento: 'Halteres',    icone: 'halteres' },
+      { id: 'elevacao-frontal',    nome: 'Elevação frontal',   grupo: 'Ombros',   equipamento: 'Halteres',    icone: 'halteres' },
+      { id: 'crucifixo-inverso',   nome: 'Crucifixo inverso',  grupo: 'Ombros',   equipamento: 'Halteres e banco inclinado', icone: 'halteres' },
+      { id: 'desenvolvimento-maq', nome: 'Desenvolvimento na máquina', grupo: 'Ombros', equipamento: 'Máquina sentada', icone: 'maquina' },
+      { id: 'remada-alta',         nome: 'Remada alta',        grupo: 'Ombros',   equipamento: 'Barra',       icone: 'barra' },
+      { id: 'encolhimento',        nome: 'Encolhimento',       grupo: 'Trapézio', equipamento: 'Halteres',    icone: 'halteres' }
+    ],
+    // O dia de braço do ABCDE: bíceps e tríceps alternados.
+    'bracos': [
+      { id: 'rosca-direta',      nome: 'Rosca direta',      grupo: 'Bíceps',  equipamento: 'Barra W',              icone: 'barra' },
+      { id: 'rosca-scott',       nome: 'Rosca scott',       grupo: 'Bíceps',  equipamento: 'Banco scott e barra W', icone: 'barra' },
+      { id: 'rosca-martelo',     nome: 'Rosca martelo',     grupo: 'Bíceps',  equipamento: 'Halteres',             icone: 'halteres' },
+      { id: 'rosca-concentrada', nome: 'Rosca concentrada', grupo: 'Bíceps',  equipamento: 'Halter',               icone: 'halteres' },
+      { id: 'triceps-pulley',    nome: 'Tríceps pulley',    grupo: 'Tríceps', equipamento: 'Polia alta com barra', icone: 'polia' },
+      { id: 'triceps-testa',     nome: 'Tríceps testa',     grupo: 'Tríceps', equipamento: 'Barra W e banco',      icone: 'barra' },
+      { id: 'triceps-corda',     nome: 'Tríceps na corda',  grupo: 'Tríceps', equipamento: 'Polia alta com corda', icone: 'polia' }
+    ],
+    // Quadril e cadeia posterior, o treino mais pedido depois do de perna.
+    'gluteos-posterior': [
+      { id: 'elevacao-pelvica',    nome: 'Elevação pélvica',    grupo: 'Glúteos',      equipamento: 'Barra e banco',    icone: 'barra' },
+      { id: 'agachamento-bulgaro', nome: 'Agachamento búlgaro', grupo: 'Glúteos',      equipamento: 'Halteres e banco', icone: 'halteres' },
+      { id: 'afundo',              nome: 'Afundo',              grupo: 'Glúteos',      equipamento: 'Halteres',         icone: 'halteres' },
+      { id: 'stiff',               nome: 'Stiff',               grupo: 'Posteriores',  equipamento: 'Barra',            icone: 'barra' },
+      { id: 'mesa-flexora',        nome: 'Mesa flexora',        grupo: 'Posteriores',  equipamento: 'Máquina deitada',  icone: 'maquina' },
+      { id: 'cadeira-flexora',     nome: 'Cadeira flexora',     grupo: 'Posteriores',  equipamento: 'Máquina sentada',  icone: 'maquina' },
+      { id: 'panturrilha',         nome: 'Panturrilha',         grupo: 'Panturrilhas', equipamento: 'Máquina em pé',    icone: 'maquina' }
+    ],
+    // Full body: um movimento por padrão — agachar, empurrar, puxar, dobrar.
+    'corpo-inteiro': [
+      { id: 'agachamento',     nome: 'Agachamento',     grupo: 'Quadríceps',  equipamento: 'Barra e rack',       icone: 'barra' },
+      { id: 'supino-reto',     nome: 'Supino reto',     grupo: 'Peito',       equipamento: 'Barra e banco reto', icone: 'barra' },
+      { id: 'remada-baixa',    nome: 'Remada baixa',    grupo: 'Dorsais',     equipamento: 'Polia baixa',        icone: 'polia' },
+      { id: 'stiff',           nome: 'Stiff',           grupo: 'Posteriores', equipamento: 'Barra',              icone: 'barra' },
+      { id: 'desenvolvimento', nome: 'Desenvolvimento', grupo: 'Ombros',      equipamento: 'Halteres',           icone: 'halteres' },
+      { id: 'rosca-direta',    nome: 'Rosca direta',    grupo: 'Bíceps',      equipamento: 'Barra W',            icone: 'barra' },
+      { id: 'abdominal',       nome: 'Abdominal',       grupo: 'Core',        equipamento: 'Peso do corpo',      icone: 'maquina' }
     ]
   };
 
@@ -310,7 +412,23 @@ const Dados = (() => {
     'elevacao-polia':      { id: 'elevacao-polia',      nome: 'Elevação lateral na polia', grupo: 'Ombros', equipamento: 'Polia baixa' },
     'elevacao-frontal':    { id: 'elevacao-frontal',    nome: 'Elevação frontal',         grupo: 'Ombros', equipamento: 'Halteres' },
     'elevacao-maquina':    { id: 'elevacao-maquina',    nome: 'Elevação lateral na máquina', grupo: 'Ombros', equipamento: 'Máquina' },
-    'remada-alta':         { id: 'remada-alta',         nome: 'Remada alta',              grupo: 'Ombros', equipamento: 'Barra' }
+    'remada-alta':         { id: 'remada-alta',         nome: 'Remada alta',              grupo: 'Ombros', equipamento: 'Barra' },
+
+    // Trapézio
+    'encolhimento':        { id: 'encolhimento',        nome: 'Encolhimento',             grupo: 'Trapézio', equipamento: 'Halteres' },
+    'encolhimento-barra':  { id: 'encolhimento-barra',  nome: 'Encolhimento com barra',   grupo: 'Trapézio', equipamento: 'Barra' },
+    'encolhimento-smith':  { id: 'encolhimento-smith',  nome: 'Encolhimento no Smith',    grupo: 'Trapézio', equipamento: 'Smith' },
+
+    // Deltoide posterior
+    'crucifixo-inverso':   { id: 'crucifixo-inverso',   nome: 'Crucifixo inverso',        grupo: 'Ombros', equipamento: 'Halteres e banco inclinado' },
+    'crucifixo-inv-maq':   { id: 'crucifixo-inv-maq',   nome: 'Crucifixo inverso na máquina', grupo: 'Ombros', equipamento: 'Peck deck invertido' },
+
+    // Core
+    'abdominal':           { id: 'abdominal',           nome: 'Abdominal',                grupo: 'Core', equipamento: 'Peso do corpo' },
+    'prancha':             { id: 'prancha',             nome: 'Prancha',                  grupo: 'Core', equipamento: 'Peso do corpo' },
+    'elevacao-pernas':     { id: 'elevacao-pernas',     nome: 'Elevação de pernas',       grupo: 'Core', equipamento: 'Banco ou paralela' },
+    'abdominal-maquina':   { id: 'abdominal-maquina',   nome: 'Abdominal na máquina',     grupo: 'Core', equipamento: 'Máquina sentada' },
+    'abdominal-infra':     { id: 'abdominal-infra',     nome: 'Abdominal infra',          grupo: 'Core', equipamento: 'Peso do corpo' }
   };
 
   /* Alternativas por exercício: mesmo grupo, movimento e estímulo
@@ -347,7 +465,26 @@ const Dados = (() => {
     'desenvolvimento':   ['desenvolvimento-maq', 'desenvolvimento-barra', 'arnold', 'elevacao-frontal', 'remada-alta'],
     'elevacao-lateral':  ['elevacao-polia', 'elevacao-maquina', 'elevacao-frontal', 'arnold', 'remada-alta'],
     'rosca':             ['rosca-scott', 'rosca-polia', 'rosca-concentrada', 'rosca-inclinada', 'rosca-corda'],
-    'triceps':           ['triceps-corda', 'triceps-maquina', 'mergulho-banco', 'triceps-coice', 'triceps-unilateral']
+    'triceps':           ['triceps-corda', 'triceps-maquina', 'mergulho-banco', 'triceps-coice', 'triceps-unilateral'],
+
+    // Exercícios que chegaram com os treinos novos
+    'barra-fixa':         ['puxada-frontal', 'puxada-neutra', 'pulldown', 'remada-unilateral', 'remada-cavalinho'],
+    'remada-serrote':     ['remada-halteres', 'remada-unilateral', 'remada-cavalinho', 'remada-baixa', 'barra-fixa'],
+    'supino-incl-halter': ['supino-inclinado', 'crucifixo-inclinado', 'chest-press', 'supino-smith', 'supino-halteres'],
+    'encolhimento':       ['encolhimento-barra', 'encolhimento-smith', 'remada-alta', 'elevacao-lateral'],
+    'crucifixo-inverso':  ['crucifixo-inv-maq', 'remada-alta', 'elevacao-polia', 'elevacao-lateral'],
+    'desenvolvimento-barra': ['desenvolvimento-maq', 'arnold', 'desenvolvimento', 'elevacao-frontal', 'remada-alta'],
+    'desenvolvimento-maq': ['desenvolvimento-barra', 'arnold', 'desenvolvimento', 'elevacao-frontal', 'remada-alta'],
+    'elevacao-frontal':   ['elevacao-lateral', 'elevacao-polia', 'elevacao-maquina', 'remada-alta', 'arnold'],
+    'remada-alta':        ['elevacao-lateral', 'encolhimento', 'elevacao-frontal', 'desenvolvimento-maq'],
+    'rosca-scott':        ['rosca-concentrada', 'rosca-polia', 'rosca-inclinada', 'rosca-direta', 'rosca-corda'],
+    'rosca-concentrada':  ['rosca-scott', 'rosca-alternada', 'rosca-polia', 'rosca-inclinada', 'rosca-corda'],
+    'triceps-corda':      ['triceps-pulley', 'triceps-maquina', 'triceps-unilateral', 'mergulho-banco', 'triceps-coice'],
+    'elevacao-pelvica':   ['agachamento-bulgaro', 'stiff', 'afundo', 'mesa-flexora', 'passada'],
+    'agachamento-bulgaro': ['afundo', 'passada', 'elevacao-pelvica', 'leg-press', 'agachamento'],
+    'afundo':             ['passada', 'agachamento-bulgaro', 'elevacao-pelvica', 'leg-press', 'agachamento'],
+    'stiff':              ['stiff-halteres', 'terra', 'mesa-flexora', 'flexora-em-pe', 'elevacao-pelvica'],
+    'abdominal':          ['prancha', 'abdominal-maquina', 'elevacao-pernas', 'abdominal-infra']
   };
 
   /** Procura um exercício em qualquer treino e, depois, no catálogo. */

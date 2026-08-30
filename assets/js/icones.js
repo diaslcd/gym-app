@@ -78,18 +78,47 @@ const Icones = (() => {
     '<path d="M8.4 6.6h7.2c2.3 0 4.1 1.7 4.4 4l.4 3.3-3 .6-.5-3v9.2c0 .4-.3.7-.7.7H7.8' +
     'c-.4 0-.7-.3-.7-.7v-9.2l-.5 3-3-.6.4-3.3c.3-2.3 2.1-4 4.4-4Z" fill="#fff"/>';
 
-  const musculos = {
-    'peito-triceps': corpo(TRONCO +
-      '<path d="M11.4 9.1v3.7c0 .6-.5 1.1-1.1 1.1H8.4c-1.1 0-2-.9-2-2v-1.5c0-.7.5-1.2 1.2-1.3' +
-      'l2.5-.3c.7-.1 1.3.4 1.3 1.3Z" fill="currentColor"/>' +
-      '<path d="M12.6 9.1v3.7c0 .6.5 1.1 1.1 1.1h1.9c1.1 0 2-.9 2-2v-1.5c0-.7-.5-1.2-1.2-1.3' +
-      'l-2.5-.3c-.7-.1-1.3.4-1.3 1.3Z" fill="currentColor"/>'),
+  // Regiões destacadas, reaproveitadas entre os treinos que as compartilham.
+  const PEITO =
+    '<path d="M11.4 9.1v3.7c0 .6-.5 1.1-1.1 1.1H8.4c-1.1 0-2-.9-2-2v-1.5c0-.7.5-1.2 1.2-1.3' +
+    'l2.5-.3c.7-.1 1.3.4 1.3 1.3Z" fill="currentColor"/>' +
+    '<path d="M12.6 9.1v3.7c0 .6.5 1.1 1.1 1.1h1.9c1.1 0 2-.9 2-2v-1.5c0-.7-.5-1.2-1.2-1.3' +
+    'l-2.5-.3c-.7-.1-1.3.4-1.3 1.3Z" fill="currentColor"/>';
 
-    'costas-biceps': corpo(TRONCO +
-      '<path d="M11.4 8.4v8.9c0 .5-.5.8-.9.6L7 15.6c-.6-.3-.9-1-.7-1.7l1.4-4.9c.2-.6.7-1 1.3-1.1' +
-      'l1-.1c.2 0 .4.3.4.6Z" fill="currentColor"/>' +
-      '<path d="M12.6 8.4v8.9c0 .5.5.8.9.6l3.5-2.3c.6-.3.9-1 .7-1.7l-1.4-4.9c-.2-.6-.7-1-1.3-1.1' +
-      'l-1-.1c-.2 0-.4.3-.4.6Z" fill="currentColor"/>'),
+  const DORSAIS =
+    '<path d="M11.4 8.4v8.9c0 .5-.5.8-.9.6L7 15.6c-.6-.3-.9-1-.7-1.7l1.4-4.9c.2-.6.7-1 1.3-1.1' +
+    'l1-.1c.2 0 .4.3.4.6Z" fill="currentColor"/>' +
+    '<path d="M12.6 8.4v8.9c0 .5.5.8.9.6l3.5-2.3c.6-.3.9-1 .7-1.7l-1.4-4.9c-.2-.6-.7-1-1.3-1.1' +
+    'l-1-.1c-.2 0-.4.3-.4.6Z" fill="currentColor"/>';
+
+  const BRACOS =
+    '<path d="M8 7.3c1.4 0 2.1.9 1.9 2.2l-.4 2.8c-.1.9-.9 1.6-1.9 1.6H5.8c-1 0-1.8-.9-1.6-2' +
+    'l.5-2.7c.3-1.3 1.5-1.9 3.3-1.9Z" fill="currentColor"/>' +
+    '<path d="M16 7.3c-1.4 0-2.1.9-1.9 2.2l.4 2.8c.1.9.9 1.6 1.9 1.6h1.8c1 0 1.8-.9 1.6-2' +
+    'l-.5-2.7c-.3-1.3-1.5-1.9-3.3-1.9Z" fill="currentColor"/>';
+
+  // Antebraços, para o dia em que o braço inteiro é o assunto.
+  const ANTEBRACOS =
+    '<path d="M5.6 14.4h2.2c.7 0 1.2.6 1.1 1.3l-.5 3.6c-.1.7-.7 1.2-1.4 1.2s-1.3-.5-1.4-1.2' +
+    'l-.5-3.6c-.1-.7.4-1.3 1.1-1.3Z" fill="currentColor"/>' +
+    '<path d="M18.4 14.4h-2.2c-.7 0-1.2.6-1.1 1.3l.5 3.6c.1.7.7 1.2 1.4 1.2s1.3-.5 1.4-1.2' +
+    'l.5-3.6c.1-.7-.4-1.3-1.1-1.3Z" fill="currentColor"/>';
+
+  // Só as cabeças do deltoide, sem descer para o braço.
+  const OMBROS =
+    '<path d="M7.6 7.2c1.6 0 2.4.8 2.2 2.1l-.2 1.4c-.1.7-.7 1.2-1.4 1.2H6.6c-.9 0-1.6-.8-1.4-1.7' +
+    'l.3-1.5c.2-1 1.1-1.5 2.1-1.5Z" fill="currentColor"/>' +
+    '<path d="M16.4 7.2c-1.6 0-2.4.8-2.2 2.1l.2 1.4c.1.7.7 1.2 1.4 1.2h1.6c.9 0 1.6-.8 1.4-1.7' +
+    'l-.3-1.5c-.2-1-1.1-1.5-2.1-1.5Z" fill="currentColor"/>';
+
+  const TRAPEZIO =
+    '<path d="M12 5.4 8.2 7.2c-.6.3-1 .8-1.1 1.5l-.2 1.2 5.1-1.7 5.1 1.7-.2-1.2' +
+    'c-.1-.7-.5-1.2-1.1-1.5L12 5.4Z" fill="currentColor"/>';
+
+  const musculos = {
+    'peito-triceps': corpo(TRONCO + PEITO),
+
+    'costas-biceps': corpo(TRONCO + DORSAIS),
 
     'perna': corpo(
       '<path d="M6.6 2.4h10.8c.7 0 1.2.6 1.1 1.3l-.5 3.6c-.2 1.4-.8 2.7-1.8 3.7l-.9 10.6' +
@@ -100,11 +129,35 @@ const Icones = (() => {
       '<path d="M15.4 4.2c-1.3 0-2 .7-2 2.1l.3 5c0 1 .8 1.7 1.8 1.7s1.8-.7 1.9-1.7l.5-5' +
       'c.1-1.4-.9-2.1-2.5-2.1Z" fill="currentColor"/>'),
 
-    'superiores': corpo(TRONCO +
-      '<path d="M8 7.3c1.4 0 2.1.9 1.9 2.2l-.4 2.8c-.1.9-.9 1.6-1.9 1.6H5.8c-1 0-1.8-.9-1.6-2' +
-      'l.5-2.7c.3-1.3 1.5-1.9 3.3-1.9Z" fill="currentColor"/>' +
-      '<path d="M16 7.3c-1.4 0-2.1.9-1.9 2.2l.4 2.8c.1.9.9 1.6 1.9 1.6h1.8c1 0 1.8-.9 1.6-2' +
-      'l-.5-2.7c-.3-1.3-1.5-1.9-3.3-1.9Z" fill="currentColor"/>')
+    'superiores': corpo(TRONCO + BRACOS),
+
+    // Push: o peito manda, o ombro entra junto.
+    'empurrar': corpo(TRONCO + PEITO + OMBROS),
+
+    // Pull: dorsais e braço que dobra.
+    'puxar': corpo(TRONCO + DORSAIS + BRACOS),
+
+    'ombro-trapezio': corpo(TRONCO + TRAPEZIO + OMBROS),
+
+    // Braço inteiro: do deltoide ao antebraço.
+    'bracos': corpo(TRONCO + BRACOS + ANTEBRACOS),
+
+    // Perna vista por trás: glúteo e posterior de coxa.
+    'gluteos-posterior': corpo(
+      '<path d="M6.6 2.4h10.8c.7 0 1.2.6 1.1 1.3l-.5 3.6c-.2 1.4-.8 2.7-1.8 3.7l-.9 10.6' +
+      'c0 .5-.4.8-.9.8h-2.1c-.5 0-.8-.3-.9-.8l-.8-8.4h-.3l-.8 8.4c0 .5-.4.8-.9.8H6.5' +
+      'c-.5 0-.8-.3-.9-.8l-.9-10.6c-1-1-1.6-2.3-1.8-3.7L2.4 3.7c-.1-.7.4-1.3 1.1-1.3h3.1Z" fill="#fff"/>' +
+      '<path d="M12 3c2.6 0 4.2 1 4.2 2.8S14.8 8.4 12 8.4 7.8 7.6 7.8 5.8 9.4 3 12 3Z" fill="currentColor"/>' +
+      '<path d="M8.8 9.4c1.2 0 1.8.6 1.7 1.8l-.4 4.2c-.1.9-.7 1.5-1.6 1.5s-1.5-.6-1.6-1.5' +
+      'l-.4-4.2c-.1-1.2.9-1.8 2.3-1.8Z" fill="currentColor"/>' +
+      '<path d="M15.2 9.4c-1.2 0-1.8.6-1.7 1.8l.4 4.2c.1.9.7 1.5 1.6 1.5s1.5-.6 1.6-1.5' +
+      'l.4-4.2c.1-1.2-.9-1.8-2.3-1.8Z" fill="currentColor"/>'),
+
+    // Full body: o tronco inteiro aceso.
+    'corpo-inteiro': corpo(
+      '<circle cx="12" cy="3.4" r="2.4" fill="#fff"/>' +
+      '<path d="M8.4 6.6h7.2c2.3 0 4.1 1.7 4.4 4l.4 3.3-3 .6-.5-3v9.2c0 .4-.3.7-.7.7H7.8' +
+      'c-.4 0-.7-.3-.7-.7v-9.2l-.5 3-3-.6.4-3.3c.3-2.3 2.1-4 4.4-4Z" fill="currentColor"/>')
   };
 
   /** Músculo trabalhado no treino; a parte destacada herda a cor. */

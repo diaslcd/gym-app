@@ -502,6 +502,57 @@ const Guia = (() => {
         'Encolher os ombros durante a subida.',
         'Passar da linha dos ombros.'
       ]
+    },
+
+    'encolhimento': {
+      musculos: ['Trapézio superior', 'Elevador da escápula'],
+      inicial: 'Em pé, {equipamento} ao lado do corpo, braços estendidos e relaxados, coluna alinhada.',
+      movimento: 'Eleve os ombros em direção às orelhas, sem dobrar os cotovelos. Segure um instante no topo e desça devagar.',
+      final: 'Ombros no ponto mais alto, braços ainda estendidos, pescoço solto.',
+      instrucoes: [
+        'O braço só carrega o peso: quem trabalha é o ombro subindo.',
+        'Pausa curta no topo — é ali que o trapézio contrai.',
+        'Desça controlado até sentir o alongamento.'
+      ],
+      erros: [
+        'Girar os ombros para trás, o que castiga a articulação sem ganho.',
+        'Dobrar os cotovelos e transformar o movimento em remada.',
+        'Projetar a cabeça à frente para parecer que subiu mais.'
+      ]
+    },
+
+    'crucifixo-inverso': {
+      musculos: ['Deltoide posterior', 'Romboides', 'Trapézio médio'],
+      inicial: 'Tronco inclinado à frente, apoiado no {equipamento}, braços pendurados e cotovelos levemente flexionados.',
+      movimento: 'Abra os braços para os lados e para trás, aproximando as escápulas. Volte devagar sem deixar os pesos baterem.',
+      final: 'Braços na linha dos ombros, escápulas juntas, tronco parado.',
+      instrucoes: [
+        'Puxe com o cotovelo, não com a mão.',
+        'Carga leve: a porção posterior do ombro é pequena.',
+        'Mantenha o pescoço na linha da coluna o tempo todo.'
+      ],
+      erros: [
+        'Levantar o tronco junto para ajudar na subida.',
+        'Esticar o cotovelo e virar o movimento numa remada alta.',
+        'Passar da linha dos ombros e jogar a carga no trapézio.'
+      ]
+    },
+
+    'abdominal': {
+      musculos: ['Reto abdominal', 'Oblíquos'],
+      inicial: 'Deitado, joelhos dobrados, pés apoiados e lombar encostada no chão.',
+      movimento: 'Enrole o tronco tirando as escápulas do chão, expirando na subida. Desça devagar sem relaxar por completo.',
+      final: 'Escápulas fora do chão, lombar ainda apoiada, abdômen contraído.',
+      instrucoes: [
+        'Sobe pouco: o movimento é curto e vem do abdômen.',
+        'Solte o ar na subida e mantenha o queixo longe do peito.',
+        'Vale mais controlar a descida do que somar repetições.'
+      ],
+      erros: [
+        'Puxar a nuca com as mãos.',
+        'Tirar a lombar do chão e virar o exercício num abdominal completo.',
+        'Ir rápido usando o embalo em vez do músculo.'
+      ]
     }
   };
 

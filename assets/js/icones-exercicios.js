@@ -341,6 +341,36 @@ const IconesExercicios = (() => {
       halter(19.4, 10.4) +
       '<path d="M6.4 14.4a7 7 0 0 1-1.6-2.6" stroke-dasharray="0.1 2.2"/>' +
       setaCima(4.6, 5.6) + setaCima(19.4, 5.6)
+    ),
+
+    // Ombros subindo em direção às orelhas, halteres pendurados.
+    'encolhimento': svg(
+      cabeca(12, 5.4) +
+      '<path d="M12 7.2v7M12 14.2l-2 6.6M12 14.2l2 6.6"/>' +
+      '<path d="M8.6 9.2 8.6 15M15.4 9.2 15.4 15"/>' +
+      '<path d="M8.6 9.2h6.8"/>' +
+      halter(8.6, 16) +
+      halter(15.4, 16) +
+      setaCima(5.6, 7.4) + setaCima(18.4, 7.4)
+    ),
+
+    // Tronco inclinado à frente, braços abrindo para trás.
+    'crucifixo-inverso': svg(
+      cabeca(7.4, 9.8) +
+      '<path d="M9.2 10.6h6.6M15.8 10.6l1.4 5.2M10.4 12.4v3.6"/>' +
+      '<path d="M12.4 11.4 8 15.6M12.4 11.4l4.2 4.2"/>' +
+      halter(7.2, 16.4) +
+      halter(17.4, 16.4) +
+      setaCima(4.6, 11.4) + setaCima(20, 11.4)
+    ),
+
+    // Tronco enrolando em direção aos joelhos.
+    'abdominal': svg(
+      banco(3.4, 20.6, 18.4) +
+      cabeca(7.6, 11.4) +
+      '<path d="M9.2 12.4 13.4 15.6M13.4 15.6h3.6M17 15.6l1.6-3.4"/>' +
+      '<path d="M9.2 12.4 6.4 9.6"/>' +
+      setaCima(7.6, 6.6)
     )
   };
 
@@ -412,7 +442,14 @@ const IconesExercicios = (() => {
     'elevacao-polia': 'elevacao-lateral',
     'elevacao-frontal': 'elevacao-lateral',
     'elevacao-maquina': 'elevacao-lateral',
-    'remada-alta': 'elevacao-lateral'
+    'remada-alta': 'elevacao-lateral',
+    'encolhimento-barra': 'encolhimento',
+    'encolhimento-smith': 'encolhimento',
+    'crucifixo-inv-maq': 'crucifixo-inverso',
+    'prancha': 'abdominal',
+    'elevacao-pernas': 'abdominal',
+    'abdominal-maquina': 'abdominal',
+    'abdominal-infra': 'abdominal'
   };
 
 
