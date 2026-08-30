@@ -67,23 +67,39 @@ jobs:
               );
               console.log('degradê de ' + claro + ' a ' + escuro);
 
-              // Achata sobre o azul primeiro: sem isso o canto transparente
-              // entra no limiar como se fosse branco e vira quina opaca.
-              const alfa = sharp(fonte).flatten({ background: escuro })
-                .resize(MARCA, MARCA).greyscale().threshold(190).raw().toBuffer();
+              // Sobre um azul opaco primeiro: o canto arredondado é
+              // transparente e entraria no limiar como se fosse branco.
+              const opaco = sharp(fonte).resize(L, L).toBuffer().then((img) =>
+                sharp({ create: { width: L, height: L, channels: 3, background: escuro } })
+                  .composite([{ input: img }]).png().toBuffer()
+              );
+
+              // Marca branca recortada no próprio contorno: o original tem
+              // folga de sobra, e encolher a imagem toda encolheria a marca.
+              const frente = opaco
+                .then((img) => sharp(img).greyscale().threshold(190).raw().toBuffer())
+                .then((mascara) =>
+                  sharp({ create: { width: L, height: L, channels: 3, background: '#ffffff' } })
+                    .joinChannel(mascara, { raw: { width: L, height: L, channels: 1 } })
+                    .png().toBuffer()
+                )
+                .then((marca) => sharp(marca).trim().png().toBuffer())
+                .then((cortada) =>
+                  sharp(cortada).resize(MARCA, MARCA, {
+                    fit: 'contain',
+                    background: { r: 0, g: 0, b: 0, alpha: 0 }
+                  }).png().toBuffer()
+                )
+                .then((ajustada) =>
+                  sharp({ create: { width: L, height: L, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+                    .composite([{ input: ajustada, top: margem, left: margem }])
+                    .png().toFile('saida/fonte-frente.png')
+                );
 
               return Promise.all([
                 sharp(fonte).resize(L, L).png().toFile('saida/fonte-completo.png'),
                 sharp(degrade).png().toFile('saida/fonte-fundo.png'),
-                alfa.then((dados) =>
-                  sharp({ create: { width: MARCA, height: MARCA, channels: 3, background: '#ffffff' } })
-                    .joinChannel(dados, { raw: { width: MARCA, height: MARCA, channels: 1 } })
-                    .png().toBuffer()
-                ).then((marca) =>
-                  sharp({ create: { width: L, height: L, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
-                    .composite([{ input: marca, top: margem, left: margem }])
-                    .png().toFile('saida/fonte-frente.png')
-                ),
+                frente,
                 sharp(fonte).resize(512, 512).png().toFile('saida/icone.png')
               ]);
             }).then(() => Promise.all([
