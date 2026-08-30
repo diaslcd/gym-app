@@ -21,12 +21,12 @@ const Icones = (() => {
 
   /** Chama usada para indicar sequência de treinos. */
   const chama =
-    '<svg viewBox="0 0 24 24" aria-hidden="true">' +
-    '<path d="M12.6 1.5c.9 2.7-.1 4.7-1.4 6.4-.4-.8-.7-1.6-.8-2.5-1.6 1.7-2.6 3.3-3.2 4.9' +
+    '<svg class="ico-chama" viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path class="chama__corpo" d="M12.6 1.5c.9 2.7-.1 4.7-1.4 6.4-.4-.8-.7-1.6-.8-2.5-1.6 1.7-2.6 3.3-3.2 4.9' +
     '-.6-.5-1-1.2-1.2-2C4.6 10.6 3.9 13 3.9 15.4c0 4.6 3.6 8 8.1 8s8.1-3.4 8.1-8' +
     'c0-2.9-1.2-5.2-2.8-7.3-.3 1.1-.9 1.9-1.8 2.4.4-3.7-1-6.9-2.9-9Z" ' +
     'fill="#FF9F0A" stroke="#12101A" stroke-width="1.7" stroke-linejoin="round"/>' +
-    '<path d="M12 13c1.8 1.8 2.8 3.2 2.8 4.7 0 1.7-1.3 3-2.8 3s-2.8-1.3-2.8-3c0-1.5 1-2.9 2.8-4.7Z" ' +
+    '<path class="chama__nucleo" d="M12 13c1.8 1.8 2.8 3.2 2.8 4.7 0 1.7-1.3 3-2.8 3s-2.8-1.3-2.8-3c0-1.5 1-2.9 2.8-4.7Z" ' +
     'fill="#FFD23F" stroke="#12101A" stroke-width="1.5" stroke-linejoin="round"/>' +
     '</svg>';
 
@@ -47,14 +47,21 @@ const Icones = (() => {
   /** Floco: marca a falta que derrubou a sequência. */
   const floco = (() => {
     const eixos = 'M12 2.6v18.8M4.1 7.3l15.8 9.4M19.9 7.3 4.1 16.7';
-    return '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+    return '<svg class="ico-floco" viewBox="0 0 24 24" aria-hidden="true">' +
       '<g fill="none" stroke-linecap="round" stroke-linejoin="round">' +
       `<path d="${eixos}" stroke="#12101A" stroke-width="6.4"/>` +
       `<path d="${eixos}" stroke="#5BC8F5" stroke-width="3.4"/>` +
       '</g>' +
-      '<circle cx="12" cy="12" r="2.9" fill="#FFFFFF" stroke="#12101A" stroke-width="1.7"/>' +
+      '<circle class="floco__centro" cx="12" cy="12" r="2.9" fill="#FFFFFF" stroke="#12101A" stroke-width="1.7"/>' +
       '</svg>';
   })();
+
+  /** Cadeado: título que a sequência ainda não alcançou. */
+  const cadeado = base(
+    '<rect x="4.6" y="10.4" width="14.8" height="9.6" rx="2.4"/>' +
+    '<path d="M8.4 10.4V7.8a3.6 3.6 0 0 1 7.2 0v2.6"/>' +
+    '<path d="M12 14.2v2.4"/>'
+  );
 
 
 
@@ -110,5 +117,5 @@ const Icones = (() => {
     return equipamentos[tipo] || equipamentos.maquina;
   }
 
-  return { equipamento, musculo, chama, trofeu, floco, trocar, remover };
+  return { equipamento, musculo, chama, trofeu, floco, cadeado, trocar, remover };
 })();

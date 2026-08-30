@@ -453,6 +453,6 @@ const Dados = (() => {
     app, treinos, tipos, tipoPorId, exerciciosDe, exercicioGlobal,
     alternativasDe, registroDe, registrarTreino, candidatosPara,
     historico, volumeDoTreino, evolucaoDe, exerciciosComEvolucao,
-    tituloDaSequencia, proximoTitulo
+    titulos, tituloDaSequencia, proximoTitulo
   };
 })();

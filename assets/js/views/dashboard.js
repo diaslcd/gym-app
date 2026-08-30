@@ -5,6 +5,7 @@ const Dashboard = (() => {
   let raiz = null;
   let mesRef = null;        // primeiro dia do mês exibido no calendário
   let diaAberto = null;     // data com a folha de detalhes aberta
+  let titulosAbertos = false; // folha com a lista de títulos
   let aviso = null;         // confirmação depois de encerrar o treino
   let relogioAviso = null;
   let diasEmSequencia = null; // datas que formam a sequência atual
@@ -50,7 +51,12 @@ const Dashboard = (() => {
           ${metrica('total', Icones.equipamento('halteres'), Dados.treinos.size, 'treinos · ver histórico', '', 'data-historico type="button"')}
         </div>
 
-        ${proximo ? `<span class="metrica__proximo">faltam ${proximo.faltam} para ${proximo.nome}</span>` : ''}
+        <button class="metrica__proximo" type="button" data-titulos>
+          <span class="metrica__proximoTexto">${proximo
+            ? `faltam ${proximo.faltam} para ${proximo.nome}`
+            : 'todos os títulos conquistados'}</span>
+          <span class="metrica__proximoVer">títulos</span>
+        </button>
       </section>`;
   }
 
@@ -160,6 +166,54 @@ const Dashboard = (() => {
       </section>`;
   }
 
+
+  /** Folha com todos os títulos: o que já caiu, o atual e o que falta. */
+  function folhaDeTitulos() {
+    if (!titulosAbertos) return '';
+
+    const atual = Utils.sequenciaAtual(Dados.treinos);
+    const recorde = Utils.maiorSequencia(Dados.treinos);
+    const doAtual = Dados.tituloDaSequencia(atual);
+    // Do mais fácil ao mais longe: a lista vem do maior para o menor.
+    const lista = Dados.titulos.slice().reverse();
+    const conquistados = lista.filter((t) => recorde >= t.dias).length;
+
+    const linhas = lista.map((t, i) => {
+      const feito = recorde >= t.dias;
+      const eAtual = t.nome === doAtual;
+      const classe = eAtual ? 'tit--atual' : (feito ? 'tit--feito' : 'tit--travado');
+      const estado = eAtual
+        ? 'agora'
+        : (feito ? '✓' : `faltam ${t.dias - atual}`);
+
+      return `
+        <li class="tit ${classe}" style="--i:${i}">
+          <span class="tit__selo">${feito ? Icones.chama : Icones.cadeado}</span>
+          <span class="tit__texto">
+            <span class="tit__nome">${t.nome}</span>
+            <span class="tit__meta">${t.dias} ${t.dias === 1 ? 'dia' : 'dias'} em sequência</span>
+          </span>
+          <span class="tit__estado">${estado}</span>
+        </li>`;
+    }).join('');
+
+    return `
+      <div class="folha">
+        <div class="folha__fundo" data-fechar-titulos></div>
+        <div class="folha__painel">
+          <div class="folha__topo">
+            <span class="folha__titulo">Títulos</span>
+            <button class="folha__fechar" data-fechar-titulos aria-label="Fechar">✕</button>
+          </div>
+          <p class="folha__sub">
+            <strong>${conquistados} de ${lista.length}</strong> conquistados ·
+            maior sequência: <strong>${recorde} dias</strong>
+          </p>
+          <ul class="folha__opcoes">${linhas}</ul>
+        </div>
+      </div>`;
+  }
+
   /** Folha com o que foi feito no dia escolhido. */
   function folhaDoDia() {
     return diaAberto ? Componentes.folhaDoDia(diaAberto) : '';
@@ -168,7 +222,7 @@ const Dashboard = (() => {
   function render() {
     raiz.innerHTML =
       cabecalho() + indicadores() + acaoPrincipal() + calendario() +
-      folhaDoDia() + faixaDeAviso();
+      folhaDoDia() + folhaDeTitulos() + faixaDeAviso();
 
     Sessao.observar((segundos) => {
       const campo = raiz.querySelector('.btn__tempo');
@@ -197,6 +251,19 @@ const Dashboard = (() => {
       return;
     }
 
+    if (evento.target.closest('[data-titulos]')) {
+      diaAberto = null;
+      titulosAbertos = true;
+      render();
+      return;
+    }
+
+    if (evento.target.closest('[data-fechar-titulos]')) {
+      titulosAbertos = false;
+      render();
+      return;
+    }
+
     if (evento.target.closest('[data-fechar-dia]')) {
       diaAberto = null;
       render();
@@ -220,6 +287,7 @@ const Dashboard = (() => {
     raiz = elemento;
     raiz.classList.add('arcade');
     diaAberto = null;
+    titulosAbertos = false;
     aviso = null;
     clearTimeout(relogioAviso);
 

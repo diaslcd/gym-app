@@ -223,9 +223,13 @@ button {
   letter-spacing: 0.12em;
 }
 
-/* ── Bilhete do próximo marco ─────────────────────────── */
+/* ── Bilhete do próximo marco (abre a lista de títulos) ─ */
 .arcade .metrica__proximo {
   align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   text-align: center;
   font-size: 10.5px;
   font-weight: 700;
@@ -236,6 +240,21 @@ button {
   border: 2.5px dashed var(--traco);
   border-radius: 12px;
   padding: 8px 10px;
+  transition: transform 0.1s;
+}
+
+.arcade .metrica__proximo:active { transform: scale(0.98); }
+
+/* Selo que avisa que o bilhete é clicável */
+.arcade .metrica__proximoVer {
+  flex: 0 0 auto;
+  background: var(--sol);
+  color: var(--traco);
+  border: 2px solid var(--traco);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
 }
 
 /* ── Tabuleiro do mês ─────────────────────────────────── */
@@ -394,15 +413,16 @@ button {
   z-index: 2;
   top: 2px;
   right: 2px;
+  width: 15px;
+  height: 15px;
   pointer-events: none;
 }
 
 .arcade .cal__fogo svg,
 .arcade .cal__floco svg { width: 100%; height: 100%; display: block; }
 
+/* O quadradinho inteiro balança; as chamas por dentro tremulam sozinhas. */
 .arcade .cal__fogo {
-  width: 15px;
-  height: 15px;
   transform-origin: bottom center;
   animation: arc-tremular 1.7s ease-in-out infinite;
 }
@@ -412,9 +432,59 @@ button {
   50%      { transform: scale(1.12) rotate(4deg); }
 }
 
-.arcade .cal__floco {
-  width: 15px;
-  height: 15px;
+/* ── Fogo vivo ────────────────────────────────────────────
+   Corpo e núcleo em compassos diferentes: um sobe enquanto o
+   outro encolhe, e é o descompasso que faz parecer fogo.
+   Só transform e opacity, para o navegador não repintar nada. */
+.ico-chama .chama__corpo,
+.ico-chama .chama__nucleo {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.ico-chama .chama__corpo {
+  animation: chama-corpo 1.9s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -230ms);
+}
+
+.ico-chama .chama__nucleo {
+  animation: chama-nucleo 1.1s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -130ms);
+}
+
+@keyframes chama-corpo {
+  0%, 100% { transform: scaleY(1) scaleX(1) rotate(-1.5deg); }
+  30%      { transform: scaleY(1.07) scaleX(0.95) rotate(1.8deg); }
+  60%      { transform: scaleY(0.96) scaleX(1.04) rotate(-0.6deg); }
+}
+
+@keyframes chama-nucleo {
+  0%, 100% { transform: scaleY(1) scaleX(1); opacity: 1; }
+  45%      { transform: scaleY(1.22) scaleX(0.9); opacity: 0.82; }
+}
+
+/* ── Gelo vivo ────────────────────────────────────────────
+   Giro lento e um brilho no miolo. O atraso negativo tira os
+   flocos do compasso uns dos outros: cada dia gira no seu tempo. */
+.ico-floco {
+  animation: floco-gira 14s linear infinite;
+  animation-delay: calc(var(--i, 0) * -370ms);
+}
+
+.ico-floco .floco__centro {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: floco-brilho 2.8s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -190ms);
+}
+
+@keyframes floco-gira {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes floco-brilho {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.28); opacity: 0.72; }
 }
 
 
@@ -1925,6 +1995,85 @@ button {
   color: #4B4460;
 }
 
+/* ── Lista de títulos ─────────────────────────────────── */
+.tit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 14px;
+  box-shadow: 3px 3px 0 var(--traco);
+}
+
+.tit__selo {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+}
+
+.tit__selo svg { width: 100%; height: 100%; display: block; }
+
+.tit__texto { display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto; }
+
+.tit__nome {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: 13px;
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: var(--traco);
+}
+
+.tit__meta {
+  margin-top: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6E6880;
+}
+
+.tit__estado {
+  flex: 0 0 auto;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6E6880;
+}
+
+/* Conquistado: chama acesa e selo verde */
+.tit--feito .tit__estado {
+  color: var(--traco);
+  background: var(--menta);
+  border: 2px solid var(--traco);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+/* O título de agora: o único em destaque */
+.tit--atual {
+  background: var(--sol);
+  transform: rotate(-0.8deg);
+}
+
+.tit--atual .tit__meta { color: #4B4460; }
+
+.tit--atual .tit__estado {
+  color: var(--sol);
+  background: var(--traco);
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+
+/* Ainda travado: cadeado apagado e a conta do que falta */
+.tit--travado { box-shadow: 3px 3px 0 rgba(18, 16, 26, 0.25); border-color: #B9B3CA; }
+.tit--travado .tit__selo { color: var(--apagado); }
+.tit--travado .tit__nome { color: #6E6880; }
+
 /* ── Aviso rápido ─────────────────────────────────────── */
 .aviso {
   position: fixed;
@@ -1990,7 +2139,11 @@ button {
 @media (prefers-reduced-motion: reduce) {
   .arcade .cal__dot,
   .arcade .cal__faixa,
-  .arcade .cal__fogo { animation: none; }
+  .arcade .cal__fogo,
+  .ico-chama .chama__corpo,
+  .ico-chama .chama__nucleo,
+  .ico-floco,
+  .ico-floco .floco__centro { animation: none; }
 }
 
 /* ── Barra superior das telas internas ────────────────── */
