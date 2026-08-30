@@ -46,19 +46,18 @@ jobs:
       # de PNGs em res/mipmap, montada aqui a partir das camadas do ícone.
       - name: Preparar as fontes do ícone
         run: |
-          npm install --no-save sharp
           node -e "
-            const sharp = require('sharp');
             const fs = require('node:fs');
-            // As camadas do ícone adaptativo vêm em 432px, o tamanho que o
-            // lançador usa na maior densidade; o @capacitor/assets pede 1024.
-            const ampliar = (de, para) =>
-              sharp('assets-android/' + de).resize(1024, 1024).png().toFile('assets-android/' + para);
-            fs.copyFileSync('assets-android/fonte-completo.png', 'assets-android/icon-only.png');
-            Promise.all([
-              ampliar('fonte-frente.png', 'icon-foreground.png'),
-              ampliar('fonte-fundo.png', 'icon-background.png')
-            ]).then(() => console.log('fontes do ícone prontas'));
+            // As camadas já saem em 1024 do workflow Imagens; aqui é só
+            // renomear para o que o @capacitor/assets procura.
+            const nomes = {
+              'fonte-completo.png': 'icon-only.png',
+              'fonte-frente.png': 'icon-foreground.png',
+              'fonte-fundo.png': 'icon-background.png'
+            };
+            Object.keys(nomes).forEach((de) =>
+              fs.copyFileSync('assets-android/' + de, 'assets-android/' + nomes[de]));
+            console.log('fontes do ícone prontas');
           "
 
       - name: Gerar os ícones do Android
