@@ -9,6 +9,7 @@ const Dashboard = (() => {
   let aviso = null;         // confirmação depois de encerrar o treino
   let relogioAviso = null;
   let diasEmSequencia = null; // datas que formam a sequência atual
+  let inicioDeUso = null;     // primeiro dia do app neste aparelho
 
   function cabecalho() {
     const nome = Perfil.nome();
@@ -53,7 +54,7 @@ const Dashboard = (() => {
 
         <div class="metricas__par">
           ${metrica('recorde', Icones.trofeu, Utils.maiorSequencia(Dados.treinos), 'recorde')}
-          ${metrica('total', Icones.equipamento('halteres'), Dados.treinos.size, 'treinos · ver histórico', '', 'data-historico type="button"')}
+          ${metrica('total', Icones.equipamento('halteres'), Dados.totalDeTreinos(), 'treinos · ver histórico', '', 'data-historico type="button"')}
         </div>
 
         <button class="metrica__proximo" type="button" data-titulos>
@@ -77,14 +78,15 @@ const Dashboard = (() => {
     return `<button class="btn btn--primary" data-acao="iniciar">Iniciar treino</button>`;
   }
 
-
   function celula(ano, mes, dia, hojeIso, ordem, ultimoDia) {
     const data = new Date(ano, mes, dia);
     const dataIso = Utils.iso(data);
-    const registro = Dados.registroDe(dataIso);
-    const treinou = !!registro;
+    const doDia = Dados.registrosDe(dataIso);
+    const treinou = doDia.length > 0;
     const hoje = dataIso === hojeIso;
-    const passado = dataIso < hojeIso;
+    // Antes de o app existir no aparelho não havia como registrar nada:
+    // dia anterior a isso fica neutro, nem descanso nem falta.
+    const passado = dataIso < hojeIso && dataIso >= inicioDeUso;
     const coluna = data.getDay();
     const naSequencia = diasEmSequencia.has(dataIso);
 
@@ -98,9 +100,13 @@ const Dashboard = (() => {
 
     if (treinou) {
       classes.push('cal__day--treino');
-      // Faixa da cor do treino feito naquele dia.
-      const tipo = Dados.tipoPorId(registro.tipoId);
-      if (tipo) marca = `<span class="cal__tipo" style="--tipo:${tipo.cor}"></span>`;
+      // Uma barrinha por treino do dia, na cor de cada um.
+      const barras = doDia
+        .map((registro) => Dados.tipoPorId(registro.tipoId))
+        .filter(Boolean)
+        .map((tipo) => `<span class="cal__tipo" style="--tipo:${tipo.cor}"></span>`)
+        .join('');
+      if (barras) marca = `<span class="cal__tipos">${barras}</span>`;
     } else if (passado) {
       // Folga numa semana que aguentou é descanso; numa semana que
       // não aguentou, é a falta que derrubou a sequência.
@@ -316,6 +322,7 @@ const Dashboard = (() => {
     const h = Utils.hoje();
     mesRef = new Date(h.getFullYear(), h.getMonth(), 1);
     diasEmSequencia = Utils.diasDaSequenciaAtual(Dados.treinos);
+    inicioDeUso = Dados.inicioDeUso();
     raiz.addEventListener('click', aoClicar);
     render();
   }

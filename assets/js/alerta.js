@@ -8,13 +8,14 @@ const Alerta = (() => {
   let raiz = null;
   let relogio = null;
 
-  /** Pede a permissão uma vez, quando o usuário inicia um descanso. */
+  /** Pede a permissão e conta como foi. Só vale dentro de um gesto. */
   function pedirPermissao() {
     try {
-      if (typeof Notification === 'undefined') return;
-      if (Notification.permission === 'default') Notification.requestPermission();
+      if (typeof Notification === 'undefined') return Promise.resolve('indisponivel');
+      if (Notification.permission !== 'default') return Promise.resolve(Notification.permission);
+      return Promise.resolve(Notification.requestPermission());
     } catch (erro) {
-      // Alguns navegadores recusam o pedido fora de um gesto; segue sem.
+      return Promise.resolve('indisponivel');
     }
   }
 

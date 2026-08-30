@@ -58,11 +58,23 @@ button {
   display: flex;
   flex-direction: column;
   gap: var(--gap);
-  animation: entrar 0.18s ease-out;
 }
 
-@keyframes entrar {
-  from { opacity: 0; transform: translateY(6px); }
+/* Avançar entra pela direita, voltar entra pela esquerda: o movimento
+   diz para que lado a navegação foi. */
+.tela--avanca { animation: tela-avanca 0.22s cubic-bezier(0.22, 1, 0.36, 1); }
+.tela--volta  { animation: tela-volta  0.22s cubic-bezier(0.22, 1, 0.36, 1); }
+
+@keyframes tela-avanca {
+  from { opacity: 0; transform: translateX(26px); }
+}
+
+@keyframes tela-volta {
+  from { opacity: 0; transform: translateX(-26px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tela--avanca, .tela--volta { animation: none; }
 }
 
 .card {
@@ -700,12 +712,20 @@ button {
 }
 
 
-/* ── Marcador do treino feito no dia ──────────────────── */
-.arcade .cal__tipo {
+/* ── Marcadores dos treinos feitos no dia ─────────────── */
+.arcade .cal__tipos {
   position: absolute;
   left: 5px;
   right: 5px;
   bottom: 3px;
+  display: flex;
+  gap: 2px;
+}
+
+/* Uma barrinha por treino: elas dividem a largura entre si. */
+.arcade .cal__tipo {
+  flex: 1 1 0;
+  min-width: 0;
   height: 5px;
   border-radius: 3px;
   background: var(--tipo);
@@ -2699,4 +2719,100 @@ button {
   font-weight: 600;
   line-height: 1.55;
   color: #6E6880;
+}
+
+/* Aviso de mais de um treino no mesmo dia */
+.dia__quantos {
+  margin: 10px 0 0;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6E6880;
+}
+
+/* ── Boas-vindas da primeira abertura ─────────────────── */
+.arcade .bemvindo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  min-height: calc(100vh - 120px);
+  min-height: calc(100dvh - 120px);
+}
+
+.arcade .bemvindo__titulo {
+  margin: 0;
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 38px;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--traco);
+}
+
+.arcade .bemvindo__titulo span {
+  display: block;
+  color: var(--rosa);
+}
+
+.arcade .bemvindo__linha {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4B4460;
+}
+
+.arcade .bemvindo__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.arcade .bemvindo__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 14px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 15px;
+  box-shadow: 3px 3px 0 var(--traco);
+}
+
+.arcade .bemvindo__icone {
+  flex: 0 0 auto;
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.arcade .bemvindo__texto { display: flex; flex-direction: column; gap: 3px; }
+
+.arcade .bemvindo__nome {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: var(--traco);
+}
+
+.arcade .bemvindo__desc {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #6E6880;
+}
+
+.arcade .bemvindo__resposta {
+  margin: 0;
+  padding: 10px 12px;
+  background: var(--gelo);
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: #0E4256;
 }

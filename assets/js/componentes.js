@@ -23,54 +23,60 @@ const Componentes = (() => {
       </li>`;
   }
 
-  /**
-   * Folha com o que foi feito num dia: treino, duração e cada
-   * exercício com as séries executadas. Usada pelo calendário do
-   * painel e pela tela de histórico.
-   */
-  function folhaDoDia(dataIso, fecharAtributo) {
-    const registro = Dados.registroDe(dataIso);
-    if (!registro) return '';
-
+  /** Um treino do dia: cabeçalho colorido e os exercícios executados. */
+  function blocoDoTreino(registro) {
     const tipo = Dados.tipoPorId(registro.tipoId);
     const feitos = registro.exercicios.map(Dados.exercicioGlobal).filter(Boolean);
+
+    return `
+      <div class="dia__treino" style="background:${tipo ? tipo.cor : '#FFD23F'}; color:${tipo ? tipo.tinta : '#12101A'}">
+        <span class="dia__icone">${Icones.musculo(registro.tipoId)}</span>
+        <span class="dia__dados">
+          <span class="dia__nome">${tipo ? tipo.nome : 'Treino'}</span>
+          <span class="dia__resumo">${feitos.length} exercícios · ${registro.duracao} min</span>
+        </span>
+      </div>
+
+      <ul class="dia__exercicios">
+        ${feitos.map((e) => {
+          const ficha = registro.fichas && registro.fichas[e.id];
+          const series = (ficha && ficha.series) || [];
+          return `
+            <li class="dia__ex">
+              <div class="dia__exTopo">
+                <span class="dia__exImg">${IconesExercicios.porId(e.id)}</span>
+                <span class="dia__exTexto">
+                  <span class="dia__exNome">${e.nome}</span>
+                  <span class="dia__exMeta">${e.grupo} · ${e.equipamento}</span>
+                </span>
+              </div>
+              ${series.length ? `<ul class="dia__series">${series.map((s, i) => serieFeita(i, s)).join('')}</ul>` : ''}
+            </li>`;
+        }).join('')}
+      </ul>`;
+  }
+
+  function folhaDoDia(dataIso, fecharAtributo) {
+    const doDia = Dados.registrosDe(dataIso);
+    if (!doDia.length) return '';
+
+    const primeiro = Dados.tipoPorId(doDia[0].tipoId);
     const data = new Date(dataIso + 'T00:00:00');
     const fechar = fecharAtributo || 'data-fechar-dia';
+    // Dois treinos no mesmo dia aparecem um embaixo do outro, na ordem
+    // em que foram feitos.
+    const quantos = doDia.length > 1 ? `<p class="dia__quantos">${doDia.length} treinos neste dia</p>` : '';
 
     return `
       <div class="folha">
         <div class="folha__fundo" ${fechar}></div>
-        <div class="folha__painel" style="--cor:${tipo ? tipo.cor : '#FFD23F'}">
+        <div class="folha__painel" style="--cor:${primeiro ? primeiro.cor : '#FFD23F'}">
           <div class="folha__topo">
             <span class="folha__titulo">${Utils.dataPorExtenso(data)}</span>
             <button class="folha__fechar" ${fechar} aria-label="Fechar">✕</button>
           </div>
-
-          <div class="dia__treino" style="background:${tipo ? tipo.cor : '#FFD23F'}; color:${tipo ? tipo.tinta : '#12101A'}">
-            <span class="dia__icone">${Icones.musculo(registro.tipoId)}</span>
-            <span class="dia__dados">
-              <span class="dia__nome">${tipo ? tipo.nome : 'Treino'}</span>
-              <span class="dia__resumo">${feitos.length} exercícios · ${registro.duracao} min</span>
-            </span>
-          </div>
-
-          <ul class="dia__exercicios">
-            ${feitos.map((e) => {
-              const ficha = registro.fichas && registro.fichas[e.id];
-              const series = (ficha && ficha.series) || [];
-              return `
-                <li class="dia__ex">
-                  <div class="dia__exTopo">
-                    <span class="dia__exImg">${IconesExercicios.porId(e.id)}</span>
-                    <span class="dia__exTexto">
-                      <span class="dia__exNome">${e.nome}</span>
-                      <span class="dia__exMeta">${e.grupo} · ${e.equipamento}</span>
-                    </span>
-                  </div>
-                  ${series.length ? `<ul class="dia__series">${series.map((s, i) => serieFeita(i, s)).join('')}</ul>` : ''}
-                </li>`;
-            }).join('')}
-          </ul>
+          ${quantos}
+          ${doDia.map(blocoDoTreino).join('')}
         </div>
       </div>`;
   }

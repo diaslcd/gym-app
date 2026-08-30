@@ -15,13 +15,13 @@ const Router = (() => {
     telas[nome] = view;
   }
 
-  function pintar(nome, params) {
+  function pintar(nome, params, sentido) {
     // A tela que sai deixa de receber o tique do cronômetro.
     if (typeof Sessao !== 'undefined') Sessao.observar(null);
 
     atual = nome;
     const tela = document.createElement('div');
-    tela.className = 'tela';
+    tela.className = 'tela tela--' + (sentido || 'avanca');
     raiz.replaceChildren(tela);
     telas[nome].montar(tela, params);
     window.scrollTo(0, 0);
@@ -33,14 +33,14 @@ const Router = (() => {
     } catch (erro) {
       // Sem history disponível: navega mesmo assim, só sem o voltar.
     }
-    pintar(nome, params);
+    pintar(nome, params, 'avanca');
   }
 
   /** Voltar do sistema: repinta o que estiver na entrada anterior. */
   function aoVoltar(evento) {
     const estado = evento.state;
     if (!estado || !telas[estado.tela]) return;
-    pintar(estado.tela, estado.params || undefined);
+    pintar(estado.tela, estado.params || undefined, 'volta');
   }
 
   function iniciar(elemento, telaInicial) {

@@ -74,7 +74,8 @@ const Login = (() => {
       return;
     }
     Perfil.criar(rascunho.nome, comPin ? rascunho.pin : '');
-    Router.ir('dashboard');
+    // Perfil novo: passa pela tela que explica o que o app usa.
+    Router.ir('bemvindo');
   }
 
   function entrar() {

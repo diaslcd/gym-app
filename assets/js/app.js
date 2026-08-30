@@ -1,6 +1,7 @@
 /* Ponto de entrada do aplicativo. */
 document.addEventListener('DOMContentLoaded', () => {
   Router.registrar('login', Login);
+  Router.registrar('bemvindo', BemVindo);
   Router.registrar('dashboard', Dashboard);
   Router.registrar('selecao', Selecao);
   Router.registrar('exercicios', Exercicios);

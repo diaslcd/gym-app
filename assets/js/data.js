@@ -52,14 +52,14 @@ const Dados = (() => {
       nome: 'Ombro e Trapézio',
       cor: '#E63946',
       tinta: '#FFFFFF',
-      descricao: 'O dia extra do ABCD: as três porções do deltoide e o trapézio.'
+      descricao: 'As três porções do deltoide, com o trapézio no fim.'
     },
     {
       id: 'bracos',
       nome: 'Braços',
       cor: '#8AC926',
       tinta: '#12101A',
-      descricao: 'Bíceps e tríceps juntos, o dia clássico do ABCDE.'
+      descricao: 'Bíceps e tríceps juntos, num dia só de braço.'
     },
     {
       id: 'gluteos-posterior',
@@ -83,8 +83,8 @@ const Dados = (() => {
      mais do que ajudaria. */
   const sistemas = [
     {
-      nome: 'ABC e derivados',
-      resumo: 'Um ou dois grupos por dia, de 3 a 5 treinos na semana. Os dois últimos entram no ABCD e no ABCDE.',
+      nome: 'Um grupo por dia',
+      resumo: 'Um ou dois grupos musculares por sessão, de 3 a 5 treinos na semana.',
       treinos: ['peito-triceps', 'costas-biceps', 'perna', 'ombro-trapezio', 'bracos']
     },
     {
@@ -250,18 +250,20 @@ const Dados = (() => {
     return { nome: alvo.nome, faltam: alvo.dias - dias };
   }
 
-  /**
-   * Registro dos treinos por data: qual treino foi feito, quais
-   * exercícios, as séries executadas e quanto durou. Nasce vazio — o que
-   * entra aqui é o que o usuário registrou, recuperado do localStorage
-   * logo abaixo. Map: `has` e `size` funcionam como no Set anterior,
-   * então os cálculos de sequência não mudam.
-   */
+  /* Cada data guarda uma LISTA de treinos: dá para treinar duas vezes no
+     mesmo dia, e o calendário mostra uma barrinha para cada um. Para a
+     conta de sequência o que importa continua sendo o dia ter ou não
+     treino, então `has` e `keys` seguem valendo. */
   const treinos = new Map();
 
-  /** O que foi feito naquele dia, ou null. */
+  /** Treinos daquele dia, na ordem em que foram feitos. */
+  function registrosDe(dataIso) {
+    return treinos.get(dataIso) || [];
+  }
+
+  /** O primeiro treino do dia, para quem só precisa de um. */
   function registroDe(dataIso) {
-    return treinos.get(dataIso) || null;
+    return registrosDe(dataIso)[0] || null;
   }
 
   // Datas ordenadas em cache: o histórico é lido várias vezes por render.
@@ -276,10 +278,23 @@ const Dados = (() => {
     return datasOrdenadas;
   }
 
+  /** Quantos treinos ao todo — não quantos dias com treino. */
+  function totalDeTreinos() {
+    let total = 0;
+    treinos.forEach((lista) => { total += lista.length; });
+    return total;
+  }
+
   /** Treinos realizados, do mais recente para o mais antigo. */
   function historico() {
-    return datasRecentesPrimeiro()
-      .map((data) => Object.assign({ data: data }, treinos.get(data)));
+    const lista = [];
+    datasRecentesPrimeiro().forEach((data) => {
+      // Dentro do dia, o mais recente primeiro também.
+      registrosDe(data).slice().reverse().forEach((registro) => {
+        lista.push(Object.assign({ data: data }, registro));
+      });
+    });
+    return lista;
   }
 
   /** Soma de repetições × carga de um treino. */
@@ -301,11 +316,12 @@ const Dados = (() => {
     const pontos = [];
     const datas = datasRecentesPrimeiro();
     for (let i = datas.length - 1; i >= 0; i--) {
-      const registro = treinos.get(datas[i]);
-      const ficha = registro.fichas && registro.fichas[exercicioId];
-      if (!ficha) continue;
-      const carga = (ficha.series || []).reduce((maior, s) => Math.max(maior, s.carga || 0), 0);
-      if (carga > 0) pontos.push({ data: datas[i], carga: carga });
+      registrosDe(datas[i]).forEach((registro) => {
+        const ficha = registro.fichas && registro.fichas[exercicioId];
+        if (!ficha) return;
+        const carga = (ficha.series || []).reduce((maior, s) => Math.max(maior, s.carga || 0), 0);
+        if (carga > 0) pontos.push({ data: datas[i], carga: carga });
+      });
     }
     return pontos;
   }
@@ -313,9 +329,11 @@ const Dados = (() => {
   /** Exercícios com histórico suficiente para comparar carga. */
   function exerciciosComEvolucao(limite) {
     const contagem = {};
-    treinos.forEach((registro) => {
-      Object.keys(registro.fichas || {}).forEach((id) => {
-        contagem[id] = (contagem[id] || 0) + 1;
+    treinos.forEach((lista) => {
+      lista.forEach((registro) => {
+        Object.keys(registro.fichas || {}).forEach((id) => {
+          contagem[id] = (contagem[id] || 0) + 1;
+        });
       });
     });
     return Object.keys(contagem)
@@ -505,11 +523,34 @@ const Dados = (() => {
     }
   }
 
+  /* Antes cada data guardava um treino só. Quem já tem registro gravado
+     no formato antigo entra aqui com ele solto, e vira lista de um. */
   const salvos = historicoSalvo();
-  Object.keys(salvos).forEach((data) => treinos.set(data, salvos[data]));
+  Object.keys(salvos).forEach((data) => {
+    const guardado = salvos[data];
+    treinos.set(data, Array.isArray(guardado) ? guardado : [guardado]);
+  });
   invalidarCache();
 
-  /** Grava o treino de hoje no calendário e no armazenamento local. */
+
+  /* Dia em que o app foi aberto pela primeira vez neste aparelho. Antes
+     dessa data não havia o que registrar, então o calendário não pode
+     acusar falta ali — sem isso o mês inteiro anterior à instalação
+     aparece como sequência quebrada. */
+  const CHAVE_INICIO = 'gym:inicio';
+
+  function inicioDeUso() {
+    const hoje = Utils.iso(Utils.hoje());
+    try {
+      const salvo = localStorage.getItem(CHAVE_INICIO);
+      if (salvo) return salvo;
+      localStorage.setItem(CHAVE_INICIO, hoje);
+    } catch (erro) {
+      // Sem storage: trata como se tivesse começado hoje.
+    }
+    return hoje;
+  }
+  /** Acrescenta o treino de hoje ao calendário e ao armazenamento local. */
   function registrarTreino(tipoId, exercicioIds, minutos, fichas) {
     const hoje = Utils.iso(Utils.hoje());
     const registro = {
@@ -518,11 +559,14 @@ const Dados = (() => {
       fichas: fichas || {},
       duracao: Math.max(1, minutos)
     };
-    treinos.set(hoje, registro);
+
+    // Empilha: o segundo treino do dia não apaga o primeiro.
+    const doDia = registrosDe(hoje).concat([registro]);
+    treinos.set(hoje, doDia);
     invalidarCache();
 
     const mapa = historicoSalvo();
-    mapa[hoje] = registro;
+    mapa[hoje] = doDia;
     guardarHistorico(mapa);
 
     return hoje;
@@ -570,7 +614,8 @@ const Dados = (() => {
 
   return {
     app, treinos, tipos, porSistema, tipoPorId, exerciciosDe, exercicioGlobal,
-    alternativasDe, registroDe, registrarTreino, candidatosPara,
+    alternativasDe, registroDe, registrosDe, registrarTreino, candidatosPara,
+    totalDeTreinos, inicioDeUso,
     historico, volumeDoTreino, evolucaoDe, exerciciosComEvolucao,
     titulos, tituloDaSequencia, proximoTitulo
   };
