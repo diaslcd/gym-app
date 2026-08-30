@@ -18,7 +18,7 @@ const Ilustracoes = (() => {
 
 /* ── Arte de cada treino ──────────────────────────────────
    Renders do fliperama, um por treino. */
-Ilustracoes.definir('peito-triceps', 'assets/treinos/peito-triceps.jpg');
-Ilustracoes.definir('costas-biceps', 'assets/treinos/costas-biceps.jpg');
-Ilustracoes.definir('perna', 'assets/treinos/perna.jpg');
-Ilustracoes.definir('superiores', 'assets/treinos/superiores.jpg');
+Ilustracoes.definir('peito-triceps', 'assets/treinos/peito-triceps.webp');
+Ilustracoes.definir('costas-biceps', 'assets/treinos/costas-biceps.webp');
+Ilustracoes.definir('perna', 'assets/treinos/perna.webp');
+Ilustracoes.definir('superiores', 'assets/treinos/superiores.webp');

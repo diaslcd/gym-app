@@ -1,16 +1,10 @@
-Arte dos tipos de treino.
+Arte dos tipos de treino, no ícone da tela de seleção.
 
-Coloque aqui um arquivo por treino, com estes nomes:
+Os arquivos .webp aqui são recortes gerados a partir dos renders em
+arte-fonte/. Para regerá-los, rode o workflow "Imagens" na aba Actions
+e baixe o artefato treinos-webp para esta pasta. O enquadramento do
+recorte fica em .github/workflows/imagens.yml.
 
-  peito-triceps.png
-  costas-biceps.png
-  perna.png
-  superiores.png
-
-Depois descomente a linha correspondente em assets/js/ilustracoes.js.
-Sem o arquivo, a tela de seleção continua mostrando o pictograma do
-músculo — nada quebra.
-
-Formato: quadrado, com a figura centralizada. O quadro na tela tem 56px,
-então 224px (4x) já basta; pixel art fica melhor num múltiplo exato do
-tamanho final, e o CSS usa image-rendering: pixelated para não borrar.
+Para trocar a arte de um treino, ponha o render novo em arte-fonte/ com
+o mesmo nome e rode o workflow. Sem o .webp correspondente, a tela de
+seleção volta a mostrar o pictograma do músculo — nada quebra.

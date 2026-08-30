@@ -571,15 +571,12 @@ button {
   display: block;
 }
 
-/* ── Cartaz de fliperama ──────────────────────────────────
-   O card vira a arte inteira. O recorte 4/5 tira a mesa e o teto do
-   render e deixa o gabinete preenchendo o quadro. */
-.arcade .opcao--arte {
-  display: block;
-  padding: 0;
+/* ── Arte no lugar do pictograma ──────────────────────────
+   O recorte já vem quadrado e apertado na figura, então preenche o
+   quadro inteiro em vez de respirar como o desenho vetorial. */
+.arcade .opcao__icone:has(.opcao__arte) {
   overflow: hidden;
-  aspect-ratio: 4 / 5;
-  background: #1B1230;
+  background: none;
 }
 
 .arcade .opcao__arte {
@@ -587,7 +584,6 @@ button {
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: center 50%;
 }
 
 .arcade .opcao__texto { gap: 4px; }
