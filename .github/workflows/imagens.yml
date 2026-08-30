@@ -26,7 +26,7 @@ jobs:
           node -e "
             const sharp = require('sharp');
             // Recorte quadrado sobre a figura, em coordenadas do render 688x1529.
-            const corte = { left: 155, top: 515, width: 380, height: 380 };
+            const corte = { left: 165, top: 512, width: 358, height: 358 };
             const arquivos = ['peito-triceps', 'costas-biceps', 'perna', 'superiores'];
             Promise.all(arquivos.map((nome) =>
               sharp('arte-fonte/' + nome + '.jpg')
