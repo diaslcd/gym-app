@@ -54,27 +54,37 @@ button {
   padding: calc(22px + env(safe-area-inset-top)) var(--pad) calc(28px + env(safe-area-inset-bottom));
 }
 
+/* As duas telas ocupam a mesma célula da grade enquanto a troca
+   acontece, então elas se sobrepõem sem sair do fluxo nem perder o
+   recuo do app. */
+.app { display: grid; grid-template-columns: 1fr; }
+
 .tela {
+  grid-area: 1 / 1;
   display: flex;
   flex-direction: column;
   gap: var(--gap);
 }
 
-/* Avançar entra pela direita, voltar entra pela esquerda: o movimento
-   diz para que lado a navegação foi. */
-.tela--avanca { animation: tela-avanca 0.22s cubic-bezier(0.22, 1, 0.36, 1); }
-.tela--volta  { animation: tela-volta  0.22s cubic-bezier(0.22, 1, 0.36, 1); }
+/* Avançar: a nova chega da direita, a antiga sai pela esquerda.
+   Voltar faz o contrário — o movimento diz para que lado se foi. */
+.tela--entraAvanca { animation: tela-entraDireita 0.26s cubic-bezier(0.22, 1, 0.36, 1); }
+.tela--entraVolta  { animation: tela-entraEsquerda 0.26s cubic-bezier(0.22, 1, 0.36, 1); }
 
-@keyframes tela-avanca {
-  from { opacity: 0; transform: translateX(26px); }
-}
+.tela--saiAvanca,
+.tela--saiVolta { pointer-events: none; }
 
-@keyframes tela-volta {
-  from { opacity: 0; transform: translateX(-26px); }
-}
+.tela--saiAvanca { animation: tela-saiEsquerda 0.26s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.tela--saiVolta  { animation: tela-saiDireita  0.26s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+@keyframes tela-entraDireita  { from { opacity: 0; transform: translateX(42px); } }
+@keyframes tela-entraEsquerda { from { opacity: 0; transform: translateX(-42px); } }
+@keyframes tela-saiEsquerda   { to   { opacity: 0; transform: translateX(-42px); } }
+@keyframes tela-saiDireita    { to   { opacity: 0; transform: translateX(42px); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .tela--avanca, .tela--volta { animation: none; }
+  .tela--entraAvanca, .tela--entraVolta,
+  .tela--saiAvanca, .tela--saiVolta { animation: none; }
 }
 
 .card {

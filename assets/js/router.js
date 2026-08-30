@@ -15,14 +15,30 @@ const Router = (() => {
     telas[nome] = view;
   }
 
+  /* As duas telas convivem enquanto a troca acontece: a que sai desliza
+     para um lado, a que entra chega do outro. Animar só a que entra não
+     lê como transição — o olho vê a antiga sumir de uma vez. */
+  const DURACAO = 260;
+
   function pintar(nome, params, sentido) {
     // A tela que sai deixa de receber o tique do cronômetro.
     if (typeof Sessao !== 'undefined') Sessao.observar(null);
 
     atual = nome;
+    const lado = sentido === 'volta' ? 'Volta' : 'Avanca';
+    const anterior = raiz.firstElementChild;
+
     const tela = document.createElement('div');
-    tela.className = 'tela tela--' + (sentido || 'avanca');
-    raiz.replaceChildren(tela);
+    tela.className = 'tela tela--entra' + lado;
+
+    if (anterior) {
+      // Mantém as classes que a view pôs — tirar .arcade agora apagaria
+      // o visual dela no meio do movimento.
+      anterior.classList.add('tela--sai' + lado);
+      setTimeout(() => anterior.remove(), DURACAO);
+    }
+
+    raiz.appendChild(tela);
     telas[nome].montar(tela, params);
     window.scrollTo(0, 0);
   }
