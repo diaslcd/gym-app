@@ -54,9 +54,8 @@ button {
   padding: calc(22px + env(safe-area-inset-top)) var(--pad) calc(28px + env(safe-area-inset-bottom));
 }
 
-/* As duas telas ocupam a mesma célula da grade enquanto a troca
-   acontece, então elas se sobrepõem sem sair do fluxo nem perder o
-   recuo do app. */
+/* As duas telas ocupam a mesma célula da grade durante a troca, então
+   se sobrepõem sem sair do fluxo e sem perder o recuo do app. */
 .app { display: grid; grid-template-columns: 1fr; }
 
 .tela {
@@ -66,26 +65,45 @@ button {
   gap: var(--gap);
 }
 
-/* Avançar: a nova chega da direita, a antiga sai pela esquerda.
-   Voltar faz o contrário — o movimento diz para que lado se foi. */
-.tela--entraAvanca { animation: tela-entraDireita 0.26s cubic-bezier(0.22, 1, 0.36, 1); }
-.tela--entraVolta  { animation: tela-entraEsquerda 0.26s cubic-bezier(0.22, 1, 0.36, 1); }
+/* A tela que entra é opaca e passa por cima da que sai. Animar a
+   opacidade das duas deixava as duas legíveis ao mesmo tempo, e o
+   resultado parecia defeito de renderização, não transição. */
+.tela--entraAvanca,
+.tela--entraVolta {
+  position: relative;
+  z-index: 1;
+  background: var(--papel, #E9E4FF);
+}
 
+.tela--entraAvanca { animation: tela-entraDireita 0.24s cubic-bezier(0.22, 1, 0.36, 1); }
+.tela--entraVolta  { animation: tela-entraEsquerda 0.24s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* A que sai anda um pouco para o mesmo lado, por baixo: é o que dá
+   profundidade ao movimento sem aparecer através da outra. */
 .tela--saiAvanca,
 .tela--saiVolta { pointer-events: none; }
 
-.tela--saiAvanca { animation: tela-saiEsquerda 0.26s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-.tela--saiVolta  { animation: tela-saiDireita  0.26s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.tela--saiAvanca { animation: tela-saiEsquerda 0.24s ease-out forwards; }
+.tela--saiVolta  { animation: tela-saiDireita  0.24s ease-out forwards; }
 
-@keyframes tela-entraDireita  { from { opacity: 0; transform: translateX(42px); } }
-@keyframes tela-entraEsquerda { from { opacity: 0; transform: translateX(-42px); } }
-@keyframes tela-saiEsquerda   { to   { opacity: 0; transform: translateX(-42px); } }
-@keyframes tela-saiDireita    { to   { opacity: 0; transform: translateX(42px); } }
+@keyframes tela-entraDireita {
+  from { transform: translateX(38px); box-shadow: -14px 0 26px rgba(18, 16, 26, 0.22); }
+  to   { transform: translateX(0); box-shadow: -14px 0 26px rgba(18, 16, 26, 0); }
+}
+
+@keyframes tela-entraEsquerda {
+  from { transform: translateX(-38px); box-shadow: 14px 0 26px rgba(18, 16, 26, 0.22); }
+  to   { transform: translateX(0); box-shadow: 14px 0 26px rgba(18, 16, 26, 0); }
+}
+
+@keyframes tela-saiEsquerda { to { transform: translateX(-18px); } }
+@keyframes tela-saiDireita  { to { transform: translateX(18px); } }
 
 @media (prefers-reduced-motion: reduce) {
   .tela--entraAvanca, .tela--entraVolta,
   .tela--saiAvanca, .tela--saiVolta { animation: none; }
 }
+
 
 .card {
   background: var(--surface);
