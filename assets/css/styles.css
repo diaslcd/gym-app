@@ -2402,3 +2402,160 @@ button {
   white-space: nowrap;
 }
 
+
+/* ── Tela de entrada ──────────────────────────────────── */
+.arcade .entrada {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  /* Empurra o cartão para o meio da tela quando sobra espaço. */
+  min-height: 74vh;
+  justify-content: center;
+}
+
+.arcade .entrada__marca {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.arcade .entrada__coelho {
+  width: 96px;
+  height: 96px;
+  border: 3px solid var(--traco);
+  border-radius: 24px;
+  box-shadow: 6px 6px 0 var(--traco);
+  transform: rotate(-3deg);
+}
+
+.arcade .entrada__cartao {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.arcade .entrada__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.arcade .entrada__rotulo {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6E6880;
+}
+
+.arcade .entrada__valor {
+  width: 100%;
+  padding: 13px 14px;
+  background: var(--papel);
+  border: 2.5px solid var(--traco);
+  border-radius: 13px;
+  font-family: "Archivo", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--traco);
+}
+
+.arcade .entrada__valor::placeholder {
+  font-weight: 600;
+  color: var(--apagado);
+}
+
+.arcade .entrada__valor:focus { outline: 3px solid var(--rosa); outline-offset: 2px; }
+
+.arcade .entrada__erro {
+  margin: 0;
+  padding: 9px 11px;
+  background: var(--gelo);
+  border: 2.5px solid var(--traco);
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0E4256;
+}
+
+.arcade .entrada__botao {
+  width: 100%;
+  padding: 15px;
+  background: var(--traco);
+  color: var(--sol);
+  border: 3px solid var(--traco);
+  border-radius: 15px;
+  box-shadow: 5px 5px 0 var(--rosa);
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .entrada__botao:active {
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0 var(--rosa);
+}
+
+.arcade .entrada__trocar {
+  width: 100%;
+  padding: 10px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6E6880;
+  text-decoration: underline;
+}
+
+.arcade .entrada__nota {
+  margin: 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #6E6880;
+}
+
+/* ── Perfil no topo do painel ─────────────────────────── */
+.arcade .header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.arcade .header__perfil {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  margin-top: 4px;
+  padding: 7px 11px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 var(--traco);
+  transform: rotate(2deg);
+}
+
+.arcade .header__nome {
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--traco);
+}
+
+.arcade .header__sair {
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6E6880;
+}

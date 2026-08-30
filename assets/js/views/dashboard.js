@@ -11,9 +11,14 @@ const Dashboard = (() => {
   let diasEmSequencia = null; // datas que formam a sequência atual
 
   function cabecalho() {
+    const nome = Perfil.nome();
     return `
       <header class="header">
         <h1 class="brand">${Dados.app.nome}</h1>
+        ${nome ? `<button class="header__perfil" data-sair type="button">
+                    <span class="header__nome">${nome}</span>
+                    <span class="header__sair">sair</span>
+                  </button>` : ''}
       </header>`;
   }
 
@@ -244,6 +249,12 @@ const Dashboard = (() => {
 
     if (evento.target.closest('[data-historico]')) {
       Router.ir('historico');
+      return;
+    }
+
+    if (evento.target.closest('[data-sair]')) {
+      Perfil.sair();
+      Router.ir('login');
       return;
     }
 
