@@ -19,6 +19,7 @@ const ARQUIVOS = [
   './assets/js/icones-exercicios.js',
   './assets/js/guia.js',
   './assets/js/demonstracao.js',
+  './assets/js/ilustracoes.js',
   './assets/js/componentes.js',
   './assets/js/router.js',
   './assets/js/views/dashboard.js',

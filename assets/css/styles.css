@@ -571,6 +571,17 @@ button {
   display: block;
 }
 
+/* A arte preenche o quadro inteiro, sem a folga que o pictograma pede. */
+.arcade .opcao__icone:has(.opcao__arte) { overflow: hidden; }
+
+.arcade .opcao__arte {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
 .arcade .opcao__texto { gap: 4px; }
 
 .arcade .opcao__nome {
