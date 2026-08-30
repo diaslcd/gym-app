@@ -98,6 +98,51 @@ const Dados = (() => {
     }
   ];
 
+  /* Como as fichas de academia costumam agrupar os treinos. Cada treino
+     aparece uma vez só, no sistema onde ele nasceu — Perna é o C do ABC
+     e também a perna do push/pull/legs, mas repetir o card confundiria
+     mais do que ajudaria. */
+  const sistemas = [
+    {
+      nome: 'ABC e derivados',
+      resumo: 'Um ou dois grupos por dia, de 3 a 5 treinos na semana. Os dois últimos entram no ABCD e no ABCDE.',
+      treinos: ['peito-triceps', 'costas-biceps', 'perna', 'ombro-trapezio', 'bracos']
+    },
+    {
+      nome: 'Push · Pull · Legs',
+      resumo: 'Empurrar, puxar e perna. O Perna do grupo acima fecha o ciclo.',
+      treinos: ['empurrar', 'puxar']
+    },
+    {
+      nome: 'Poucos dias na semana',
+      resumo: 'O corpo todo em um ou dois treinos, para quem vai duas ou três vezes.',
+      treinos: ['superiores', 'corpo-inteiro']
+    },
+    {
+      nome: 'Foco',
+      resumo: 'Quando um grupo pede atenção extra.',
+      treinos: ['gluteos-posterior']
+    }
+  ];
+
+  /** Sistemas com os tipos já resolvidos; o que sobrar cai em "Outros". */
+  function porSistema() {
+    const usados = {};
+    const grupos = sistemas.map((s) => {
+      const lista = s.treinos.map((id) => {
+        usados[id] = true;
+        return tipoPorId(id);
+      }).filter(Boolean);
+      return { nome: s.nome, resumo: s.resumo, tipos: lista };
+    }).filter((g) => g.tipos.length);
+
+    const sobras = tipos.filter((t) => !usados[t.id]);
+    if (sobras.length) {
+      grupos.push({ nome: 'Outros', resumo: '', tipos: sobras });
+    }
+    return grupos;
+  }
+
   // Exercícios de cada treino. 'icone' aponta para Icones.equipamento().
   const exercicios = {
     'peito-triceps': [
@@ -587,7 +632,7 @@ const Dados = (() => {
   }
 
   return {
-    app, treinos, tipos, tipoPorId, exerciciosDe, exercicioGlobal,
+    app, treinos, tipos, porSistema, tipoPorId, exerciciosDe, exercicioGlobal,
     alternativasDe, registroDe, registrarTreino, candidatosPara,
     historico, volumeDoTreino, evolucaoDe, exerciciosComEvolucao,
     titulos, tituloDaSequencia, proximoTitulo

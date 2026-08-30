@@ -1,4 +1,4 @@
-/* Seleção do tipo de treino. */
+/* Seleção do tipo de treino, agrupada pelo sistema de divisão. */
 const Selecao = (() => {
   /** Arte do treino quando houver; o pictograma do músculo enquanto não. */
   function arte(tipo) {
@@ -22,6 +22,15 @@ const Selecao = (() => {
       </button>`;
   }
 
+  function sistema(grupo) {
+    return `
+      <section class="sistema">
+        <h2 class="sistema__nome">${grupo.nome}</h2>
+        ${grupo.resumo ? `<p class="sistema__resumo">${grupo.resumo}</p>` : ''}
+        <div class="opcoes">${grupo.tipos.map(opcao).join('')}</div>
+      </section>`;
+  }
+
   function aoClicar(evento) {
     if (evento.target.closest('[data-voltar]')) {
       Router.ir('dashboard');
@@ -35,9 +44,7 @@ const Selecao = (() => {
     raiz.classList.add('arcade');
     raiz.innerHTML = `
       ${Componentes.topo('Escolha o treino', 'Selecione o grupo muscular de hoje')}
-      <section class="opcoes">
-        ${Dados.tipos.map(opcao).join('')}
-      </section>`;
+      ${Dados.porSistema().map(sistema).join('')}`;
     raiz.addEventListener('click', aoClicar);
   }
 

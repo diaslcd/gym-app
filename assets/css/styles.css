@@ -537,6 +537,37 @@ button {
 /* ── Cartazes de treino ───────────────────────────────── */
 .arcade .opcoes { gap: 16px; }
 
+/* ── Sistemas de divisão na seleção ───────────────────── */
+.arcade .sistema {
+  display: flex;
+  flex-direction: column;
+}
+
+.arcade .sistema__nome {
+  margin: 0;
+  align-self: flex-start;
+  padding: 5px 12px 6px;
+  background: var(--traco);
+  color: var(--sol);
+  border-radius: 999px;
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.arcade .sistema__resumo {
+  margin: 8px 0 14px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #4B4460;
+}
+
+/* Sem resumo, a fila de cards ainda precisa respirar sob o rótulo. */
+.arcade .sistema__nome + .opcoes { margin-top: 14px; }
+
 .arcade .opcao {
   gap: 14px;
   padding: 16px;
