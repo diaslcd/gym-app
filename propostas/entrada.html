@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BunnyGym — 3 telas de entrada</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@600;700;800&display=swap" />
+<style>
+  :root {
+    --papel: #E9E4FF; --traco: #12101A; --rosa: #FF3D81;
+    --azul3: #2B4BFF; --sol: #FFD23F; --menta: #00E5A0;
+    --apagado: #8B85A0; --gelo: #A5E4FF;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 28px 18px 60px;
+    background: #DDD6F5; color: var(--traco);
+    font-family: "Archivo", system-ui, sans-serif;
+  }
+  button, input { font: inherit; color: inherit; }
+  button { cursor: pointer; border: 0; background: none; }
+
+  .cabeca { max-width: 1180px; margin: 0 auto 26px; }
+  .cabeca h1 {
+    margin: 0 0 6px; font-family: "Archivo Black", Impact, sans-serif;
+    font-size: 26px; text-transform: uppercase; letter-spacing: -0.01em;
+  }
+  .cabeca p { margin: 0; font-size: 14px; font-weight: 600; color: #4B4460; max-width: 62ch; line-height: 1.5; }
+
+  .grade {
+    max-width: 1180px; margin: 0 auto;
+    display: grid; gap: 34px;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    align-items: start;
+  }
+
+  .coluna h2 {
+    margin: 0 0 4px; font-family: "Archivo Black", Impact, sans-serif;
+    font-size: 17px; text-transform: uppercase;
+  }
+  .coluna .resumo {
+    margin: 0 0 14px; font-size: 13px; font-weight: 600;
+    color: #4B4460; line-height: 1.5;
+  }
+
+  /* Moldura de celular */
+  .fone {
+    width: 100%; max-width: 360px; aspect-ratio: 360 / 740;
+    border: 10px solid var(--traco); border-radius: 34px;
+    box-shadow: 8px 8px 0 rgba(18,16,26,.32);
+    overflow: hidden; position: relative;
+  }
+  .tela { position: absolute; inset: 0; padding: 26px 20px; display: flex; flex-direction: column; }
+
+  /* A · Fliperama */
+  .a { background: #1B1230; color: #FFF; justify-content: center; gap: 22px; text-align: center; }
+  .a::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(120% 60% at 50% 0%, rgba(255,46,126,.45), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.045) 0 2px, transparent 2px 4px);
+    pointer-events: none;
+  }
+  .a > * { position: relative; }
+  .a__coelho { width: 92px; height: 92px; margin: 0 auto; border-radius: 22px; display: block;
+               box-shadow: 0 0 0 3px #FF2E7E, 0 0 34px rgba(255,46,126,.75); }
+  .a__marca { font-family: "Archivo Black", Impact, sans-serif; font-size: 34px; margin: 0;
+              letter-spacing: .04em; color: #FFF; text-shadow: 0 0 16px rgba(77,225,255,.9); }
+  .a__chamada { margin: 0; font-size: 11px; font-weight: 800; letter-spacing: .28em;
+                text-transform: uppercase; color: #4DE1FF; animation: pisca 1.4s steps(2) infinite; }
+  @keyframes pisca { 50% { opacity: .25; } }
+  .a__campo { width: 100%; padding: 14px; text-align: center; background: rgba(0,0,0,.45);
+              border: 2px solid #4DE1FF; border-radius: 8px; color: #FFF;
+              font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+  .a__campo::placeholder { color: #6C6390; letter-spacing: .1em; }
+  .a__start { width: 100%; padding: 16px; background: #FF2E7E; color: #FFF;
+              border-radius: 8px; font-family: "Archivo Black", Impact, sans-serif;
+              font-size: 17px; letter-spacing: .16em; box-shadow: 0 0 26px rgba(255,46,126,.6); }
+  .a__nota { margin: 0; font-size: 10px; font-weight: 700; letter-spacing: .12em;
+             text-transform: uppercase; color: #6C6390; }
+
+  /* B · Cartão de sócio */
+  .b { background: var(--papel); justify-content: center; gap: 18px; }
+  .b__cartao {
+    background: #FFF; border: 3px solid var(--traco); border-radius: 18px;
+    box-shadow: 7px 7px 0 var(--traco); transform: rotate(-1.5deg); overflow: hidden;
+  }
+  .b__topo { display: flex; align-items: center; gap: 12px; padding: 14px;
+             background: var(--sol); border-bottom: 3px dashed var(--traco); }
+  .b__foto { width: 58px; height: 58px; border: 2.5px solid var(--traco); border-radius: 12px; display: block; }
+  .b__quem { display: flex; flex-direction: column; gap: 2px; }
+  .b__clube { font-size: 9px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #6E6880; }
+  .b__marca { font-family: "Archivo Black", Impact, sans-serif; font-size: 22px; }
+  .b__corpo { padding: 16px 14px; display: flex; flex-direction: column; gap: 13px; }
+  .b__linha { display: flex; flex-direction: column; gap: 5px; }
+  .b__rot { font-size: 9px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: #6E6880; }
+  .b__campo { width: 100%; padding: 9px 2px; background: none; border: 0;
+              border-bottom: 2.5px solid var(--traco); border-radius: 0; font-size: 15px; font-weight: 700; }
+  .b__campo::placeholder { color: #C4BEDA; }
+  .b__pins { display: flex; gap: 8px; }
+  .b__pin { flex: 1; aspect-ratio: 1; display: grid; place-items: center;
+            background: var(--papel); border: 2.5px solid var(--traco); border-radius: 10px;
+            font-size: 19px; font-weight: 800; }
+  .b__rodape { padding: 12px 14px 14px; border-top: 3px dashed var(--traco); }
+  .b__entrar { width: 100%; padding: 13px; background: var(--menta); border: 3px solid var(--traco);
+               border-radius: 13px; box-shadow: 4px 4px 0 var(--traco);
+               font-family: "Archivo Black", Impact, sans-serif; font-size: 14px; text-transform: uppercase; }
+  .b__nota { margin: 0; text-align: center; font-size: 10.5px; font-weight: 600; color: #6E6880; }
+
+  /* C · Direto ao ponto */
+  .c { background: var(--papel); justify-content: flex-end; gap: 20px; }
+  .c__marca { font-family: "Archivo Black", Impact, sans-serif; font-size: 46px; line-height: .95;
+              margin: 0 0 auto; padding-top: 30px; letter-spacing: -.02em; }
+  .c__marca span { display: block; color: var(--rosa); }
+  .c__pergunta { margin: 0; font-size: 15px; font-weight: 700; color: #4B4460; }
+  .c__campo { width: 100%; padding: 0 0 10px; background: none; border: 0;
+              border-bottom: 4px solid var(--traco); border-radius: 0;
+              font-family: "Archivo Black", Impact, sans-serif; font-size: 30px; }
+  .c__campo::placeholder { color: #C4BEDA; }
+  .c__trava { display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 700; color: #4B4460; }
+  .c__chave { width: 44px; height: 26px; flex: 0 0 auto; padding: 3px;
+              background: #FFF; border: 2.5px solid var(--traco); border-radius: 999px; }
+  .c__bola { width: 15px; height: 15px; background: var(--apagado); border-radius: 999px; display: block; }
+  .c__ir { width: 100%; padding: 19px; background: var(--rosa); color: #FFF;
+           border: 3px solid var(--traco); border-radius: 999px; box-shadow: 5px 5px 0 var(--traco);
+           font-family: "Archivo Black", Impact, sans-serif; font-size: 18px; text-transform: uppercase; }
+  .c__nota { margin: 0; text-align: center; font-size: 10.5px; font-weight: 600; color: #6E6880; }
+</style>
+</head>
+<body>
+
+<div class="cabeca">
+  <h1>Três telas de entrada</h1>
+  <p>Mesma função nas três: nome, PIN opcional e entrar. O que muda é o que a tela
+     diz sobre o app antes de você tocar em qualquer coisa. Abra no celular para
+     ver no tamanho real.</p>
+</div>
+
+<div class="grade">
+
+  <div class="coluna">
+    <h2>A · Insira uma ficha</h2>
+    <p class="resumo">O app se apresenta como fliperama. Fundo escuro com neon, o coelho
+       aceso na vitrine e o "insira seu nome" piscando. É a única que quebra o lilás claro
+       do resto do app.</p>
+    <div class="fone">
+      <div class="tela a">
+        <img class="a__coelho" src="../assets/icone.png" alt="">
+        <h3 class="a__marca">BUNNYGYM</h3>
+        <p class="a__chamada">Insira seu nome</p>
+        <input class="a__campo" placeholder="AAA" maxlength="24">
+        <input class="a__campo" placeholder="PIN · OPCIONAL" maxlength="4">
+        <button class="a__start">START</button>
+        <p class="a__nota">1 jogador · sem crédito</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="coluna">
+    <h2>B · Cartão de sócio</h2>
+    <p class="resumo">Entrar é preencher a carteirinha da academia. Cabeçalho amarelo com
+       a foto, campo de nome em linha pontilhada e o PIN em quatro casas separadas.
+       A que mais conversa com o visual atual.</p>
+    <div class="fone">
+      <div class="tela b">
+        <div class="b__cartao">
+          <div class="b__topo">
+            <img class="b__foto" src="../assets/icone.png" alt="">
+            <span class="b__quem">
+              <span class="b__clube">Carteirinha</span>
+              <span class="b__marca">BunnyGym</span>
+            </span>
+          </div>
+          <div class="b__corpo">
+            <label class="b__linha">
+              <span class="b__rot">Nome do sócio</span>
+              <input class="b__campo" placeholder="Leonardo">
+            </label>
+            <div class="b__linha">
+              <span class="b__rot">Código · opcional</span>
+              <div class="b__pins">
+                <span class="b__pin">•</span><span class="b__pin">•</span>
+                <span class="b__pin">•</span><span class="b__pin">•</span>
+              </div>
+            </div>
+          </div>
+          <div class="b__rodape">
+            <button class="b__entrar">Entrar na academia</button>
+          </div>
+        </div>
+        <p class="b__nota">Fica tudo neste aparelho.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="coluna">
+    <h2>C · Direto ao ponto</h2>
+    <p class="resumo">Sem cartão, sem moldura. Marca grande no alto, uma linha para o nome
+       e um botão que ocupa a largura toda embaixo, no alcance do polegar. O PIN só aparece
+       se você ligar a chave.</p>
+    <div class="fone">
+      <div class="tela c">
+        <h3 class="c__marca">Bunny<span>Gym</span></h3>
+        <p class="c__pergunta">Quem vai treinar hoje?</p>
+        <input class="c__campo" placeholder="Seu nome">
+        <label class="c__trava">
+          <span class="c__chave"><span class="c__bola"></span></span>
+          Proteger com um PIN
+        </label>
+        <button class="c__ir">Bora</button>
+        <p class="c__nota">Fica tudo neste aparelho.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
