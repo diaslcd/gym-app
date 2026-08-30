@@ -1,13 +1,13 @@
 name: Imagens
 
-# Corta a figura do treino de dentro do render do fliperama e reduz para o
-# tamanho do ícone. Sai como artefato para ser conferido antes de entrar no
-# repositório — os originais ficam em arte-fonte/ e não vão para o app.
+# Deriva do que está em arte-fonte/ tudo que o app serve: os recortes dos
+# treinos e as camadas do ícone. Sai como artefato para ser conferido antes
+# de entrar no repositório — os originais não vão para dentro do app.
 on:
   workflow_dispatch:
 
 jobs:
-  cortar:
+  gerar:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Cortar e reduzir
+      - name: Recortar os treinos
         run: |
           npm install --no-save sharp
           mkdir -p saida
@@ -38,9 +38,53 @@ jobs:
             ));
           "
 
-      - name: Publicar os recortes
+      # O ícone chega como um PNG chapado. O Android quer duas camadas
+      # separadas, então elas saem daqui: o fundo é o próprio degradê
+      # ampliado até os cantos arredondados caírem para fora, e a frente é
+      # a marca branca recortada por limiar de luminosidade.
+      - name: Montar as camadas do ícone
+        run: |
+          node -e "
+            const sharp = require('sharp');
+            const fonte = 'arte-fonte/icone-bunnygym.png';
+            const L = 1024;
+            const MARCA = Math.round(L * 0.62); // folga que o recorte do lançador come
+            const margem = Math.round((L - MARCA) / 2);
+
+            // Fundo: amplia e corta o miolo, para não sobrar canto transparente.
+            const fundo = sharp(fonte).resize(Math.round(L * 1.18), Math.round(L * 1.18))
+              .extract({ left: Math.round(L * 0.09), top: Math.round(L * 0.09), width: L, height: L })
+              .png();
+
+            // Frente: branco vira opaco, azul vira transparente.
+            const alfa = sharp(fonte).resize(MARCA, MARCA).greyscale().threshold(190).raw().toBuffer();
+
+            Promise.all([
+              sharp(fonte).resize(L, L).png().toFile('saida/fonte-completo.png'),
+              fundo.clone().toFile('saida/fonte-fundo.png'),
+              alfa.then((dados) =>
+                sharp({ create: { width: MARCA, height: MARCA, channels: 3, background: '#ffffff' } })
+                  .joinChannel(dados, { raw: { width: MARCA, height: MARCA, channels: 1 } })
+                  .png().toBuffer()
+              ).then((marca) =>
+                sharp({ create: { width: L, height: L, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+                  .composite([{ input: marca, top: margem, left: margem }])
+                  .png().toFile('saida/fonte-frente.png')
+              ),
+              // Web: o ícone comum e o mascarável já composto.
+              sharp(fonte).resize(512, 512).png().toFile('saida/icone.png')
+            ]).then(() => Promise.all([
+              sharp('saida/fonte-fundo.png').resize(512, 512).toBuffer(),
+              sharp('saida/fonte-frente.png').resize(512, 512).toBuffer()
+            ])).then(([fundo512, frente512]) =>
+              sharp(fundo512).composite([{ input: frente512 }])
+                .png().toFile('saida/icone-mascara.png')
+            ).then(() => console.log('camadas do ícone prontas'));
+          "
+
+      - name: Publicar o resultado
         uses: actions/upload-artifact@v4
         with:
-          name: treinos-webp
-          path: saida/*.webp
+          name: imagens
+          path: saida/*
           if-no-files-found: error
