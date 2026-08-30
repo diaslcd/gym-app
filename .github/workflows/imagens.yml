@@ -103,10 +103,12 @@ jobs:
                   sharp(cheio).resize(512, 512).toFile('saida/icone.png')
                 ])),
 
-              // Mascarável: o mesmo composto, mas sem cantos — quem recorta é o sistema.
+              // Mascarável: o mesmo composto, mas sem cantos — quem recorta é o
+              // sistema. Compõe primeiro e reduz depois: o sharp aplica o
+              // resize antes do composite, e a marca não caberia na base menor.
               sharp(svg(degrade('')))
-                .composite([{ input: camadaFrente }])
-                .resize(512, 512).png().toFile('saida/icone-mascara.png')
+                .composite([{ input: camadaFrente }]).png().toBuffer()
+                .then((mascara) => sharp(mascara).resize(512, 512).toFile('saida/icone-mascara.png'))
             ])).then(() => console.log('camadas do ícone prontas'));
           "
 
