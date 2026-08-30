@@ -26,7 +26,14 @@ const Router = (() => {
 
     atual = nome;
     const lado = sentido === 'volta' ? 'Volta' : 'Avanca';
-    const anterior = raiz.firstElementChild;
+
+    // Toque rápido pode pedir a próxima troca antes de a anterior
+    // terminar. A tela que já estava saindo some agora: no máximo duas
+    // convivem, a atual e a que sai.
+    raiz.querySelectorAll('.tela--saiAvanca, .tela--saiVolta')
+      .forEach((velha) => velha.remove());
+
+    const anterior = raiz.lastElementChild;
 
     const tela = document.createElement('div');
     tela.className = 'tela tela--entra' + lado;
