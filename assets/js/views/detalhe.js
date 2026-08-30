@@ -134,14 +134,9 @@ const Detalhe = (() => {
 
   function render() {
     const guia = Guia.para(exercicio);
-    const tipo = Dados.tipoPorId(tipoId);
 
     raiz.innerHTML =
       Componentes.topo(exercicio.nome, `${exercicio.grupo} · ${exercicio.equipamento}`) +
-
-      `<section class="demo" style="--cor:${tipo ? tipo.cor : '#FFD23F'}">
-        ${Demonstracao.render(exercicio)}
-      </section>` +
 
       (executando() ? painelDeExecucao() : '') +
 
