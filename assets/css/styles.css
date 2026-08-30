@@ -1137,8 +1137,8 @@ button {
 
 /* Fecho do "Como fazer": as dicas soltas depois dos passos. */
 .arcade .dicas--fecho {
-  margin-top: 12px;
-  padding-top: 12px;
+  margin-top: 18px;
+  padding-top: 16px;
   border-top: 2.5px dashed var(--traco);
 }
 
