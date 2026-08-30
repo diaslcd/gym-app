@@ -47,7 +47,6 @@ const Execucao = (() => {
   function fichaNova() {
     return {
       series: [novaSerie(), novaSerie(), novaSerie()],
-      observacao: '',
       concluido: false,
       descanso: DESCANSO_PADRAO
     };
@@ -68,7 +67,6 @@ const Execucao = (() => {
     }
     return {
       series: series,
-      observacao: f.observacao || '',
       concluido: !!f.concluido,
       descanso: f.descanso || DESCANSO_PADRAO
     };
@@ -111,11 +109,6 @@ const Execucao = (() => {
     const f = ficha(tipoId, exercicioId);
     if (!f.series[indice]) return;
     f.series[indice].feita = !f.series[indice].feita;
-    guardar();
-  }
-
-  function definirObservacao(tipoId, exercicioId, texto) {
-    ficha(tipoId, exercicioId).observacao = texto;
     guardar();
   }
 
@@ -197,7 +190,7 @@ const Execucao = (() => {
   }
 
   return {
-    ficha, temFicha, ajustarSeries, definirSerie, alternarSerie, definirObservacao,
+    ficha, temFicha, ajustarSeries, definirSerie, alternarSerie,
     concluir, estaConcluido,
     descansoDe, ajustarDescanso, iniciarDescanso, pararDescanso, descansoRestante,
     resumo, limpar

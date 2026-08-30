@@ -68,7 +68,6 @@ const Componentes = (() => {
                     </span>
                   </div>
                   ${series.length ? `<ul class="dia__series">${series.map((s, i) => serieFeita(i, s)).join('')}</ul>` : ''}
-                  ${ficha && ficha.observacao ? `<p class="dia__obs">${ficha.observacao}</p>` : ''}
                 </li>`;
             }).join('')}
           </ul>
@@ -96,8 +95,7 @@ const Componentes = (() => {
     feitos.forEach((exercicio) => {
       const f = Execucao.ficha(tipoId, exercicio.id);
       fichas[exercicio.id] = {
-        series: f.series.map((s) => ({ reps: s.reps, carga: s.carga, feita: s.feita })),
-        observacao: f.observacao
+        series: f.series.map((s) => ({ reps: s.reps, carga: s.carga, feita: s.feita }))
       };
     });
 

@@ -70,9 +70,6 @@ const Detalhe = (() => {
           <button class="conta__btn" data-serie-mais aria-label="Mais uma série">+</button>
         </div>
 
-        <textarea class="exec__obs" data-obs rows="2"
-                  placeholder="Observação: pegada, ajuste do banco, como se sentiu…">${f.observacao}</textarea>
-
         ${descanso(f)}
 
         <button class="exec__fim" data-concluir>
@@ -165,8 +162,13 @@ const Detalhe = (() => {
       const campo = raiz.querySelector('.descanso__tempo');
       if (!campo) return;
       const falta = Execucao.descansoRestante();
-      if (falta > 0) campo.textContent = Sessao.formatar(falta);
-      else render();
+      if (falta > 0) {
+        campo.textContent = Sessao.formatar(falta);
+        return;
+      }
+      // Chegou a zero neste tique: avisa uma vez e repinta sem o relógio.
+      Alerta.descansoAcabou(`${exercicio.nome} · hora da próxima série`);
+      render();
     });
   }
 
@@ -224,12 +226,22 @@ const Detalhe = (() => {
 
     const marca = alvo('[data-serie]');
     if (marca) {
-      Execucao.alternarSerie(tipoId, exercicio.id, Number(marca.dataset.serie));
+      const indice = Number(marca.dataset.serie);
+      const feita = Execucao.ficha(tipoId, exercicio.id).series[indice];
+      const marcando = feita && !feita.feita;
+      Execucao.alternarSerie(tipoId, exercicio.id, indice);
+      // Marcar a série é o gesto de quem acabou de terminá-la: o descanso
+      // começa sozinho. Desmarcar é correção, e não dispara nada.
+      if (marcando) {
+        Alerta.pedirPermissao();
+        Execucao.iniciarDescanso(Execucao.descansoDe(tipoId, exercicio.id));
+      }
       render();
       return;
     }
 
     if (alvo('[data-descansar]')) {
+      Alerta.pedirPermissao();
       Execucao.iniciarDescanso(Execucao.descansoDe(tipoId, exercicio.id));
       render();
       return;
@@ -269,12 +281,6 @@ const Detalhe = (() => {
 
   function aoDigitar(evento) {
     const campo = evento.target;
-
-    if (campo.matches('[data-obs]')) {
-      // Só grava: repintar aqui tiraria o foco do campo.
-      Execucao.definirObservacao(tipoId, exercicio.id, campo.value);
-      return;
-    }
 
     if (campo.matches('[data-reps]')) {
       Execucao.definirSerie(tipoId, exercicio.id, Number(campo.dataset.reps),

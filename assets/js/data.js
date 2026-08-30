@@ -1,28 +1,7 @@
-/* Dados mock — serão substituídos por armazenamento real depois. */
+/* Catálogo de treinos e exercícios; o histórico é o que o usuário
+   registrar. */
 const Dados = (() => {
   const app = { nome: 'BunnyGym' };
-
-  // Dias com treino, em quantidade de dias atrás a partir de hoje.
-  // Ritmo de 5 treinos por semana com 2 descansos. Duas semanas quebram
-  // de propósito: a de 12 a 17 dias atrás tem 4 faltas e a de 33 a 38
-  // dias atrás tem 3.
-  const HISTORICO = [
-    0, 1, 2, 3,
-    5, 6, 7, 9, 10,
-    15, 16, 17,
-    19, 20, 21, 23, 24,
-    26, 27, 28, 30, 31,
-    33, 34, 36, 38,
-    40, 41, 42, 44, 45,
-    47, 48, 49, 51, 52,
-    54, 55, 56, 58, 59,
-    61, 62, 63, 65, 66,
-    68, 69, 70, 72, 73,
-    75, 76, 77, 79, 80,
-    84, 86
-  ];
-
-
 
   // Tipos de treino disponíveis.
   const tipos = [
@@ -271,55 +250,14 @@ const Dados = (() => {
     return { nome: alvo.nome, faltam: alvo.dias - dias };
   }
 
-
-  /** Número estável a partir do id, para a carga base do exercício. */
-  function semente(texto) {
-    let n = 0;
-    for (let i = 0; i < texto.length; i++) n = (n * 31 + texto.charCodeAt(i)) % 997;
-    return n;
-  }
-
-  /** Séries de demonstração: carga sobe devagar conforme se aproxima de hoje. */
-  function fichasDeDemonstracao(ids, atras) {
-    const fichas = {};
-    ids.forEach((id) => {
-      const base = 10 + (semente(id) % 8) * 5;
-      const evolucao = Math.floor((90 - atras) / 12) * 2.5;
-      const carga = Math.max(5, base + evolucao);
-      fichas[id] = {
-        series: [
-          { reps: 12, carga: carga, feita: true },
-          { reps: 10, carga: carga + 2.5, feita: true },
-          { reps: 8, carga: carga + 5, feita: true }
-        ],
-        observacao: ''
-      };
-    });
-    return fichas;
-  }
-
   /**
    * Registro dos treinos por data: qual treino foi feito, quais
-   * exercícios, as séries executadas e quanto durou. Map — `has` e
-   * `size` funcionam como no Set anterior, então os cálculos de
-   * sequência não mudam.
+   * exercícios, as séries executadas e quanto durou. Nasce vazio — o que
+   * entra aqui é o que o usuário registrou, recuperado do localStorage
+   * logo abaixo. Map: `has` e `size` funcionam como no Set anterior,
+   * então os cálculos de sequência não mudam.
    */
-  const treinos = new Map(
-    HISTORICO.map((atras, indice) => {
-      const data = Utils.iso(Utils.somarDias(Utils.hoje(), -atras));
-      // Rodízio dos quatro treinos, do mais antigo para o mais recente.
-      const tipo = tipos[(HISTORICO.length - 1 - indice) % tipos.length];
-      const feitos = exercicios[tipo.id] || [];
-      // De vez em quando um exercício fica de fora, como na vida real.
-      const ids = (atras % 4 === 1 ? feitos.slice(0, -1) : feitos).map((e) => e.id);
-      return [data, {
-        tipoId: tipo.id,
-        exercicios: ids,
-        fichas: fichasDeDemonstracao(ids, atras),
-        duracao: 44 + (atras % 6) * 5
-      }];
-    })
-  );
+  const treinos = new Map();
 
   /** O que foi feito naquele dia, ou null. */
   function registroDe(dataIso) {
@@ -547,8 +485,7 @@ const Dados = (() => {
     return (alternativas[exercicioId] || []).map(exercicioGlobal).filter(Boolean);
   }
 
-  /* Treinos que o usuário realmente registrou ficam no localStorage e
-     entram por cima do histórico de demonstração. */
+  /* O que o usuário registrou fica no localStorage e é lido na abertura. */
   const CHAVE_HISTORICO = 'gym:historico';
 
   function historicoSalvo() {

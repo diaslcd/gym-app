@@ -38,11 +38,9 @@ jobs:
             ));
           "
 
-      # O ícone chega como um PNG chapado. O Android quer duas camadas que
-      # ele compõe sozinho, então elas saem daqui: o fundo é o degradê
-      # refeito a partir das cores das pontas do original (sem a marca, que
-      # senão apareceria duas vezes), e a frente é só a marca branca,
-      # recortada por limiar depois de achatar os cantos transparentes.
+      # Do arquivo original só a marca branca é aproveitada — a cor vem da
+      # paleta do app. O Android quer fundo e frente separados, e a versão
+      # cheia é a mesma composição num quadrado de cantos arredondados.
       - name: Montar as camadas do ícone
         run: |
           node -e "
@@ -51,61 +49,65 @@ jobs:
             const L = 1024;
             const MARCA = Math.round(L * 0.62); // folga que o recorte do lançador come
             const margem = Math.round((L - MARCA) / 2);
+            const claro = '#9B5CFF';   // roxo dos cards
+            const escuro = '#5B21B6';  // roxo escuro, para o degradê ter profundidade
 
-            const corEm = (x, y) => sharp(fonte)
-              .extract({ left: x, top: y, width: 16, height: 16 })
-              .stats()
-              .then((s) => 'rgb(' + s.channels.slice(0, 3).map((c) => Math.round(c.mean)).join(',') + ')');
+            const degrade = (extra) =>
+              '<defs><linearGradient id=\"g\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\">' +
+              '<stop offset=\"0\" stop-color=\"' + claro + '\"/>' +
+              '<stop offset=\"1\" stop-color=\"' + escuro + '\"/></linearGradient></defs>' +
+              '<rect width=\"' + L + '\" height=\"' + L + '\" ' + extra + ' fill=\"url(#g)\"/>';
 
-            Promise.all([corEm(160, 160), corEm(848, 848)]).then(([claro, escuro]) => {
-              const degrade = Buffer.from(
-                '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"' + L + '\" height=\"' + L + '\">' +
-                '<defs><linearGradient id=\"g\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\">' +
-                '<stop offset=\"0\" stop-color=\"' + claro + '\"/>' +
-                '<stop offset=\"1\" stop-color=\"' + escuro + '\"/>' +
-                '</linearGradient></defs><rect width=\"' + L + '\" height=\"' + L + '\" fill=\"url(#g)\"/></svg>'
+            const svg = (conteudo) => Buffer.from(
+              '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"' + L + '\" height=\"' + L + '\">' +
+              conteudo + '</svg>'
+            );
+
+            // Só o miolo entra no limiar: os cantos do arquivo original são
+            // brancos, não transparentes, e virariam quina opaca na marca.
+            const M = Math.round(L * 0.7);
+            const inicio = Math.round(L * 0.15);
+
+            const frente = sharp(fonte).resize(L, L)
+              .extract({ left: inicio, top: inicio, width: M, height: M })
+              .greyscale().threshold(190).raw().toBuffer()
+              .then((mascara) =>
+                sharp({ create: { width: M, height: M, channels: 3, background: '#ffffff' } })
+                  .joinChannel(mascara, { raw: { width: M, height: M, channels: 1 } })
+                  .png().toBuffer()
+              )
+              // Recorta no próprio contorno: o original tem folga de sobra,
+              // e sem isso a marca encolheria junto com ela.
+              .then((marca) => sharp(marca).trim().png().toBuffer())
+              .then((cortada) =>
+                sharp(cortada).resize(MARCA, MARCA, {
+                  fit: 'contain',
+                  background: { r: 0, g: 0, b: 0, alpha: 0 }
+                }).png().toBuffer()
+              )
+              .then((ajustada) =>
+                sharp({ create: { width: L, height: L, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+                  .composite([{ input: ajustada, top: margem, left: margem }])
+                  .png().toBuffer()
               );
-              console.log('degradê de ' + claro + ' a ' + escuro);
 
-              // Só o miolo entra no limiar. Os cantos do original são
-              // brancos, não transparentes, e virariam quina opaca na marca.
-              const M = Math.round(L * 0.7);
-              const inicio = Math.round(L * 0.15);
+            frente.then((camadaFrente) => Promise.all([
+              sharp(camadaFrente).toFile('saida/fonte-frente.png'),
+              sharp(svg(degrade(''))).png().toFile('saida/fonte-fundo.png'),
 
-              const frente = sharp(fonte).resize(L, L)
-                .extract({ left: inicio, top: inicio, width: M, height: M })
-                .greyscale().threshold(190).raw().toBuffer()
-                .then((mascara) =>
-                  sharp({ create: { width: M, height: M, channels: 3, background: '#ffffff' } })
-                    .joinChannel(mascara, { raw: { width: M, height: M, channels: 1 } })
-                    .png().toBuffer()
-                )
-                .then((marca) => sharp(marca).trim().png().toBuffer())
-                .then((cortada) =>
-                  sharp(cortada).resize(MARCA, MARCA, {
-                    fit: 'contain',
-                    background: { r: 0, g: 0, b: 0, alpha: 0 }
-                  }).png().toBuffer()
-                )
-                .then((ajustada) =>
-                  sharp({ create: { width: L, height: L, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
-                    .composite([{ input: ajustada, top: margem, left: margem }])
-                    .png().toFile('saida/fonte-frente.png')
-                );
+              // Cheio: degradê com cantos arredondados e a marca por cima.
+              sharp(svg(degrade('rx=\"' + Math.round(L * 0.22) + '\"')))
+                .composite([{ input: camadaFrente }]).png().toBuffer()
+                .then((cheio) => Promise.all([
+                  sharp(cheio).toFile('saida/fonte-completo.png'),
+                  sharp(cheio).resize(512, 512).toFile('saida/icone.png')
+                ])),
 
-              return Promise.all([
-                sharp(fonte).resize(L, L).png().toFile('saida/fonte-completo.png'),
-                sharp(degrade).png().toFile('saida/fonte-fundo.png'),
-                frente,
-                sharp(fonte).resize(512, 512).png().toFile('saida/icone.png')
-              ]);
-            }).then(() => Promise.all([
-              sharp('saida/fonte-fundo.png').resize(512, 512).toBuffer(),
-              sharp('saida/fonte-frente.png').resize(512, 512).toBuffer()
-            ])).then(([fundo512, frente512]) =>
-              sharp(fundo512).composite([{ input: frente512 }])
-                .png().toFile('saida/icone-mascara.png')
-            ).then(() => console.log('camadas do ícone prontas'));
+              // Mascarável: o mesmo composto, mas sem cantos — quem recorta é o sistema.
+              sharp(svg(degrade('')))
+                .composite([{ input: camadaFrente }])
+                .resize(512, 512).png().toFile('saida/icone-mascara.png')
+            ])).then(() => console.log('camadas do ícone prontas'));
           "
 
       - name: Publicar o resultado

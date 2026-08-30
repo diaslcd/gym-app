@@ -1,18 +1,20 @@
 /* Seleção do tipo de treino, agrupada pelo sistema de divisão. */
 const Selecao = (() => {
-  /** Arte do treino quando houver; o pictograma do músculo enquanto não. */
+  /* Só quem tem arte mostra o quadro. Os treinos sem imagem ficam sem
+     ícone de propósito, até a arte deles ficar pronta — um pictograma
+     genérico ao lado de uma foto parecia descuido, não escolha. */
   function arte(tipo) {
     const imagem = Ilustracoes.de(tipo.id);
     return imagem
-      ? `<img class="opcao__arte" src="${imagem}" alt="" loading="lazy">`
-      : Icones.musculo(tipo.id);
+      ? `<span class="opcao__icone"><img class="opcao__arte" src="${imagem}" alt="" loading="lazy"></span>`
+      : '';
   }
 
   function opcao(tipo, indice) {
     return `
       <button class="opcao" data-tipo="${tipo.id}"
               style="--cor:${tipo.cor}; --tinta:${tipo.tinta}; --giro:${indice % 2 ? 1 : -1}deg">
-        <span class="opcao__icone">${arte(tipo)}</span>
+        ${arte(tipo)}
         <span class="opcao__texto">
           <span class="opcao__nome">${tipo.nome}</span>
           <span class="opcao__desc">${tipo.descricao}</span>

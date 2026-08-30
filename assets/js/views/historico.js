@@ -176,6 +176,17 @@ const Historico = (() => {
 
   /** A lista chega fechada: só os últimos treinos, o resto sob demanda. */
   function blocoDeTreinos(lista) {
+    if (!lista.length) {
+      return `
+        <section class="bloco">
+          <h2 class="bloco__titulo">Treinos realizados</h2>
+          <p class="hist__vazio">
+            Nenhum treino registrado ainda. Termine um treino e ele aparece
+            aqui, com as séries, as cargas e o tempo.
+          </p>
+        </section>`;
+    }
+
     const filtrada = filtro ? lista.filter((r) => r.tipoId === filtro) : lista;
     const visiveis = aberta ? filtrada : filtrada.slice(0, PREVIA);
     const restam = filtrada.length - visiveis.length;
@@ -194,7 +205,7 @@ const Historico = (() => {
         ${botao}
       </section>`;
   }
-  /* ── Render ────────────────────────────────────────── */
+
 
   function render() {
     const lista = Dados.historico();

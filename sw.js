@@ -11,6 +11,7 @@ const ARQUIVOS = [
   './assets/icone.png',
   './assets/icone-mascara.png',
   './assets/js/utils.js',
+  './assets/js/alerta.js',
   './assets/js/perfil.js',
   './assets/js/data.js',
   './assets/js/treino.js',
