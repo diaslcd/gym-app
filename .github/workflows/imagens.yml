@@ -1,0 +1,46 @@
+name: Imagens
+
+# Corta a figura do treino de dentro do render do fliperama e reduz para o
+# tamanho do ícone. Sai como artefato para ser conferido antes de entrar no
+# repositório — os originais ficam em arte-fonte/ e não vão para o app.
+on:
+  workflow_dispatch:
+
+jobs:
+  cortar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cortar e reduzir
+        run: |
+          npm install --no-save sharp
+          mkdir -p saida
+          node -e "
+            const sharp = require('sharp');
+            // Recorte quadrado sobre a figura, em coordenadas do render 688x1529.
+            const corte = { left: 135, top: 470, width: 420, height: 420 };
+            const arquivos = ['peito-triceps', 'costas-biceps', 'perna', 'superiores'];
+            Promise.all(arquivos.map((nome) =>
+              sharp('arte-fonte/' + nome + '.jpg')
+                .extract(corte)
+                .resize(224, 224)
+                .webp({ quality: 82 })
+                .toFile('saida/' + nome + '.webp')
+                .then((info) => console.log(nome + ': ' + Math.round(info.size / 1024) + ' KB'))
+            ));
+          "
+
+      - name: Publicar os recortes
+        uses: actions/upload-artifact@v4
+        with:
+          name: treinos-webp
+          path: saida/*.webp
+          if-no-files-found: error
