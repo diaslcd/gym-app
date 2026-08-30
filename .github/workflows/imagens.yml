@@ -67,20 +67,17 @@ jobs:
               );
               console.log('degradê de ' + claro + ' a ' + escuro);
 
-              // Sobre um azul opaco primeiro: o canto arredondado é
-              // transparente e entraria no limiar como se fosse branco.
-              const opaco = sharp(fonte).resize(L, L).toBuffer().then((img) =>
-                sharp({ create: { width: L, height: L, channels: 3, background: escuro } })
-                  .composite([{ input: img }]).png().toBuffer()
-              );
+              // Só o miolo entra no limiar. Os cantos do original são
+              // brancos, não transparentes, e virariam quina opaca na marca.
+              const M = Math.round(L * 0.7);
+              const inicio = Math.round(L * 0.15);
 
-              // Marca branca recortada no próprio contorno: o original tem
-              // folga de sobra, e encolher a imagem toda encolheria a marca.
-              const frente = opaco
-                .then((img) => sharp(img).greyscale().threshold(190).raw().toBuffer())
+              const frente = sharp(fonte).resize(L, L)
+                .extract({ left: inicio, top: inicio, width: M, height: M })
+                .greyscale().threshold(190).raw().toBuffer()
                 .then((mascara) =>
-                  sharp({ create: { width: L, height: L, channels: 3, background: '#ffffff' } })
-                    .joinChannel(mascara, { raw: { width: L, height: L, channels: 1 } })
+                  sharp({ create: { width: M, height: M, channels: 3, background: '#ffffff' } })
+                    .joinChannel(mascara, { raw: { width: M, height: M, channels: 1 } })
                     .png().toBuffer()
                 )
                 .then((marca) => sharp(marca).trim().png().toBuffer())
