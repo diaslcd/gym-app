@@ -17,8 +17,8 @@ const Ilustracoes = (() => {
 })();
 
 /* ── Arte de cada treino ──────────────────────────────────
-   Descomente conforme os arquivos entrarem em assets/treinos/. */
-// Ilustracoes.definir('peito-triceps', 'assets/treinos/peito-triceps.png');
-// Ilustracoes.definir('costas-biceps', 'assets/treinos/costas-biceps.png');
-// Ilustracoes.definir('perna', 'assets/treinos/perna.png');
-// Ilustracoes.definir('superiores', 'assets/treinos/superiores.png');
+   Renders do fliperama, um por treino. */
+Ilustracoes.definir('peito-triceps', 'assets/treinos/peito-triceps.jpg');
+Ilustracoes.definir('costas-biceps', 'assets/treinos/costas-biceps.jpg');
+Ilustracoes.definir('perna', 'assets/treinos/perna.jpg');
+Ilustracoes.definir('superiores', 'assets/treinos/superiores.jpg');
