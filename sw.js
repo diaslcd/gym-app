@@ -8,7 +8,7 @@ const ARQUIVOS = [
   './index.html',
   './manifest.webmanifest',
   './assets/css/styles.css',
-  './assets/icone.svg',
+  './assets/icone.png',
   './assets/icone-mascara.svg',
   './assets/js/utils.js',
   './assets/js/data.js',

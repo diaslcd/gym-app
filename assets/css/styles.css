@@ -49,7 +49,9 @@ button {
 .app {
   max-width: 520px;
   margin: 0 auto;
-  padding: 22px var(--pad) calc(28px + env(safe-area-inset-bottom));
+  /* A barra de status do celular fica por cima do app: o topo precisa
+     do recuo, senão o relógio pousa em cima do nome. */
+  padding: calc(22px + env(safe-area-inset-top)) var(--pad) calc(28px + env(safe-area-inset-bottom));
 }
 
 .tela {

@@ -42,22 +42,23 @@ jobs:
       - name: Criar o projeto Android
         run: npx cap add android
 
-      # O ícone do lançador do Android não vem do manifest da web: é uma
-      # pilha de PNGs em res/mipmap. Estes passos desenham essa pilha a
-      # partir do mesmo SVG do coelho, para não haver dois ícones no
-      # projeto podendo divergir.
-      - name: Rasterizar o ícone
+      # O ícone do lançador não vem do manifest da web: o Android lê uma pilha
+      # de PNGs em res/mipmap, montada aqui a partir das camadas do ícone.
+      - name: Preparar as fontes do ícone
         run: |
           npm install --no-save sharp
           node -e "
             const sharp = require('sharp');
-            const svg = (arquivo) => sharp(arquivo, { density: 600 }).resize(1024, 1024);
+            const fs = require('node:fs');
+            // As camadas do ícone adaptativo vêm em 432px, o tamanho que o
+            // lançador usa na maior densidade; o @capacitor/assets pede 1024.
+            const ampliar = (de, para) =>
+              sharp('assets-android/' + de).resize(1024, 1024).png().toFile('assets-android/' + para);
+            fs.copyFileSync('assets-android/fonte-completo.png', 'assets-android/icon-only.png');
             Promise.all([
-              svg('assets-android/icone-completo.svg').png().toFile('assets-android/icon-only.png'),
-              svg('assets-android/icone-frente.svg').png().toFile('assets-android/icon-foreground.png'),
-              sharp({ create: { width: 1024, height: 1024, channels: 4,
-                                background: '#FFD23F' } }).png().toFile('assets-android/icon-background.png')
-            ]).then(() => console.log('PNGs do ícone prontos'));
+              ampliar('fonte-frente.png', 'icon-foreground.png'),
+              ampliar('fonte-fundo.png', 'icon-background.png')
+            ]).then(() => console.log('fontes do ícone prontas'));
           "
 
       - name: Gerar os ícones do Android

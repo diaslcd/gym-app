@@ -11,9 +11,9 @@
   "lang": "pt-BR",
   "icons": [
     {
-      "src": "assets/icone.svg",
-      "type": "image/svg+xml",
-      "sizes": "any",
+      "src": "assets/icone.png",
+      "type": "image/png",
+      "sizes": "512x512",
       "purpose": "any"
     },
     {
