@@ -2844,3 +2844,187 @@ button {
   line-height: 1.45;
   color: #0E4256;
 }
+
+/* ── Plano da semana ──────────────────────────────────── */
+.arcade .plano {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.arcade .plano__titulo {
+  margin: 12px 0 0;
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 34px;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--traco);
+}
+
+.arcade .plano__titulo span { display: block; color: var(--rosa); }
+
+/* Os números ocupam a largura toda: é a pergunta inteira num toque. */
+.arcade .plano__dias {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.arcade .plano__dia {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  background: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 14px;
+  box-shadow: 3px 3px 0 var(--traco);
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  color: var(--traco);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .plano__dia--on {
+  background: var(--sol);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--traco);
+}
+
+.arcade .plano__sugestao {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 15px;
+  background: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 18px;
+  box-shadow: 5px 5px 0 var(--traco);
+}
+
+.arcade .plano__contagem {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4B4460;
+}
+
+.arcade .plano__contagem strong {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 19px;
+  color: var(--traco);
+}
+
+.arcade .plano__nota {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #6E6880;
+}
+
+.arcade .plano__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  counter-reset: nenhum;
+}
+
+.arcade .plano__treino {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  background: var(--cor);
+  color: var(--tinta);
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+}
+
+.arcade .plano__ordem {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  background: var(--traco);
+  color: var(--sol);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.arcade .plano__nome {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: 13.5px;
+  text-transform: uppercase;
+}
+
+.arcade .plano__vazio {
+  margin: 0;
+  padding: 18px 15px;
+  text-align: center;
+  background: #FFFFFF;
+  border: 2.5px dashed var(--traco);
+  border-radius: 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #6E6880;
+}
+
+.arcade .entrada__ir[disabled] {
+  opacity: 0.45;
+  box-shadow: 3px 3px 0 var(--traco);
+}
+
+/* ── Faixa do plano no painel ─────────────────────────── */
+.arcade .planoFaixa {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 13px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 13px;
+  box-shadow: 3px 3px 0 var(--traco);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--traco);
+  transition: transform 0.1s;
+}
+
+.arcade .planoFaixa:active { transform: translate(2px, 2px); }
+
+.arcade .planoFaixa--vazia {
+  border-style: dashed;
+  color: #6E6880;
+}
+
+.arcade .planoFaixa__acao {
+  background: var(--sol);
+  border: 2px solid var(--traco);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-size: 9.5px;
+  color: var(--traco);
+}
+
+.arcade .planoFaixa__pontos { display: flex; gap: 4px; }
+
+.arcade .planoFaixa__ponto {
+  width: 12px;
+  height: 12px;
+  background: var(--cor);
+  border: 2px solid var(--traco);
+  border-radius: 999px;
+}

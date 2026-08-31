@@ -66,6 +66,29 @@ const Dashboard = (() => {
       </section>`;
   }
 
+
+  /** Faixa do plano: quantos treinos a semana pede e quais são. */
+  function planoDaSemana() {
+    if (!Plano.escolhido()) {
+      return `
+        <button class="planoFaixa planoFaixa--vazia" data-plano type="button">
+          <span class="planoFaixa__texto">Monte seu plano da semana</span>
+          <span class="planoFaixa__acao">escolher</span>
+        </button>`;
+    }
+
+    const dias = Plano.dias();
+    const treinos = Plano.treinosDe(dias);
+    const pontos = treinos
+      .map((t) => `<span class="planoFaixa__ponto" style="--cor:${t.cor}" title="${t.nome}"></span>`)
+      .join('');
+
+    return `
+      <button class="planoFaixa" data-plano type="button">
+        <span class="planoFaixa__texto">${treinos.length} treinos na semana</span>
+        <span class="planoFaixa__pontos">${pontos}</span>
+      </button>`;
+  }
   function acaoPrincipal() {
     if (Sessao.emAndamento()) {
       const tipo = Dados.tipoPorId(Sessao.tipoEmAndamento());
@@ -233,7 +256,7 @@ const Dashboard = (() => {
 
   function render() {
     raiz.innerHTML =
-      cabecalho() + indicadores() + acaoPrincipal() + calendario() +
+      cabecalho() + indicadores() + planoDaSemana() + acaoPrincipal() + calendario() +
       folhaDoDia() + folhaDeTitulos() + faixaDeAviso();
 
     Sessao.observar((segundos) => {
@@ -255,6 +278,11 @@ const Dashboard = (() => {
 
     if (evento.target.closest('[data-historico]')) {
       Router.ir('historico');
+      return;
+    }
+
+    if (evento.target.closest('[data-plano]')) {
+      Router.ir('plano');
       return;
     }
 

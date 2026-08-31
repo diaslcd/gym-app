@@ -51,7 +51,7 @@ const BemVindo = (() => {
 
   function aoClicar(evento) {
     if (evento.target.closest('[data-pular]')) {
-      Router.ir('dashboard');
+      Router.ir('plano', { primeiraVez: true });
       return;
     }
 
@@ -59,14 +59,14 @@ const BemVindo = (() => {
 
     Alerta.pedirPermissao().then((estado) => {
       if (estado === 'granted' || estado === 'indisponivel') {
-        Router.ir('dashboard');
+        Router.ir('plano', { primeiraVez: true });
         return;
       }
       // Negada ou ignorada: segue em frente, o aviso na tela continua valendo.
       resposta = 'Sem notificação, tudo bem — o aviso de descanso aparece na tela do mesmo jeito.';
       render();
       setTimeout(() => {
-        if (raiz.isConnected) Router.ir('dashboard');
+        if (raiz.isConnected) Router.ir('plano', { primeiraVez: true });
       }, 2600);
     });
   }
