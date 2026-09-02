@@ -7,6 +7,7 @@ const Historico = (() => {
   let diaAberto = null;
   let filtro = null;      // tipo de treino escolhido nas fichas
   let aberta = false;     // lista inteira ou só a prévia
+  let excluindo = null;   // "data:indice" do treino esperando confirmação
 
   /* ── Evolução de carga ─────────────────────────────── */
 
@@ -132,6 +133,24 @@ const Historico = (() => {
   function treino(registro) {
     const tipo = Dados.tipoPorId(registro.tipoId);
     const data = new Date(registro.data + 'T00:00:00');
+    const dia = data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+    const chave = `${registro.data}:${registro.indice}`;
+
+    // Confirmando: a linha vira a pergunta, no lugar do treino.
+    if (excluindo === chave) {
+      return `
+        <li class="hist hist--confirma">
+          <p class="hist__confirmaTexto">
+            Apagar <strong>${tipo ? tipo.nome : 'este treino'}</strong> de ${dia}?
+            Não dá para desfazer.
+          </p>
+          <div class="dia__confirmaBotoes">
+            <button class="dia__cancelar" data-cancelar-hist type="button">Manter</button>
+            <button class="dia__apagar" data-confirmar-hist="${chave}" type="button">Apagar</button>
+          </div>
+        </li>`;
+    }
+
     const series = totalDeSeries(registro);
     const carga = cargaMaxima(registro);
 
@@ -140,13 +159,17 @@ const Historico = (() => {
         <button class="hist__abrir" data-dia="${registro.data}">
           <span class="hist__faixa" style="background:${tipo ? tipo.cor : '#FFD23F'}"></span>
           <span class="hist__texto">
-            <span class="hist__data">${data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</span>
+            <span class="hist__data">${dia}</span>
             <span class="hist__nome">${tipo ? tipo.nome : 'Treino'}</span>
             <span class="hist__meta">
               ${registro.exercicios.length} exercícios · ${series} séries · ${registro.duracao} min${carga ? ` · até ${carga} kg` : ''}
             </span>
           </span>
           <span class="hist__seta" aria-hidden="true">→</span>
+        </button>
+        <button class="hist__lixo" data-excluir-hist="${chave}" type="button"
+                aria-label="Excluir ${tipo ? tipo.nome : 'treino'} de ${dia}">
+          ${Icones.remover}
         </button>
       </li>`;
   }
@@ -238,6 +261,28 @@ const Historico = (() => {
       return;
     }
 
+    const pedir = evento.target.closest('[data-excluir-hist]');
+    if (pedir) {
+      excluindo = pedir.dataset.excluirHist;
+      render();
+      return;
+    }
+
+    if (evento.target.closest('[data-cancelar-hist]')) {
+      excluindo = null;
+      render();
+      return;
+    }
+
+    const confirmar = evento.target.closest('[data-confirmar-hist]');
+    if (confirmar) {
+      const partes = confirmar.dataset.confirmarHist.split(':');
+      Dados.removerTreino(partes[0], Number(partes[1]));
+      excluindo = null;
+      render();
+      return;
+    }
+
     if (diaAberto) {
       const acao = Componentes.cliqueNaFolha(evento, diaAberto);
       if (acao === 'fechar') {
@@ -263,6 +308,7 @@ const Historico = (() => {
     raiz = elemento;
     diaAberto = null;
     filtro = null;
+    excluindo = null;
     aberta = false;
     raiz.classList.add('arcade');
     raiz.addEventListener('click', aoClicar);

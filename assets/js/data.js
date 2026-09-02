@@ -289,10 +289,12 @@ const Dados = (() => {
   function historico() {
     const lista = [];
     datasRecentesPrimeiro().forEach((data) => {
-      // Dentro do dia, o mais recente primeiro também.
-      registrosDe(data).slice().reverse().forEach((registro) => {
-        lista.push(Object.assign({ data: data }, registro));
-      });
+      const doDia = registrosDe(data);
+      // Dentro do dia, o mais recente primeiro. O índice acompanha para
+      // quem precisa apagar o treino certo depois.
+      for (let i = doDia.length - 1; i >= 0; i--) {
+        lista.push(Object.assign({ data: data, indice: i }, doDia[i]));
+      }
     });
     return lista;
   }

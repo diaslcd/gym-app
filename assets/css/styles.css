@@ -3099,3 +3099,47 @@ button {
   color: #FFFFFF;
   box-shadow: 3px 3px 0 var(--traco);
 }
+
+/* ── Excluir direto na lista do histórico ─────────────── */
+.arcade .hist {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.arcade .hist .hist__abrir { flex: 1 1 auto; min-width: 0; }
+
+.arcade .hist__lixo {
+  flex: 0 0 auto;
+  width: 42px;
+  display: grid;
+  place-items: center;
+  background: var(--gelo);
+  border: 2.5px solid var(--traco);
+  border-radius: 13px;
+  color: var(--traco);
+  transition: transform 0.1s;
+}
+
+.arcade .hist__lixo svg { width: 19px; height: 19px; display: block; }
+.arcade .hist__lixo:active { transform: scale(0.94); }
+
+/* Confirmando, a linha inteira vira a pergunta. */
+.arcade .hist--confirma {
+  flex-direction: column;
+  gap: 11px;
+  padding: 13px;
+  background: var(--gelo);
+  border: 2.5px solid var(--traco);
+  border-radius: 14px;
+}
+
+.arcade .hist__confirmaTexto {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #0E4256;
+}
+
+.arcade .hist__confirmaTexto strong { font-weight: 800; }
