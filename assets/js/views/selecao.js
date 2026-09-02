@@ -1,4 +1,5 @@
-/* Seleção do tipo de treino, agrupada pelo sistema de divisão. */
+/* Seleção do tipo de treino: primeiro o que o plano da semana
+   recomenda, depois o resto agrupado pelo sistema de divisão. */
 const Selecao = (() => {
   /* Só quem tem arte mostra o quadro. Os treinos sem imagem ficam sem
      ícone de propósito, até a arte deles ficar pronta — um pictograma
@@ -26,11 +27,49 @@ const Selecao = (() => {
 
   function sistema(grupo) {
     return `
-      <section class="sistema">
+      <section class="sistema${grupo.destaque ? ' sistema--plano' : ''}">
         <h2 class="sistema__nome">${grupo.nome}</h2>
         ${grupo.resumo ? `<p class="sistema__resumo">${grupo.resumo}</p>` : ''}
         <div class="opcoes">${grupo.tipos.map(opcao).join('')}</div>
       </section>`;
+  }
+
+  /* O plano repete treino quando a semana pede — dois dias é corpo
+     inteiro duas vezes. Na lista cada um aparece uma vez só. */
+  function semRepetir(tipos) {
+    const vistos = {};
+    return tipos.filter((tipo) => {
+      if (vistos[tipo.id]) return false;
+      vistos[tipo.id] = true;
+      return true;
+    });
+  }
+
+  /** Plano no topo; o resto do catálogo abaixo, sem repetir o que subiu. */
+  function grupos() {
+    if (!Plano.escolhido()) return Dados.porSistema();
+
+    const dias = Plano.dias();
+    const recomendados = semRepetir(Plano.treinosDe(dias));
+    if (!recomendados.length) return Dados.porSistema();
+
+    const noPlano = {};
+    recomendados.forEach((tipo) => { noPlano[tipo.id] = true; });
+
+    const resto = Dados.porSistema()
+      .map((grupo) => ({
+        nome: grupo.nome,
+        resumo: grupo.resumo,
+        tipos: grupo.tipos.filter((tipo) => !noPlano[tipo.id])
+      }))
+      .filter((grupo) => grupo.tipos.length);
+
+    return [{
+      nome: 'Seu plano da semana',
+      resumo: Plano.notaDe(dias),
+      tipos: recomendados,
+      destaque: true
+    }].concat(resto);
   }
 
   function aoClicar(evento) {
@@ -46,7 +85,7 @@ const Selecao = (() => {
     raiz.classList.add('arcade');
     raiz.innerHTML = `
       ${Componentes.topo('Escolha o treino', 'Selecione o grupo muscular de hoje')}
-      ${Dados.porSistema().map(sistema).join('')}`;
+      ${grupos().map(sistema).join('')}`;
     raiz.addEventListener('click', aoClicar);
   }
 

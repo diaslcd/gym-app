@@ -1,6 +1,6 @@
 {
   "name": "bunnygym",
-  "version": "1.16.0",
+  "version": "1.17.0",
   "description": "Aplicativo de treino de academia — empacotamento Android com Capacitor",
   "private": true,
   "scripts": {

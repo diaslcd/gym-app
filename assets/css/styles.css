@@ -3028,3 +3028,12 @@ button {
   border: 2px solid var(--traco);
   border-radius: 999px;
 }
+
+/* O grupo do plano é o primeiro e o único em amarelo: o olho vai nele
+   antes de decidir. */
+.arcade .sistema--plano .sistema__nome {
+  background: var(--sol);
+  color: var(--traco);
+}
+
+.arcade .sistema--plano .sistema__resumo { color: #4B4460; }
