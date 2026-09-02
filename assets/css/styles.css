@@ -3037,3 +3037,65 @@ button {
 }
 
 .arcade .sistema--plano .sistema__resumo { color: #4B4460; }
+
+/* ── Excluir treino registrado ────────────────────────── */
+.dia__excluir {
+  width: 100%;
+  margin-top: 12px;
+  padding: 11px;
+  background: #FFFFFF;
+  border: 2.5px dashed var(--traco);
+  border-radius: 13px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6E6880;
+}
+
+.dia__confirma {
+  margin-top: 12px;
+  padding: 14px;
+  background: var(--gelo);
+  border: 2.5px solid var(--traco);
+  border-radius: 14px;
+}
+
+.dia__confirmaTexto {
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #0E4256;
+}
+
+.dia__confirmaTexto strong { font-weight: 800; }
+
+.dia__confirmaBotoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.dia__cancelar,
+.dia__apagar {
+  padding: 11px;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dia__cancelar {
+  background: #FFFFFF;
+  color: var(--traco);
+}
+
+/* O botão que apaga é o único vermelho do app. */
+.dia__apagar {
+  background: #E63946;
+  color: #FFFFFF;
+  box-shadow: 3px 3px 0 var(--traco);
+}

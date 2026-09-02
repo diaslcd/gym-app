@@ -310,15 +310,23 @@ const Dashboard = (() => {
       return;
     }
 
-    if (evento.target.closest('[data-fechar-dia]')) {
-      diaAberto = null;
-      render();
-      return;
+    if (diaAberto) {
+      const acao = Componentes.cliqueNaFolha(evento, diaAberto);
+      if (acao === 'fechar') {
+        diaAberto = null;
+        render();
+        return;
+      }
+      if (acao === 'repintar') {
+        render();
+        return;
+      }
     }
 
     const dia = evento.target.closest('[data-dia]');
     if (dia) {
       diaAberto = dia.dataset.dia;
+      Componentes.abrirFolha();
       render();
       return;
     }

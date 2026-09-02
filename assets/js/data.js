@@ -573,6 +573,27 @@ const Dados = (() => {
   }
 
 
+
+  /** Apaga um treino do dia. A data some quando era o único. */
+  function removerTreino(dataIso, indice) {
+    const doDia = registrosDe(dataIso).slice();
+    if (indice < 0 || indice >= doDia.length) return false;
+
+    doDia.splice(indice, 1);
+    const mapa = historicoSalvo();
+
+    if (doDia.length) {
+      treinos.set(dataIso, doDia);
+      mapa[dataIso] = doDia;
+    } else {
+      treinos.delete(dataIso);
+      delete mapa[dataIso];
+    }
+
+    guardarHistorico(mapa);
+    invalidarCache();
+    return true;
+  }
   /** Todos os exercícios conhecidos: os dos treinos e os do catálogo. */
   function todosOsExercicios() {
     const vistos = {};
@@ -614,7 +635,7 @@ const Dados = (() => {
 
   return {
     app, treinos, tipos, porSistema, tipoPorId, exerciciosDe, exercicioGlobal,
-    alternativasDe, registroDe, registrosDe, registrarTreino, candidatosPara,
+    alternativasDe, registroDe, registrosDe, registrarTreino, removerTreino, candidatosPara,
     totalDeTreinos, inicioDeUso,
     historico, volumeDoTreino, evolucaoDe, exerciciosComEvolucao,
     titulos, tituloDaSequencia, proximoTitulo

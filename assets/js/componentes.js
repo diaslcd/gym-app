@@ -23,8 +23,37 @@ const Componentes = (() => {
       </li>`;
   }
 
+  /* Índice do treino que está esperando confirmação para ser apagado.
+     Apagar é a única ação irreversível do app, então ela pede dois
+     toques — e o segundo diz o que vai sumir. */
+  let aConfirmar = null;
+
+  /** Rodapé do treino: excluir, ou a confirmação já aberta. */
+  function acaoDeExcluir(registro, indice) {
+    const tipo = Dados.tipoPorId(registro.tipoId);
+    const nome = tipo ? tipo.nome : 'este treino';
+
+    if (aConfirmar !== indice) {
+      return `
+        <button class="dia__excluir" data-excluir="${indice}" type="button">
+          Excluir este treino
+        </button>`;
+    }
+
+    return `
+      <div class="dia__confirma">
+        <p class="dia__confirmaTexto">
+          Apagar <strong>${nome}</strong> e as séries registradas nele? Não dá para desfazer.
+        </p>
+        <div class="dia__confirmaBotoes">
+          <button class="dia__cancelar" data-cancelar-excluir type="button">Manter</button>
+          <button class="dia__apagar" data-confirmar-excluir="${indice}" type="button">Apagar</button>
+        </div>
+      </div>`;
+  }
+
   /** Um treino do dia: cabeçalho colorido e os exercícios executados. */
-  function blocoDoTreino(registro) {
+  function blocoDoTreino(registro, indice) {
     const tipo = Dados.tipoPorId(registro.tipoId);
     const feitos = registro.exercicios.map(Dados.exercicioGlobal).filter(Boolean);
 
@@ -53,7 +82,9 @@ const Componentes = (() => {
               ${series.length ? `<ul class="dia__series">${series.map((s, i) => serieFeita(i, s)).join('')}</ul>` : ''}
             </li>`;
         }).join('')}
-      </ul>`;
+      </ul>
+
+      ${acaoDeExcluir(registro, indice)}`;
   }
 
   function folhaDoDia(dataIso, fecharAtributo) {
@@ -81,6 +112,47 @@ const Componentes = (() => {
       </div>`;
   }
 
+
+  /**
+   * Cliques da folha do dia, num lugar só — painel e histórico abrem a
+   * mesma folha. Devolve o que a view deve fazer: 'fechar' quando o dia
+   * acabou ou o usuário fechou, 'repintar' quando só mudou o conteúdo,
+   * e null quando o clique não era daqui.
+   */
+  function cliqueNaFolha(evento, dataIso) {
+    const alvo = (seletor) => evento.target.closest(seletor);
+
+    if (alvo('[data-fechar-dia]')) {
+      aConfirmar = null;
+      return 'fechar';
+    }
+
+    const pedir = alvo('[data-excluir]');
+    if (pedir) {
+      aConfirmar = Number(pedir.dataset.excluir);
+      return 'repintar';
+    }
+
+    if (alvo('[data-cancelar-excluir]')) {
+      aConfirmar = null;
+      return 'repintar';
+    }
+
+    const confirmar = alvo('[data-confirmar-excluir]');
+    if (confirmar) {
+      Dados.removerTreino(dataIso, Number(confirmar.dataset.confirmarExcluir));
+      aConfirmar = null;
+      // Some a folha quando o dia ficou sem treino nenhum.
+      return Dados.registrosDe(dataIso).length ? 'repintar' : 'fechar';
+    }
+
+    return null;
+  }
+
+  /** Zera a confirmação pendente ao abrir outro dia. */
+  function abrirFolha() {
+    aConfirmar = null;
+  }
   /**
    * Encerra o treino em andamento: grava no calendário, limpa a
    * execução e leva ao painel com a confirmação. Usado pela lista de
@@ -113,6 +185,6 @@ const Componentes = (() => {
     });
   }
 
-  return { topo, folhaDoDia, encerrarTreino };
+  return { topo, folhaDoDia, cliqueNaFolha, abrirFolha, encerrarTreino };
 
 })();
