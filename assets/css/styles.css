@@ -17,14 +17,68 @@
   --r-md: 16px;
   --r-lg: 22px;
 
-  --gap: 14px;
-  --pad: 18px;
+  /* Espaçamento fluido.
+
+     Antes eram 14px e 18px fixos, o que assumia um aparelho de largura
+     média: no aparelho estreito sobrava borda e faltava conteúdo; no
+     largo, o contrário. Agora acompanham a largura da tela dentro de um
+     teto e um piso, então o app se ajusta ao espaço que tem em vez de
+     supor qual é. */
+  --gap: clamp(10px, 3.6vw, 16px);
+  --pad: clamp(12px, 4.6vw, 20px);
+
+  /* Escala tipográfica fluida.
+
+     Mesma ideia: o texto acompanha a largura da tela entre um mínimo
+     legível e um máximo que não estoura o container. Os nomes vão do
+     rótulo miúdo em caixa alta até o número gigante da sequência. */
+  --fs-xs:   clamp(9px,    2.7vw,  11.5px);
+  --fs-sm:   clamp(10.5px, 3.1vw,  13px);
+  --fs-md:   clamp(12px,   3.6vw,  15px);
+  --fs-lg:   clamp(14px,   4.3vw,  18px);
+  --fs-hero: clamp(42px,   15vw,   64px);
+
+  /* Área mínima de toque confortável, na medida recomendada para dedo. */
+  --toque: 44px;
 }
 
 /* ── Base ─────────────────────────────────────────────── */
 * { box-sizing: border-box; }
 
 html, body { margin: 0; padding: 0; }
+
+/* O WebView do Android infla o texto por conta própria.
+
+   É o "font boosting": o motor decide que um bloco é o conteúdo
+   principal da página e aumenta a fonte dele, sozinho, sem tocar nos
+   vizinhos. Em MIUI/HyperOS — Xiaomi, Poco, Redmi — o efeito é mais
+   forte, porque a escala de fonte do sistema entra por cima.
+
+   O estrago não é o texto ficar grande: é ficar grande de forma
+   desigual. Como o layout era todo em pixel fixo, um rótulo inflado
+   empurrava o flex que o continha, o container esticava além da tela e
+   aparecia rolagem lateral, com botões saindo da área tocável. Medido
+   aqui: a 1,3x já eram 40 elementos fora do container; a 1,6x, 51.
+
+   Fixar em 100% desliga o palpite do motor e devolve ao CSS o controle
+   do tamanho. Quem precisa de letra maior continua atendido pelo zoom
+   do navegador e pela escala fluida dos tokens acima, que valem para a
+   interface inteira em vez de um bloco só. */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Filho de flex/grid não encolhe abaixo do próprio conteúdo por padrão:
+   um texto longo — ou inflado — estica o pai e fura a tela. Estes dois
+   ajustes fazem o texto quebrar ou truncar dentro do espaço disponível
+   em vez de empurrar o layout. */
+.tela :where(section, header, article, div, ul, li, p, span, button) { min-width: 0; }
+body { overflow-wrap: break-word; }
+
+/* Rolagem lateral nunca é intencional aqui: o app é uma coluna só.
+   Se algo escapar, some em vez de virar uma tela que desliza de lado. */
+html, body { overflow-x: hidden; }
 
 body {
   background: var(--bg);
@@ -50,13 +104,40 @@ button {
   max-width: 520px;
   margin: 0 auto;
   /* A barra de status do celular fica por cima do app: o topo precisa
-     do recuo, senão o relógio pousa em cima do nome. */
-  padding: calc(22px + env(safe-area-inset-top)) var(--pad) calc(28px + env(safe-area-inset-bottom));
+     do recuo, senão o relógio pousa em cima do nome. O mesmo vale
+     embaixo, onde mora a barra de gestos.
+
+     Nos aparelhos com tela arredondada o conteúdo também precisa fugir
+     das laterais, senão o canto do card some na curva do vidro — daí os
+     insets esquerdo e direito somados ao recuo normal. */
+  padding-top: calc(clamp(16px, 5vw, 22px) + env(safe-area-inset-top));
+  padding-bottom: calc(clamp(20px, 7vw, 28px) + env(safe-area-inset-bottom));
+  padding-left: calc(var(--pad) + env(safe-area-inset-left));
+  padding-right: calc(var(--pad) + env(safe-area-inset-right));
 }
 
 /* As duas telas ocupam a mesma célula da grade durante a troca, então
-   se sobrepõem sem sair do fluxo e sem perder o recuo do app. */
-.app { display: grid; grid-template-columns: 1fr; }
+   se sobrepõem sem sair do fluxo e sem perder o recuo do app.
+
+   O minmax(0, 1fr) não é detalhe: "1fr" sozinho significa
+   "minmax(auto, 1fr)", e esse mínimo automático é o tamanho do
+   conteúdo. Bastava um item da lista se recusar a encolher para a
+   coluna inteira crescer além da janela, levando junto todas as telas.
+   Era o que acontecia em aparelhos estreitos — medido em 320px: a tela
+   ficava com 339px dentro de um app de 320. Com o mínimo zerado, quem
+   cede é o conteúdo, não o layout. */
+.app { display: grid; grid-template-columns: minmax(0, 1fr); }
+
+.tela { min-width: 0; }
+
+/* Altura cheia da janela, para as telas que se apoiam nela (entrada e
+   boas-vindas) terem em que se medir.
+
+   O dvh é o que enxerga a janela como ela está agora: no Android, a
+   barra de endereço some ao rolar e o teclado ocupa metade da tela, e
+   nesses momentos o 100vh continua contando a altura antiga. O vh fica
+   como reserva para quem não conhece a unidade nova. */
+.app { min-height: 100vh; min-height: 100dvh; }
 
 .tela {
   grid-area: 1 / 1;
@@ -144,11 +225,20 @@ button {
 .arcade button { color: inherit; }
 
 /* ── Marca ────────────────────────────────────────────── */
+/* "BunnyGym" é uma palavra só e não tem onde quebrar: em 40px fixos,
+   qualquer aumento de fonte a fazia crescer para fora da tela e levar o
+   cabeçalho junto. Fluida, ela cede espaço quando a tela é estreita. */
 .arcade .brand {
   margin: 0;
   align-self: flex-start;
+  min-width: 0;
+  /* Último recurso: se ainda assim não couber — fonte do sistema muito
+     ampliada, tela muito estreita — a palavra quebra em duas linhas.
+     Feio, mas legível; melhor do que sair da tela. */
+  max-width: 100%;
+  overflow-wrap: anywhere;
   font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
-  font-size: 40px;
+  font-size: clamp(28px, 10.5vw, 44px);
   font-weight: 400;
   line-height: 0.9;
   letter-spacing: -0.02em;
@@ -195,14 +285,14 @@ button {
 .arcade .metrica__num {
   font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
   font-weight: 400;
-  font-size: 62px;
+  font-size: var(--fs-hero);
   line-height: 0.82;
   letter-spacing: -0.04em;
 }
 
 .arcade .metrica__rotulo {
   margin-top: 5px;
-  font-size: 11px;
+  font-size: var(--fs-xs);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -325,7 +415,12 @@ button {
 
 .arcade .cal__nav { display: flex; gap: 6px; }
 
+/* O botão continua com 26px de desenho, mas a área que responde ao
+   toque vai a 44px através do ::after invisível. Trocar as setas de mês
+   era difícil de acertar com o dedo — e crescer o botão desequilibrava
+   o cabeçalho do calendário. Assim o visual fica e o alvo cresce. */
 .arcade .cal__btn {
+  position: relative;
   width: 26px;
   height: 26px;
   border: 2.5px solid var(--traco);
@@ -339,6 +434,16 @@ button {
   place-items: center;
   box-shadow: 2px 2px 0 var(--traco);
   transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .cal__btn::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--toque);
+  height: var(--toque);
+  transform: translate(-50%, -50%);
 }
 
 .arcade .cal__btn:active {
@@ -361,7 +466,7 @@ button {
 
 .arcade .cal__wd {
   text-align: center;
-  font-size: 9px;
+  font-size: var(--fs-xs);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -537,9 +642,12 @@ button {
   margin-bottom: 4px;
 }
 
+/* Voltar é o botão mais usado do app, e estava dois pixels abaixo da
+   medida confortável para o dedo. Vale para todas as telas. */
 .arcade .topo__voltar {
-  width: 42px;
-  height: 42px;
+  width: var(--toque);
+  height: var(--toque);
+  flex: 0 0 auto;
   border: 3px solid var(--traco);
   border-radius: 12px;
   background: var(--sol);
@@ -2026,8 +2134,13 @@ button {
   position: relative;
   width: 100%;
   max-width: 520px;
+  /* Com o teclado aberto o vh continua reportando a tela inteira, e a
+     folha passava por baixo dele. O dvh acompanha a janela real. */
   max-height: 82vh;
+  max-height: 82dvh;
   overflow-y: auto;
+  /* A rolagem para no fim da folha em vez de continuar na tela atrás. */
+  overscroll-behavior: contain;
   background: var(--papel);
   border: 3px solid var(--traco);
   border-bottom: 0;
@@ -2490,8 +2603,11 @@ button {
   flex-direction: column;
   justify-content: flex-end;
   gap: 20px;
-  min-height: calc(100vh - 120px);
-  min-height: calc(100dvh - 120px);
+  /* O 120px fixo era o recuo do .app estimado a olho: onde a barra de
+     status ou a de gestos é mais alta, a conta sobrava e sobrava também
+     uma rolagem de alguns pixels que não deveria existir. A altura do
+     próprio container já desconta o recuo real, seja ele qual for. */
+  min-height: 100%;
 }
 
 .arcade .entrada__marca {
@@ -2652,6 +2768,10 @@ button {
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
+  /* Se a marca e o cartão do perfil não couberem lado a lado — tela
+     muito estreita, ou fonte ampliada nas preferências do sistema — o
+     perfil desce em vez de os dois espremerem e vazarem para fora. */
+  flex-wrap: wrap;
 }
 
 .arcade .header__perfil {
@@ -2669,18 +2789,21 @@ button {
   transform: rotate(2deg);
 }
 
+/* O nome trunca em vez de empurrar a marca: o teto acompanha a largura
+   da tela, então no aparelho estreito ele cede espaço e no largo mostra
+   mais letras. Fixo em 90px, um nome comprido esticava o topo. */
 .arcade .header__nome {
-  max-width: 90px;
+  max-width: clamp(64px, 24vw, 120px);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   font-weight: 800;
   color: var(--traco);
 }
 
 .arcade .header__sair {
-  font-size: 8.5px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -2765,8 +2888,11 @@ button {
   flex-direction: column;
   gap: 16px;
   justify-content: center;
-  min-height: calc(100vh - 120px);
-  min-height: calc(100dvh - 120px);
+  /* O 120px fixo era o recuo do .app estimado a olho: onde a barra de
+     status ou a de gestos é mais alta, a conta sobrava e sobrava também
+     uma rolagem de alguns pixels que não deveria existir. A altura do
+     próprio container já desconta o recuo real, seja ele qual for. */
+  min-height: 100%;
 }
 
 .arcade .bemvindo__titulo {
@@ -3143,3 +3269,57 @@ button {
 }
 
 .arcade .hist__confirmaTexto strong { font-weight: 800; }
+
+
+/* ═══════════════════════════════════════════════════════
+   ÁREA DE TOQUE
+   Varredura feita nas telas do app: vários botões estavam
+   entre 23 e 42 px, abaixo da medida confortável para o
+   dedo. Onde crescer não atrapalha o desenho, cresce; onde
+   atrapalharia, o alvo é ampliado por um ::after invisível
+   e o visual fica igual.
+   ═══════════════════════════════════════════════════════ */
+
+/* Botões largos: ganham altura sem mudar de aparência. */
+.arcade .entrada__trocar,
+.arcade .metrica__proximo,
+.arcade .hist__mais,
+.arcade .bloco__abrir {
+  min-height: var(--toque);
+}
+
+/* O "usar outro perfil" é um link discreto: centraliza o texto na
+   altura nova em vez de encostá-lo no topo. */
+.arcade .entrada__trocar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arcade .bloco__abrir {
+  display: flex;
+  align-items: center;
+}
+
+/* Ícones e etiquetas pequenas: o desenho continua do tamanho que é,
+   e o alvo cresce por baixo. Precisa de position para o ::after se
+   ancorar; os que já são relative não se incomodam com a repetição. */
+.arcade .item__acao,
+.arcade .chip,
+.arcade .hist__lixo {
+  position: relative;
+}
+
+.arcade .item__acao::after,
+.arcade .chip::after,
+.arcade .hist__lixo::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  min-width: var(--toque);
+  min-height: var(--toque);
+}
