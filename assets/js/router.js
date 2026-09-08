@@ -48,6 +48,10 @@ const Router = (() => {
     raiz.appendChild(tela);
     telas[nome].montar(tela, params);
     window.scrollTo(0, 0);
+
+    // A barra de abas fica fora da tela e não é repintada por ela:
+    // avisamos aqui, no único ponto por onde toda troca passa.
+    if (typeof Abas !== 'undefined') Abas.atualizar(nome);
   }
 
   function ir(nome, params) {

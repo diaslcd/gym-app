@@ -53,7 +53,7 @@ séries marcáveis, observação e cronômetro de descanso ajustável por exerc�
 série executada. Mais dois gráficos: **volume por treino** (repetições × carga)
 e **evolução de carga** por exercício.
 
-**Nutrição** — consulta de calorias e macros, alcançada pelo painel. Busca por
+**Nutrição** — consulta de calorias e macros, na segunda aba. Busca por
 alimento ou por refeição inteira: digitar `frango com arroz e feijão` encontra o
 prato composto e abre a conta item por item, com a gramagem de cada um. Toda
 tela mostra a porção a que os números se referem — a porção vem antes do
@@ -85,6 +85,7 @@ assets/js/
   perfil.js                  quem está usando o app
   biometria.js               entrada por digital (WebAuthn)
   nutricao.js                tabela de alimentos, pratos e busca
+  abas.js                    as três áreas e a barra inferior
   icones.js                  ícones de interface e músculo
   icones-exercicios.js       pictogramas dos exercícios
   guia.js                    guia de execução por família de movimento
@@ -92,16 +93,23 @@ assets/js/
   componentes.js             peças compartilhadas entre telas
   router.js                  troca de telas
   views/                     painel, seleção, exercícios, detalhe, histórico,
-                             nutrição e alimento
+                             nutrição, alimento e social
 ```
 
 Cada módulo é uma IIFE que expõe o mínimo. As views recebem um container novo a
 cada navegação, então listeners antigos morrem com o nó anterior.
 
-**Navegação.** Não há barra de abas: o painel é a raiz e todas as seções saem
-dele, inclusive Nutrição. É proposital — com mais de uma tela-raiz, o botão
-voltar do Android deixa de ter um fim óbvio, e hoje ele sai do app justamente
-por saber que o painel é o fim da pilha.
+**Navegação.** Três abas na barra inferior — Treino, Nutrição e Social — cada
+uma com sua tela-raiz. Até a segunda área o app tinha uma raiz só e a barra não
+se justificava; com a terceira, passou a valer.
+
+Isso muda o botão voltar do Android, que antes sabia que "estou no painel"
+significava "cheguei ao fim". Com três raízes a regra passa a ser a do Material
+Design: de uma tela funda volta uma tela, da raiz de uma aba secundária vai
+para a aba inicial, e só da raiz inicial é que o app fecha — assim ninguém
+fecha o app sem querer vindo do Social. A barra some durante a execução do
+treino, onde já existe a barra da sessão em andamento e duas empilhadas comeriam
+a tela.
 
 **Responsividade.** Espaçamento e tipografia vêm de tokens fluidos com `clamp()`
 em `:root`, então acompanham a largura da tela em vez de assumir um aparelho.
