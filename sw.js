@@ -14,6 +14,7 @@ const ARQUIVOS = [
   './assets/js/alerta.js',
   './assets/js/plano.js',
   './assets/js/perfil.js',
+  './assets/js/biometria.js',
   './assets/js/data.js',
   './assets/js/treino.js',
   './assets/js/sessao.js',

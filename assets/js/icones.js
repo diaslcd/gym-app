@@ -170,5 +170,18 @@ const Icones = (() => {
     return equipamentos[tipo] || equipamentos.maquina;
   }
 
-  return { equipamento, musculo, chama, trofeu, floco, cadeado, trocar, remover };
+  /* Digital: arcos concêntricos, o desenho que todo mundo reconhece
+     como impressão digital. Traço aberto, sem preenchimento, para
+     seguir a linha dos outros ícones de interface. */
+  const digital =
+    '<svg class="ico-digital" viewBox="0 0 24 24" aria-hidden="true" fill="none" ' +
+    'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M12 11.5v3.2c0 1.5-.3 2.9-.9 4.2"/>' +
+    '<path d="M8.7 11.5a3.3 3.3 0 0 1 6.6 0v2.8c0 1.1-.2 2.2-.5 3.2"/>' +
+    '<path d="M5.6 11.5a6.4 6.4 0 0 1 12.8 0v2.6c0 .9-.1 1.7-.3 2.5"/>' +
+    '<path d="M3.1 8.6a9.5 9.5 0 0 1 17.8 0"/>' +
+    '<path d="M8.4 20.4c.7-1.1 1.1-2.4 1.2-3.7"/>' +
+    '</svg>';
+
+  return { equipamento, musculo, chama, trofeu, floco, cadeado, digital, trocar, remover };
 })();

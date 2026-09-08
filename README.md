@@ -65,6 +65,12 @@ abriu sem saber o que procurar. Os valores são de referência da **TACO**
 (Unicamp) e do **USDA**, e o app diz isso: corte, preparo e quantidade mudam o
 resultado no prato real.
 
+**Entrada por biometria** — opcional, ligada em *conta*, no topo do painel.
+Usa WebAuthn, então quem lê e confere a digital é o sistema do aparelho; o app
+recebe só a confirmação e guarda apenas o identificador público da credencial.
+Nenhum dado biométrico passa pelo app. O PIN continua disponível o tempo todo
+como alternativa — ver a ressalva de segurança em `assets/js/biometria.js`.
+
 ## Arquitetura
 
 ```
@@ -76,6 +82,8 @@ assets/js/
   treino.js                  ajustes do treino na sessão
   sessao.js                  cronômetro do treino
   execucao.js                séries, cargas e descanso
+  perfil.js                  quem está usando o app
+  biometria.js               entrada por digital (WebAuthn)
   nutricao.js                tabela de alimentos, pratos e busca
   icones.js                  ícones de interface e músculo
   icones-exercicios.js       pictogramas dos exercícios
@@ -94,6 +102,13 @@ cada navegação, então listeners antigos morrem com o nó anterior.
 dele, inclusive Nutrição. É proposital — com mais de uma tela-raiz, o botão
 voltar do Android deixa de ter um fim óbvio, e hoje ele sai do app justamente
 por saber que o painel é o fim da pilha.
+
+**Responsividade.** Espaçamento e tipografia vêm de tokens fluidos com `clamp()`
+em `:root`, então acompanham a largura da tela em vez de assumir um aparelho.
+Duas defesas estruturais sustentam isso: `text-size-adjust: 100%`, que desliga o
+aumento automático de fonte do WebView Android, e `minmax(0, 1fr)` na grade do
+`.app`, que impede um filho grande de esticar o container. As duas estão
+comentadas no CSS com o porquê e o que quebrava sem elas.
 
 **Pictogramas.** Os 78 exercícios são desenhados em SVG inline a partir de 29
 movimentos base — variações que mudam só o equipamento compartilham o desenho da
@@ -118,6 +133,8 @@ registra de verdade ficam no `localStorage` e entram por cima:
 | `gym:sessao` | treino em andamento |
 | `gym:execucao` | séries e descanso do treino atual |
 | `gym:ajustes` | remoções, trocas e acréscimos |
+| `gym:perfil` | nome e PIN de quem usa o aparelho |
+| `gym:biometria` | id público da credencial da digital — nada biométrico |
 | `gym:nutri:favoritos` | alimentos e pratos marcados com estrela |
 | `gym:nutri:recentes` | os últimos consultados na Nutrição |
 
@@ -164,9 +181,16 @@ entram no versionamento.
 
 ## Estado do projeto
 
-Protótipo funcional de treino e nutrição. Não tem back-end, autenticação nem
-sincronização entre dispositivos — tudo vive no navegador. A demonstração dos
-exercícios usa pictogramas, não vídeo real.
+Protótipo funcional de treino e nutrição. Não tem back-end nem sincronização
+entre dispositivos — tudo vive no navegador. A demonstração dos exercícios usa
+pictogramas, não vídeo real.
+
+**Sobre a entrada.** Nem o PIN nem a biometria são autenticação de verdade,
+porque não há servidor para conferir nada: valem como tranca contra quem pega o
+celular na mão, no mesmo nível de antes. A biometria melhora a conveniência e
+usa o mecanismo seguro do aparelho, mas o dado de treino continua em texto puro
+no `localStorage`. O detalhe está comentado em `assets/js/biometria.js`, e
+substituir por login real é trocar esse módulo e o `perfil.js`.
 
 **Sobre a tabela nutricional.** São valores de referência de tabelas públicas,
 não medição do prato de ninguém. O app declara isso na tela em vez de sugerir

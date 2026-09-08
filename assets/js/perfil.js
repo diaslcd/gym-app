@@ -67,6 +67,18 @@ const Perfil = (() => {
     return true;
   }
 
+  /* Libera a sessão sem conferir o PIN.
+
+     Existe para a biometria: quando o sistema operacional confirma a
+     digital, quem verificou a identidade foi ele, e exigir o PIN em
+     seguida seria pedir a mesma prova duas vezes. Só deve ser chamada
+     depois de uma confirmação de verdade — ver biometria.js. */
+  function liberar() {
+    if (!dono) return false;
+    liberado = true;
+    return true;
+  }
+
   /** Fecha a sessão sem apagar o perfil: volta a pedir o PIN. */
   function sair() {
     liberado = false;
@@ -83,5 +95,5 @@ const Perfil = (() => {
     }
   }
 
-  return { existe, nome, temPin, dentro, criar, entrar, sair, esquecer };
+  return { existe, nome, temPin, dentro, criar, entrar, liberar, sair, esquecer };
 })();

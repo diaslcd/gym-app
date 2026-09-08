@@ -10,17 +10,99 @@ const Dashboard = (() => {
   let relogioAviso = null;
   let diasEmSequencia = null; // datas que formam a sequência atual
   let inicioDeUso = null;     // primeiro dia do app neste aparelho
+  let contaAberta = false;    // folha de conta e ajustes de entrada
+  let bioDisponivel = false;  // o aparelho tem sensor utilizável?
+  let bioOcupada = false;     // aguardando resposta do sensor
+  let bioErro = null;
 
   function cabecalho() {
     const nome = Perfil.nome();
     return `
       <header class="header">
         <h1 class="brand">${Dados.app.nome}</h1>
-        ${nome ? `<button class="header__perfil" data-sair type="button">
+        ${nome ? `<button class="header__perfil" data-conta type="button">
                     <span class="header__nome">${nome}</span>
-                    <span class="header__sair">sair</span>
+                    <span class="header__sair">conta</span>
                   </button>` : ''}
       </header>`;
+  }
+
+  /* Folha da conta: onde ficam os ajustes de entrada e a saída.
+
+     O botão do topo abria a sessão direto para fora. Agora abre esta
+     folha, porque a biometria precisava de um lugar para ser ligada e
+     desligada, e criar uma tela de configurações inteira para uma
+     chave só seria peso demais. Sair continua aqui, um toque adiante. */
+  function folhaDaConta() {
+    if (!contaAberta) return '';
+
+    const ligada = Biometria.ativa();
+
+    /* Três estados, três textos. O aparelho sem sensor não recebe um
+       botão desligado sem explicação: recebe o motivo. */
+    let bloco;
+    if (!bioDisponivel) {
+      bloco = `
+        <p class="conta__indisponivel">
+          Este aparelho não tem biometria configurada, ou o navegador não
+          oferece esse recurso. Sua entrada continua pelo PIN.
+        </p>`;
+    } else {
+      bloco = `
+        <button class="conta__opcao" data-bio-toggle type="button"
+                aria-pressed="${ligada}" ${bioOcupada ? 'disabled' : ''}>
+          <span class="conta__icone">${Icones.digital}</span>
+          <span class="conta__texto">
+            <span class="conta__nome">Entrar com biometria</span>
+            <span class="conta__sub">${bioOcupada
+              ? 'aguardando o sensor…'
+              : (ligada ? 'ativada neste aparelho' : 'usar a digital em vez do PIN')}</span>
+          </span>
+          <span class="chave${ligada ? ' chave--on' : ''}" aria-hidden="true"></span>
+        </button>
+        ${bioErro ? `<p class="conta__erro">${bioErro}</p>` : ''}
+        <p class="conta__nota">
+          A digital é lida e conferida pelo sistema do celular. O app não recebe
+          nem guarda nenhum dado biométrico — só a informação de que a
+          confirmação deu certo.
+        </p>`;
+    }
+
+    return `
+      <div class="folha">
+        <div class="folha__fundo" data-fechar-conta></div>
+        <div class="folha__painel">
+          <div class="folha__topo">
+            <span class="folha__titulo">${Perfil.nome()}</span>
+            <button class="folha__fechar" data-fechar-conta aria-label="Fechar">✕</button>
+          </div>
+          <div class="conta">
+            ${bloco}
+            <button class="conta__sair" data-sair type="button">Sair da conta</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  /* Liga ou desliga a biometria. Desligar é imediato; ligar precisa da
+     confirmação no sensor, senão ficaria ativada sem nunca ter sido
+     testada — e a pessoa só descobriria na próxima abertura. */
+  async function alternarBiometria() {
+    if (bioOcupada) return;
+    bioErro = null;
+
+    if (Biometria.ativa()) {
+      Biometria.desativar();
+      render();
+      return;
+    }
+
+    bioOcupada = true;
+    render();
+    const r = await Biometria.ativar(Perfil.nome());
+    bioOcupada = false;
+    if (!r.ok) bioErro = r.motivo;
+    render();
   }
 
   function metrica(cor, icone, numero, rotulo, extra, atributos) {
@@ -281,7 +363,7 @@ const Dashboard = (() => {
   function render() {
     raiz.innerHTML =
       cabecalho() + indicadores() + planoDaSemana() + acaoPrincipal() + portaDaNutricao() + calendario() +
-      folhaDoDia() + folhaDeTitulos() + faixaDeAviso();
+      folhaDoDia() + folhaDeTitulos() + folhaDaConta() + faixaDeAviso();
 
     Sessao.observar((segundos) => {
       const campo = raiz.querySelector('.btn__tempo');
@@ -312,6 +394,26 @@ const Dashboard = (() => {
 
     if (evento.target.closest('[data-plano]')) {
       Router.ir('plano');
+      return;
+    }
+
+    if (evento.target.closest('[data-conta]')) {
+      diaAberto = null;
+      titulosAbertos = false;
+      bioErro = null;
+      contaAberta = true;
+      render();
+      return;
+    }
+
+    if (evento.target.closest('[data-fechar-conta]')) {
+      contaAberta = false;
+      render();
+      return;
+    }
+
+    if (evento.target.closest('[data-bio-toggle]')) {
+      alternarBiometria();
       return;
     }
 
@@ -371,6 +473,9 @@ const Dashboard = (() => {
     raiz.classList.add('arcade');
     diaAberto = null;
     titulosAbertos = false;
+    contaAberta = false;
+    bioOcupada = false;
+    bioErro = null;
     aviso = null;
     clearTimeout(relogioAviso);
 
@@ -390,6 +495,14 @@ const Dashboard = (() => {
     inicioDeUso = Dados.inicioDeUso();
     raiz.addEventListener('click', aoClicar);
     render();
+
+    // Saber se há sensor é assíncrono: pinta agora e corrige a folha
+    // quando a resposta chega, o que acontece antes de alguém abri-la.
+    Biometria.disponivel().then((tem) => {
+      if (!raiz.isConnected) return;
+      bioDisponivel = tem;
+      if (contaAberta) render();
+    });
   }
 
   return { montar };

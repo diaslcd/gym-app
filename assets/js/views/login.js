@@ -6,6 +6,7 @@ const Login = (() => {
   let comPin = false;   // a chave do PIN está ligada?
   // O que já foi digitado sobrevive ao repintar da tela.
   let rascunho = { nome: '', pin: '' };
+  let ocupado = false;   // aguardando a resposta do sensor
 
   function marca() {
     return `<h1 class="entrada__marca">Bunny<span>Gym</span></h1>`;
@@ -37,16 +38,59 @@ const Login = (() => {
       <button class="entrada__ir" data-criar type="button">Bora</button>`;
   }
 
+  /* Botão da digital. Só aparece quando há cadastro válido neste
+     aparelho — oferecer o que não vai funcionar é pior do que não
+     oferecer. O PIN continua logo abaixo, sempre: é a saída para
+     quando a leitura falha, o dedo está molhado ou a pessoa
+     simplesmente prefere digitar. */
+  function botaoBiometria() {
+    if (!Biometria.ativa()) return '';
+    return `
+      <button class="entrada__bio" data-bio type="button" ${ocupado ? 'disabled' : ''}>
+        <span class="entrada__bioIcone" aria-hidden="true">${Icones.digital}</span>
+        <span class="entrada__bioTexto">${ocupado ? 'Confirmando…' : 'Entrar com biometria'}</span>
+      </button>`;
+  }
+
   /** Já tem perfil: pede o PIN se houver, senão é só confirmar. */
   function formularioVolta() {
     return `
       <p class="entrada__pergunta">Olá de novo, ${Perfil.nome()}.</p>
 
+      ${botaoBiometria()}
       ${Perfil.temPin() ? campoPin('Seu PIN') : ''}
       ${erro ? `<p class="entrada__erro">${erro}</p>` : ''}
 
       <button class="entrada__ir" data-entrar type="button">Bora</button>
       <button class="entrada__trocar" data-esquecer type="button">Usar outro perfil</button>`;
+  }
+
+  /* Pergunta a digital assim que a tela abre, quando está ativada.
+
+     Só na abertura, e uma vez: repetir a cada repintura viraria um
+     diálogo que reabre sozinho, e quem escolheu digitar o PIN ficaria
+     preso. Se falhar ou for cancelada, a tela permanece com o PIN à
+     mão — nada trava. */
+  async function tentarBiometria(automatica) {
+    if (!Biometria.ativa() || ocupado) return;
+    ocupado = true;
+    erro = null;
+    render();
+
+    const r = await Biometria.entrar();
+    ocupado = false;
+
+    if (r.ok) {
+      // A biometria destrava a sessão; o PIN segue guardado no perfil.
+      Perfil.liberar();
+      Router.ir('dashboard');
+      return;
+    }
+
+    // Cancelar a oferta automática não merece texto de erro: a pessoa
+    // só quis digitar o PIN. Já a tentativa pedida no botão explica.
+    if (!automatica || r.expirada) erro = r.motivo;
+    render();
   }
 
   function render() {
@@ -91,6 +135,7 @@ const Login = (() => {
   function aoClicar(evento) {
     if (evento.target.closest('[data-criar]')) return criar();
     if (evento.target.closest('[data-entrar]')) return entrar();
+    if (evento.target.closest('[data-bio]')) return tentarBiometria(false);
 
     if (evento.target.closest('[data-trava]')) {
       comPin = !comPin;
@@ -127,12 +172,16 @@ const Login = (() => {
     raiz = elemento;
     erro = null;
     comPin = false;
+    ocupado = false;
     rascunho = { nome: '', pin: '' };
     raiz.classList.add('arcade');
     raiz.addEventListener('click', aoClicar);
     raiz.addEventListener('input', aoDigitar);
     raiz.addEventListener('keydown', aoTeclar);
     render();
+
+    // Perfil que já usa biometria não deveria precisar tocar em nada.
+    if (Perfil.existe() && Biometria.ativa()) tentarBiometria(true);
   }
 
   return { montar };
