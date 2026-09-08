@@ -1,3 +1,5 @@
+| `gym:social:atividades` | treinos registrados como atividade, com pontos |
+| `gym:social:conquistas` | quando cada conquista caiu |
 # BunnyGym
 
 Aplicativo web de treino de academia, feito para uso no celular. Acompanha a
@@ -86,6 +88,7 @@ assets/js/
   biometria.js               entrada por digital (WebAuthn)
   nutricao.js                tabela de alimentos, pratos e busca
   abas.js                    as três áreas e a barra inferior
+  social.js                  pontos, atividades, conquistas e fair play
   icones.js                  ícones de interface e músculo
   icones-exercicios.js       pictogramas dos exercícios
   guia.js                    guia de execução por família de movimento

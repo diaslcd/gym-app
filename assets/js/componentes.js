@@ -177,11 +177,47 @@ const Componentes = (() => {
       };
     });
 
+    /* Recorde tem de ser apurado agora, antes de gravar: um instante
+       depois o treino de hoje já faz parte do histórico e passaria a
+       ser o próprio recorde a superar. */
+    const bateuRecorde = feitos.some((exercicio) => {
+      const cargaDeHoje = (fichas[exercicio.id].series || [])
+        .reduce((maior, s) => Math.max(maior, s.carga || 0), 0);
+      if (cargaDeHoje <= 0) return false;
+      const anterior = Dados.evolucaoDe(exercicio.id)
+        .reduce((maior, p) => Math.max(maior, p.carga || 0), 0);
+      return cargaDeHoje > anterior;
+    });
+
     Dados.registrarTreino(tipoId, feitos.map((e) => e.id), minutos, fichas);
     Execucao.limpar();
 
+    /* O treino vira atividade da área Social, com pontos. O registro no
+       calendário acima é independente disto: se a pontuação for negada
+       pelas regras de fair play, o treino continua no histórico — o que
+       muda é só quanto ele vale. */
+    const registro = SocialDados.registrarTreino({
+      titulo: tipo ? tipo.nome : 'Treino',
+      tipoId: tipoId,
+      minutos: minutos,
+      series: series,
+      sequencia: Utils.sequenciaAtual(Dados.treinos),
+      recorde: bateuRecorde
+    });
+
+    const novasConquistas = SocialDados.conferirConquistas();
+
     Router.ir('dashboard', {
-      registrado: { nome: tipo ? tipo.nome : 'Treino', minutos: minutos, series: series }
+      registrado: {
+        nome: tipo ? tipo.nome : 'Treino',
+        minutos: minutos,
+        series: series,
+        atividadeId: registro.atividade.id,
+        pontos: registro.atividade.pontos,
+        conta: registro.conta,
+        semPontos: registro.permissao.pode ? null : registro.permissao.motivo,
+        conquistas: novasConquistas
+      }
     });
   }
 

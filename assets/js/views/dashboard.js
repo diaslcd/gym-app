@@ -14,6 +14,7 @@ const Dashboard = (() => {
   let bioDisponivel = false;  // o aparelho tem sensor utilizável?
   let bioOcupada = false;     // aguardando resposta do sensor
   let bioErro = null;
+  let resultado = null;      // dados do treino recém-encerrado
 
   function cabecalho() {
     const nome = Perfil.nome();
@@ -336,10 +337,73 @@ const Dashboard = (() => {
     return diaAberto ? Componentes.folhaDoDia(diaAberto) : '';
   }
 
+  /* Folha que fecha o treino: o que foi feito e quanto valeu.
+
+     Substitui a faixa de "treino registrado" que passava em quatro
+     segundos. O momento logo depois de encerrar é o de maior atenção do
+     app inteiro — é quando a pessoa quer ver o resultado do esforço — e
+     gastá-lo com uma tarja que some é desperdício.
+
+     A conta aparece aberta, linha por linha, porque pontuação que não
+     se entende não motiva: vira número arbitrário. */
+  function folhaDoResultado() {
+    if (!resultado) return '';
+
+    const r = resultado;
+    const conta = r.conta || { linhas: [] };
+
+    const linhas = conta.linhas.map((l) => `
+      <li class="ganho__linha">
+        <span class="ganho__rotulo">${l.rotulo}</span>
+        <span class="ganho__pontos">+${l.pontos}</span>
+      </li>`).join('');
+
+    const conquistas = (r.conquistas || []).map((c) => `
+      <li class="ganho__conquista">
+        <span class="ganho__medalha">${c.icone}</span>
+        <span class="ganho__conquistaTexto">
+          <strong>${c.nome}</strong>
+          <span>${c.descricao}</span>
+        </span>
+      </li>`).join('');
+
+    return `
+      <div class="folha">
+        <div class="folha__fundo" data-fechar-resultado></div>
+        <div class="folha__painel">
+          <div class="folha__topo">
+            <span class="folha__titulo">${r.nome} concluído</span>
+            <button class="folha__fechar" data-fechar-resultado aria-label="Fechar">✕</button>
+          </div>
+
+          <div class="ganho">
+            <div class="ganho__selo">
+              <span class="ganho__num">${r.pontos > 0 ? '+' + r.pontos : '0'}</span>
+              <span class="ganho__unidade">pontos</span>
+            </div>
+
+            <p class="ganho__resumo">${r.minutos} min · ${r.series} ${r.series === 1 ? 'série' : 'séries'}</p>
+
+            ${r.semPontos
+              ? `<p class="ganho__aviso">${r.semPontos}</p>`
+              : `<ul class="ganho__linhas">${linhas}</ul>`}
+
+            ${conquistas ? `
+              <div class="ganho__novas">
+                <p class="ganho__novasTitulo">Conquista desbloqueada</p>
+                <ul class="ganho__conquistas">${conquistas}</ul>
+              </div>` : ''}
+
+            <button class="ganho__ir" data-ver-social type="button">Ver no Social</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
   function render() {
     raiz.innerHTML =
       cabecalho() + indicadores() + planoDaSemana() + acaoPrincipal() + calendario() +
-      folhaDoDia() + folhaDeTitulos() + folhaDaConta() + faixaDeAviso();
+      folhaDoDia() + folhaDeTitulos() + folhaDaConta() + folhaDoResultado() + faixaDeAviso();
 
     Sessao.observar((segundos) => {
       const campo = raiz.querySelector('.btn__tempo');
@@ -365,6 +429,18 @@ const Dashboard = (() => {
 
     if (evento.target.closest('[data-plano]')) {
       Router.ir('plano');
+      return;
+    }
+
+    if (evento.target.closest('[data-fechar-resultado]')) {
+      resultado = null;
+      render();
+      return;
+    }
+
+    if (evento.target.closest('[data-ver-social]')) {
+      resultado = null;
+      Abas.ir('social');
       return;
     }
 
@@ -450,14 +526,10 @@ const Dashboard = (() => {
     aviso = null;
     clearTimeout(relogioAviso);
 
-    // Chega com aviso quando o usuário acabou de encerrar um treino.
+    // Chega com o resultado quando o usuário acabou de encerrar um
+    // treino: a folha abre sozinha e espera ser fechada.
     if (params && params.registrado) {
-      aviso = `${params.registrado.nome} registrado · ${params.registrado.minutos} min`;
-      relogioAviso = setTimeout(() => {
-        if (!raiz.isConnected) return;
-        aviso = null;
-        render();
-      }, 4000);
+      resultado = params.registrado;
     }
 
     const h = Utils.hoje();

@@ -4352,3 +4352,438 @@ body.temAbas .app {
   transform: translate(3px, 3px);
   box-shadow: 1px 1px 0 var(--traco);
 }
+
+/* ═══════════════════════════════════════════════════════
+   PONTOS, RESULTADO DO TREINO E FEED
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Folha de resultado, ao encerrar o treino ─────────── */
+.arcade .ganho {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.arcade .ganho__selo {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  padding: clamp(16px, 5vw, 24px);
+  background: var(--traco);
+  color: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 18px;
+  box-shadow: 5px 5px 0 var(--sol, #FFD23F);
+}
+
+.arcade .ganho__num {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: clamp(40px, 14vw, 60px);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.arcade .ganho__unidade {
+  font-size: var(--fs-md);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.arcade .ganho__resumo {
+  margin: 0;
+  text-align: center;
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  color: #6E6880;
+}
+
+.arcade .ganho__linhas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 13px;
+  overflow: hidden;
+}
+
+.arcade .ganho__linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 13px;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: #6E6880;
+}
+
+.arcade .ganho__linha + .ganho__linha { border-top: 2px solid #EFECF6; }
+.arcade .ganho__rotulo { min-width: 0; overflow-wrap: anywhere; }
+
+.arcade .ganho__pontos {
+  flex: 0 0 auto;
+  font-weight: 800;
+  color: var(--traco);
+  white-space: nowrap;
+}
+
+/* Quando a regra de fair play negou os pontos, a explicação ocupa o
+   lugar da conta — dizer o motivo é melhor que mostrar zero sem razão. */
+.arcade .ganho__aviso {
+  margin: 0;
+  padding: 11px 13px;
+  background: var(--gelo, #EFECFF);
+  border: 2.5px dashed var(--traco);
+  border-radius: 12px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  line-height: 1.5;
+  color: #6E6880;
+}
+
+.arcade .ganho__novas {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 12px;
+  background: var(--sol, #FFD23F);
+  border: 2.5px solid var(--traco);
+  border-radius: 13px;
+}
+
+.arcade .ganho__novasTitulo {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--traco);
+}
+
+.arcade .ganho__conquistas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.arcade .ganho__conquista {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.arcade .ganho__medalha { font-size: clamp(22px, 7vw, 28px); line-height: 1; flex: 0 0 auto; }
+
+.arcade .ganho__conquistaTexto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--traco);
+}
+
+.arcade .ganho__conquistaTexto strong { font-size: var(--fs-sm); font-weight: 800; }
+
+.arcade .ganho__ir {
+  min-height: var(--toque);
+  padding: 12px;
+  background: var(--social, #7C5CFF);
+  color: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 var(--traco);
+  font-weight: 800;
+  font-size: var(--fs-sm);
+}
+
+.arcade .ganho__ir:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--traco); }
+
+/* ── Resumo de pontos na aba Social ───────────────────── */
+.arcade .pontos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.arcade .pontos__total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: clamp(16px, 5.5vw, 24px);
+  background: var(--social, #7C5CFF);
+  color: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 20px;
+  box-shadow: 6px 6px 0 var(--traco);
+}
+
+.arcade .pontos__num {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: clamp(38px, 13vw, 58px);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.arcade .pontos__rotulo {
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.92;
+}
+
+.arcade .pontos__par {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.arcade .pontos__caixa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 12px 8px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 14px;
+  box-shadow: 3px 3px 0 var(--traco);
+  min-width: 0;
+}
+
+.arcade .pontos__caixaNum {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: clamp(20px, 6.5vw, 28px);
+  line-height: 1;
+  color: var(--traco);
+}
+
+.arcade .pontos__caixaRotulo {
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6E6880;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* ── Semana em barras ─────────────────────────────────── */
+.arcade .semana {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: clamp(4px, 1.6vw, 8px);
+  padding: 12px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 14px;
+}
+
+.arcade .semana__col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.arcade .semana__trilho {
+  width: 100%;
+  height: clamp(48px, 15vw, 72px);
+  display: flex;
+  align-items: flex-end;
+  background: var(--gelo, #EFECFF);
+  border: 2px solid var(--traco);
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.arcade .semana__barra {
+  width: 100%;
+  background: var(--social, #7C5CFF);
+  border-top: 2px solid var(--traco);
+}
+
+.arcade .semana__barra--vazia { background: #D8D2EA; border-top: 0; }
+
+.arcade .semana__dia {
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #6E6880;
+}
+
+/* ── Conquistas ───────────────────────────────────────── */
+.arcade .bloco__topoLinha {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.arcade .bloco__contagem {
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6E6880;
+}
+
+.arcade .medalhas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(96px, 100%), 1fr));
+  gap: 9px;
+}
+
+.arcade .medalha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 11px 7px;
+  text-align: center;
+  background: var(--sol, #FFD23F);
+  border: 2.5px solid var(--traco);
+  border-radius: 13px;
+  box-shadow: 3px 3px 0 var(--traco);
+  min-width: 0;
+}
+
+.arcade .medalha__icone { font-size: clamp(22px, 7vw, 28px); line-height: 1; }
+
+.arcade .medalha__nome {
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  color: var(--traco);
+  overflow-wrap: anywhere;
+}
+
+/* ── Feed ─────────────────────────────────────────────── */
+.arcade .feed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.arcade .post {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 12px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 15px;
+  box-shadow: 3px 3px 0 var(--traco);
+}
+
+.arcade .post__topo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.arcade .post__avatar {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  background: var(--cor, #7C5CFF);
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  color: #FFFFFF;
+  font-size: 19px;
+}
+
+.arcade .post__avatar svg { width: 26px; height: 26px; display: block; }
+
+.arcade .post__quem {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.arcade .post__nome {
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  color: var(--traco);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arcade .post__quando {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: #6E6880;
+  overflow-wrap: anywhere;
+}
+
+.arcade .post__pontos {
+  flex: 0 0 auto;
+  padding: 5px 10px;
+  background: var(--sol, #FFD23F);
+  border: 2.5px solid var(--traco);
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  color: var(--traco);
+  white-space: nowrap;
+}
+
+.arcade .post__pontos--zero {
+  background: var(--gelo, #EFECFF);
+  color: #6E6880;
+}
+
+.arcade .post__treino {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.arcade .post__treino strong {
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  color: var(--traco);
+  overflow-wrap: anywhere;
+}
+
+.arcade .post__meta {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: #6E6880;
+}
+
+.arcade .post__recorde {
+  margin: 0;
+  padding: 7px 10px;
+  background: var(--sol, #FFD23F);
+  border: 2px solid var(--traco);
+  border-radius: 10px;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  color: var(--traco);
+}
