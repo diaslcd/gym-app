@@ -53,6 +53,18 @@ séries marcáveis, observação e cronômetro de descanso ajustável por exerc�
 série executada. Mais dois gráficos: **volume por treino** (repetições × carga)
 e **evolução de carga** por exercício.
 
+**Nutrição** — consulta de calorias e macros, alcançada pelo painel. Busca por
+alimento ou por refeição inteira: digitar `frango com arroz e feijão` encontra o
+prato composto e abre a conta item por item, com a gramagem de cada um. Toda
+tela mostra a porção a que os números se referem — a porção vem antes do
+número, nunca depois. Dá para trocar entre as medidas caseiras do alimento
+(«1 filé médio», «1 escumadeira»), a referência de 100 g e um peso digitado.
+
+Categorias, favoritos e histórico de consulta ficam na primeira tela, para quem
+abriu sem saber o que procurar. Os valores são de referência da **TACO**
+(Unicamp) e do **USDA**, e o app diz isso: corte, preparo e quantidade mudam o
+resultado no prato real.
+
 ## Arquitetura
 
 ```
@@ -64,17 +76,24 @@ assets/js/
   treino.js                  ajustes do treino na sessão
   sessao.js                  cronômetro do treino
   execucao.js                séries, cargas e descanso
+  nutricao.js                tabela de alimentos, pratos e busca
   icones.js                  ícones de interface e músculo
   icones-exercicios.js       pictogramas dos exercícios
   guia.js                    guia de execução por família de movimento
   demonstracao.js            encaixe de mídia da demonstração
   componentes.js             peças compartilhadas entre telas
   router.js                  troca de telas
-  views/                     painel, seleção, exercícios, detalhe, histórico
+  views/                     painel, seleção, exercícios, detalhe, histórico,
+                             nutrição e alimento
 ```
 
 Cada módulo é uma IIFE que expõe o mínimo. As views recebem um container novo a
 cada navegação, então listeners antigos morrem com o nó anterior.
+
+**Navegação.** Não há barra de abas: o painel é a raiz e todas as seções saem
+dele, inclusive Nutrição. É proposital — com mais de uma tela-raiz, o botão
+voltar do Android deixa de ter um fim óbvio, e hoje ele sai do app justamente
+por saber que o painel é o fim da pilha.
 
 **Pictogramas.** Os 78 exercícios são desenhados em SVG inline a partir de 29
 movimentos base — variações que mudam só o equipamento compartilham o desenho da
@@ -99,6 +118,8 @@ registra de verdade ficam no `localStorage` e entram por cima:
 | `gym:sessao` | treino em andamento |
 | `gym:execucao` | séries e descanso do treino atual |
 | `gym:ajustes` | remoções, trocas e acréscimos |
+| `gym:nutri:favoritos` | alimentos e pratos marcados com estrela |
+| `gym:nutri:recentes` | os últimos consultados na Nutrição |
 
 Todo acesso ao storage é protegido: em navegação privada o app funciona igual,
 só não persiste.
@@ -143,6 +164,10 @@ entram no versionamento.
 
 ## Estado do projeto
 
-Protótipo funcional. Não tem back-end, autenticação nem sincronização entre
-dispositivos — tudo vive no navegador. A demonstração dos exercícios usa
-pictogramas, não vídeo real.
+Protótipo funcional de treino e nutrição. Não tem back-end, autenticação nem
+sincronização entre dispositivos — tudo vive no navegador. A demonstração dos
+exercícios usa pictogramas, não vídeo real.
+
+**Sobre a tabela nutricional.** São valores de referência de tabelas públicas,
+não medição do prato de ninguém. O app declara isso na tela em vez de sugerir
+precisão que não tem.

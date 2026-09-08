@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
   Router.registrar('exercicios', Exercicios);
   Router.registrar('detalhe', Detalhe);
   Router.registrar('historico', Historico);
+  Router.registrar('nutricao', NutricaoView);
+  Router.registrar('alimento', Alimento);
 
   // Perfil sem PIN entra direto; com PIN, passa pela tela de entrada.
   const inicial = Perfil.dentro() ? 'dashboard' : 'login';

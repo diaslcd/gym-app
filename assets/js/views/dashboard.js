@@ -101,6 +101,30 @@ const Dashboard = (() => {
     return `<button class="btn btn--primary" data-acao="iniciar">Iniciar treino</button>`;
   }
 
+  /* Porta de entrada da Nutrição.
+
+     O app não tem barra de abas: o painel é a raiz e tudo sai daqui,
+     inclusive histórico e plano. Criar uma barra inferior só para a
+     segunda seção traria dois problemas — passaria a existir mais de
+     uma tela-raiz, e o voltar do Android, que hoje sai do app no
+     painel, precisaria decidir qual raiz é o fim. Então a Nutrição
+     entra pelo mesmo caminho das outras seções, com o peso visual de
+     seção principal: bloco largo, logo abaixo da ação de treino.
+
+     O verde é só dela e se repete lá dentro, para dar identidade sem
+     romper a linguagem do app. */
+  function portaDaNutricao() {
+    return `
+      <button class="secaoNutri" data-nutricao type="button">
+        <span class="secaoNutri__icone" aria-hidden="true">🥗</span>
+        <span class="secaoNutri__texto">
+          <span class="secaoNutri__nome">Nutrição</span>
+          <span class="secaoNutri__sub">calorias e macros de alimentos e pratos</span>
+        </span>
+        <span class="secaoNutri__seta" aria-hidden="true">›</span>
+      </button>`;
+  }
+
   function celula(ano, mes, dia, hojeIso, ordem, ultimoDia) {
     const data = new Date(ano, mes, dia);
     const dataIso = Utils.iso(data);
@@ -256,7 +280,7 @@ const Dashboard = (() => {
 
   function render() {
     raiz.innerHTML =
-      cabecalho() + indicadores() + planoDaSemana() + acaoPrincipal() + calendario() +
+      cabecalho() + indicadores() + planoDaSemana() + acaoPrincipal() + portaDaNutricao() + calendario() +
       folhaDoDia() + folhaDeTitulos() + faixaDeAviso();
 
     Sessao.observar((segundos) => {
@@ -278,6 +302,11 @@ const Dashboard = (() => {
 
     if (evento.target.closest('[data-historico]')) {
       Router.ir('historico');
+      return;
+    }
+
+    if (evento.target.closest('[data-nutricao]')) {
+      Router.ir('nutricao');
       return;
     }
 
