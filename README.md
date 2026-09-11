@@ -1,5 +1,3 @@
-| `gym:social:atividades` | treinos registrados como atividade, com pontos |
-| `gym:social:conquistas` | quando cada conquista caiu |
 # BunnyGym
 
 Aplicativo web de treino de academia, feito para uso no celular. Acompanha a
@@ -148,6 +146,8 @@ registra de verdade ficam no `localStorage` e entram por cima:
 | `gym:biometria` | id público da credencial da digital — nada biométrico |
 | `gym:nutri:favoritos` | alimentos e pratos marcados com estrela |
 | `gym:nutri:recentes` | os últimos consultados na Nutrição |
+| `gym:social:atividades` | treinos registrados como atividade, com pontos |
+| `gym:social:conquistas` | quando cada conquista caiu |
 
 Todo acesso ao storage é protegido: em navegação privada o app funciona igual,
 só não persiste.
