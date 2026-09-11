@@ -175,16 +175,49 @@ const Social = (() => {
       </div>`;
   }
 
+  /* Atalhos para o resto da área.
+
+     Ficam logo abaixo dos pontos porque é ali que a pergunta seguinte
+     aparece: "quanto isso vale perto dos outros?". Levam ranking,
+     grupos, desafios e perfil sem empurrar cada um para uma aba
+     própria — a barra inferior já tem três e não comporta mais. */
+  function atalhos() {
+    const eu = Comunidade.minhaPosicao();
+    const desafiosAtivos = Comunidade.desafios().filter((d) => d.inscrito).length;
+    const meusGrupos = Comunidade.grupos().length;
+
+    const item = (destino, icone, nome, detalhe) => `
+      <button class="atalho" type="button" data-ir="${destino}">
+        <span class="atalho__icone" aria-hidden="true">${icone}</span>
+        <span class="atalho__nome">${nome}</span>
+        <span class="atalho__detalhe">${detalhe}</span>
+      </button>`;
+
+    return `
+      <nav class="atalhos" aria-label="Áreas do Social">
+        ${item('ranking', '🏆', 'Ranking', eu ? eu.posicao + 'º lugar' : 'fora da lista')}
+        ${item('grupos', '👥', 'Grupos', meusGrupos ? meusGrupos + (meusGrupos === 1 ? ' grupo' : ' grupos') : 'criar')}
+        ${item('desafios', '🎯', 'Desafios', desafiosAtivos ? desafiosAtivos + ' em curso' : 'participar')}
+        ${item('perfil', '💪', 'Perfil', 'seus números')}
+      </nav>`;
+  }
+
   function render() {
     const temAtividade = SocialDados.todas().length > 0;
     raiz.innerHTML = cabecalho() + (temAtividade
-      ? resumoDePontos() + semana() + conquistas() + atividades()
-      : estadoVazio());
+      ? resumoDePontos() + atalhos() + semana() + conquistas() + atividades()
+      : estadoVazio() + atalhos());
   }
 
   function aoClicar(evento) {
     if (evento.target.closest('[data-treinar]')) {
       Abas.ir('treino');
+      return;
+    }
+
+    const ir = evento.target.closest('[data-ir]');
+    if (ir) {
+      Router.ir(ir.dataset.ir);
       return;
     }
 

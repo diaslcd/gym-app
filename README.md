@@ -1,3 +1,6 @@
+| `gym:social:privacidade` | quem pode ver o quê |
+| `gym:social:grupos` | grupos criados e de quem participa |
+| `gym:social:desafios` | data de entrada em cada desafio |
 # BunnyGym
 
 Aplicativo web de treino de academia, feito para uso no celular. Acompanha a
@@ -88,6 +91,7 @@ assets/js/
   abas.js                    as três áreas e a barra inferior
   social.js                  pontos, atividades, conquistas e fair play
   privacidade.js             quem pode ver o quê
+  comunidade.js              ranking, grupos e desafios
   foto.js                    captura e redução de imagem
   icones.js                  ícones de interface e músculo
   icones-exercicios.js       pictogramas dos exercícios

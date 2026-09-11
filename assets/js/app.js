@@ -11,6 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
   Router.registrar('alimento', Alimento);
   Router.registrar('social', Social);
   Router.registrar('publicar', Publicar);
+  Router.registrar('perfil', TelaPerfil);
+  Router.registrar('ranking', Ranking);
+  Router.registrar('grupos', Grupos);
+  Router.registrar('grupo', Grupo);
+  Router.registrar('desafios', Desafios);
 
   // Perfil sem PIN entra direto; com PIN, passa pela tela de entrada.
   const inicial = Perfil.dentro() ? 'dashboard' : 'login';
