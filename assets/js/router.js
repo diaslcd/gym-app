@@ -20,17 +20,24 @@ const Router = (() => {
      lê como transição — o olho vê a antiga sumir de uma vez. */
   const DURACAO = 260;
 
+  /* Três movimentos, porque são três relações diferentes entre telas.
+
+     Avançar e voltar deslizam para os lados: há hierarquia, e o lado
+     diz de onde se veio. Trocar de aba não tem lado — as três áreas são
+     irmãs, nenhuma está "depois" da outra — e deslizar sugeriria uma
+     ordem que não existe. Ali o movimento é de troca de plano: a que
+     sai recua e some, a que entra vem de trás e assume. */
   function pintar(nome, params, sentido) {
     // A tela que sai deixa de receber o tique do cronômetro.
     if (typeof Sessao !== 'undefined') Sessao.observar(null);
 
     atual = nome;
-    const lado = sentido === 'volta' ? 'Volta' : 'Avanca';
+    const lado = sentido === 'aba' ? 'Aba' : (sentido === 'volta' ? 'Volta' : 'Avanca');
 
     // Toque rápido pode pedir a próxima troca antes de a anterior
     // terminar. A tela que já estava saindo some agora: no máximo duas
     // convivem, a atual e a que sai.
-    raiz.querySelectorAll('.tela--saiAvanca, .tela--saiVolta')
+    raiz.querySelectorAll('.tela--saiAvanca, .tela--saiVolta, .tela--saiAba')
       .forEach((velha) => velha.remove());
 
     const anterior = raiz.lastElementChild;
@@ -54,13 +61,14 @@ const Router = (() => {
     if (typeof Abas !== 'undefined') Abas.atualizar(nome);
   }
 
-  function ir(nome, params) {
+  /** `sentido` é opcional: 'avanca' (padrão), 'volta' ou 'aba'. */
+  function ir(nome, params, sentido) {
     try {
       history.pushState({ tela: nome, params: params || null }, '');
     } catch (erro) {
       // Sem history disponível: navega mesmo assim, só sem o voltar.
     }
-    pintar(nome, params, 'avanca');
+    pintar(nome, params, sentido || 'avanca');
   }
 
   /** Voltar do sistema: repinta o que estiver na entrada anterior. */

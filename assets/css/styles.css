@@ -156,8 +156,22 @@ button {
   background: var(--papel, #E9E4FF);
 }
 
-.tela--entraAvanca { animation: tela-entraDireita 0.24s cubic-bezier(0.22, 1, 0.36, 1); }
-.tela--entraVolta  { animation: tela-entraEsquerda 0.24s cubic-bezier(0.22, 1, 0.36, 1); }
+/* Curva de saída do Material: sai rápido, chega devagar. É o que faz o
+   movimento parecer que respeita a inércia em vez de frear de uma vez.
+   Um pouco mais longo que os 0,24s antigos — abaixo de 0,25s o olho
+   registra um corte, não um movimento. */
+.tela--entraAvanca { animation: tela-entraDireita 0.3s cubic-bezier(0.05, 0.7, 0.1, 1); }
+.tela--entraVolta  { animation: tela-entraEsquerda 0.3s cubic-bezier(0.05, 0.7, 0.1, 1); }
+
+/* Troca de aba: nem esquerda nem direita.
+
+   As três áreas são irmãs, e deslizar sugeriria uma ordem entre elas
+   que não existe — ir do Treino para o Social pela direita e voltar
+   pela esquerda faria o Social parecer "depois". Aqui o movimento é de
+   profundidade: a que entra vem de trás, levemente menor, e cresce até
+   assumir o plano. */
+.tela--entraAba { animation: tela-entraAba 0.28s cubic-bezier(0.05, 0.7, 0.1, 1); }
+.tela--saiAba   { animation: tela-saiAba 0.16s ease-in forwards; }
 
 /* A que sai anda um pouco para o mesmo lado, por baixo: é o que dá
    profundidade ao movimento sem aparecer através da outra. */
@@ -177,8 +191,21 @@ button {
   to   { transform: translateX(0); box-shadow: 14px 0 26px rgba(18, 16, 26, 0); }
 }
 
-@keyframes tela-saiEsquerda { to { transform: translateX(-18px); } }
-@keyframes tela-saiDireita  { to { transform: translateX(18px); } }
+@keyframes tela-saiEsquerda { to { transform: translateX(-18px); opacity: 0.6; } }
+@keyframes tela-saiDireita  { to { transform: translateX(18px); opacity: 0.6; } }
+
+/* A que entra sobe de 96% e ganha opacidade nos primeiros instantes: o
+   grosso do movimento acontece enquanto ela ainda está translúcida, o
+   que evita o pulo que uma escala visível de ponta a ponta provoca. */
+@keyframes tela-entraAba {
+  from { opacity: 0; transform: scale(0.96); }
+  40%  { opacity: 1; }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes tela-saiAba {
+  to { opacity: 0; transform: scale(1.02); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .tela--entraAvanca, .tela--entraVolta,
@@ -4128,10 +4155,34 @@ button {
   pointer-events: none;
 }
 
-/* O conteúdo precisa de espaço para não terminar embaixo da barra.
-   A conta soma a altura da barra ao recuo que o .app já tinha. */
+/* Tudo que encosta no rodapé precisa desviar da barra.
+
+   A altura vem de `--abas-h`, que abas.js mede da barra de verdade a
+   cada repintura. Antes era um 62px escrito à mão, e a barra mede 68 —
+   o que deixava o último botão de qualquer folha 48px atrás dela, sem
+   nenhum sinal de que existia. O padding da barra já inclui a safe-area
+   de baixo, então ela não é somada de novo aqui. */
+:root { --abas-h: 0px; }
+
 body.temAbas .app {
-  padding-bottom: calc(clamp(20px, 7vw, 28px) + env(safe-area-inset-bottom) + 62px);
+  padding-bottom: calc(clamp(20px, 7vw, 28px) + env(safe-area-inset-bottom) + var(--abas-h));
+}
+
+/* Folhas sobem do rodapé e passavam por baixo da barra: o conteúdo do
+   fim — que é justamente onde mora o botão de confirmar — ficava
+   inalcançável. */
+body.temAbas .folha__painel {
+  padding-bottom: calc(20px + env(safe-area-inset-bottom) + var(--abas-h));
+  max-height: calc(82dvh - var(--abas-h) / 2);
+}
+
+/* O aviso rápido e a barra do treino em andamento seguem a mesma conta. */
+body.temAbas .aviso {
+  bottom: calc(18px + env(safe-area-inset-bottom) + var(--abas-h));
+}
+
+body.temAbas .barra {
+  bottom: calc(10px + env(safe-area-inset-bottom) + var(--abas-h));
 }
 
 .aba {
@@ -5993,4 +6044,42 @@ body.temAbas .app {
   height: 100%;
   min-width: var(--toque);
   min-height: var(--toque);
+}
+
+/* ── Movimento da barra de abas ───────────────────────── */
+
+/* O botão ativo se acende com um salto curto do ícone. Sem isso a troca
+   de aba acontecia sem confirmação nenhuma na barra: o conteúdo mudava
+   e o rodapé só trocava de cor, o que lia como recarregamento e não
+   como resposta ao toque. */
+.aba--on .aba__icone { animation: aba-salta 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.4); }
+
+@keyframes aba-salta {
+  0%   { transform: translateY(0) scale(1); }
+  45%  { transform: translateY(-4px) scale(1.14); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* A pastilha amarela cresce por baixo em vez de aparecer pronta. */
+.aba--on { animation: aba-acende 0.26s cubic-bezier(0.05, 0.7, 0.1, 1); }
+
+@keyframes aba-acende {
+  from { box-shadow: 0 0 0 var(--traco, #12101A); transform: scale(0.94); }
+  to   { box-shadow: 3px 3px 0 var(--traco, #12101A); transform: scale(1); }
+}
+
+/* A folha também sobe com a curva nova, para pertencer ao mesmo
+   vocabulário de movimento do resto do app. */
+.folha__painel { animation: folha-sobe 0.3s cubic-bezier(0.05, 0.7, 0.1, 1); }
+.folha__fundo { animation: fundo-escurece 0.22s ease-out; }
+
+@keyframes fundo-escurece {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tela--entraAba, .tela--saiAba,
+  .aba--on, .aba--on .aba__icone,
+  .folha__painel, .folha__fundo { animation: none; }
 }

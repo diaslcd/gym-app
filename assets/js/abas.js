@@ -111,7 +111,27 @@ const Abas = (() => {
     const aba = porId(id);
     if (!aba) return;
     if (Router.telaAtual() === aba.raiz) return;
-    Router.ir(aba.raiz);
+    // 'aba' pede a troca de plano em vez do deslize lateral: as três
+    // áreas são irmãs e nenhuma está "depois" da outra.
+    Router.ir(aba.raiz, undefined, 'aba');
+  }
+
+  /* Publica a altura real da barra numa variável de CSS.
+
+     Quem precisa desviar dela — o recuo do conteúdo, o fundo das folhas,
+     o aviso rápido — usava um número fixo chutado a olho. Estava errado:
+     a barra mede 68px e o recuo reservava 62, então o último botão de
+     qualquer folha ficava 48px atrás dela, sem sinal nenhum de que
+     existia. E o número certo não é constante: a barra cresce com a
+     escala de fonte do sistema, então medir uma vez no CSS nunca ia
+     bastar. Medida aqui, todos os recuos acompanham. */
+  function medirAltura() {
+    if (!barra || barra.hidden) {
+      document.documentElement.style.setProperty('--abas-h', '0px');
+      return;
+    }
+    const alto = Math.ceil(barra.getBoundingClientRect().height);
+    document.documentElement.style.setProperty('--abas-h', alto + 'px');
   }
 
   /** Repinta a barra para a tela atual; esconde onde ela não cabe. */
@@ -120,7 +140,10 @@ const Abas = (() => {
     const visivel = mostraBarra(tela);
     barra.hidden = !visivel;
     document.body.classList.toggle('temAbas', visivel);
-    if (!visivel) return;
+    if (!visivel) {
+      medirAltura();
+      return;
+    }
 
     const atual = daTela(tela);
     barra.innerHTML = abas.map((a) => {
@@ -132,7 +155,13 @@ const Abas = (() => {
           <span class="aba__nome">${a.nome}</span>
         </button>`;
     }).join('');
+
+    medirAltura();
   }
+
+  /* A barra muda de altura quando a janela muda — rotação de tela, ou a
+     escala de fonte do sistema alterada com o app aberto. */
+  window.addEventListener('resize', medirAltura);
 
   return { lista, porId, daTela, mostraBarra, ehRaiz, abaInicial, ehRaizInicial, ir, atualizar };
 })();
