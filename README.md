@@ -121,7 +121,7 @@ aumento automático de fonte do WebView Android, e `minmax(0, 1fr)` na grade do
 `.app`, que impede um filho grande de esticar o container. As duas estão
 comentadas no CSS com o porquê e o que quebrava sem elas.
 
-**Pictogramas.** Os 78 exercícios são desenhados em SVG inline a partir de 29
+**Pictogramas.** Os exercícios são desenhados em SVG inline a partir de 29
 movimentos base — variações que mudam só o equipamento compartilham o desenho da
 mecânica, e o texto do equipamento faz a distinção. Nenhuma imagem externa.
 

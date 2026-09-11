@@ -225,6 +225,21 @@ const IconesExercicios = (() => {
       setaCima(20.6, 12.4)
     ),
 
+    /* Abdutora e adutora: as duas únicas máquinas de perna em que o
+       movimento é lateral, então são desenhadas de frente — de perfil
+       abrir e fechar as pernas não aparece. Figura sentada vista da
+       frente, coxas em V e setas para os dois lados; o que muda entre
+       as duas é o sentido, e isso o nome resolve. */
+    'cadeira-abdutora': svg(
+      cabeca(12, 5.2) +
+      '<path d="M12 7v4.4"/>' +
+      '<path d="M12 11.4 8 15.4M12 11.4l4 4"/>' +
+      '<path d="M8 15.4v3.4M16 15.4v3.4"/>' +
+      '<path d="M5.6 20.4h3.4M15 20.4h3.4"/>' +
+      setaEsq(2.6, 13.6) +
+      setaDir(18, 13.6)
+    ),
+
     'mesa-flexora': svg(
       '<path d="M3.4 15h13"/>' +
       '<path d="M5.4 15v5.6M14.6 15v5.6"/>' +
@@ -378,6 +393,26 @@ const IconesExercicios = (() => {
   // equipamento ou o lado, não a mecânica — o pictograma é o mesmo
   // de propósito, e o texto do equipamento faz a diferenciação.
   const equivalentes = {
+    // Máquinas acrescentadas depois: cada uma aponta para o desenho do
+    // movimento que executa, seguindo a regra da casa — o que muda é o
+    // equipamento, e disso o texto já dá conta.
+    'cadeira-adutora': 'cadeira-abdutora',
+    'supino-maquina': 'chest-press',
+    'leg-horizontal': 'leg-press',
+    'agachamento-maquina': 'hack-squat',
+    'flexora-unilateral': 'cadeira-flexora',
+    'gluteo-maquina': 'mesa-flexora',
+    'gluteo-polia': 'mesa-flexora',
+    'hip-thrust-maquina': 'stiff',
+    'graviton': 'barra-fixa',
+    'mergulho-maquina': 'barra-fixa',
+    'paralelas': 'barra-fixa',
+    'remada-maquina': 'remada-articulada',
+    'puxada-articulada': 'puxada-frontal',
+    'rosca-maquina': 'rosca-direta',
+    'desenvolvimento-halt': 'desenvolvimento',
+    'abdominal-polia': 'abdominal',
+
     supino: 'supino-reto',
     puxada: 'puxada-frontal',
     rosca: 'rosca-direta',

@@ -2882,95 +2882,6 @@ button {
   color: #6E6880;
 }
 
-/* ── Boas-vindas da primeira abertura ─────────────────── */
-.arcade .bemvindo {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  justify-content: center;
-  /* O 120px fixo era o recuo do .app estimado a olho: onde a barra de
-     status ou a de gestos é mais alta, a conta sobrava e sobrava também
-     uma rolagem de alguns pixels que não deveria existir. A altura do
-     próprio container já desconta o recuo real, seja ele qual for. */
-  min-height: 100%;
-}
-
-.arcade .bemvindo__titulo {
-  margin: 0;
-  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
-  font-weight: 400;
-  font-size: 38px;
-  line-height: 0.95;
-  letter-spacing: -0.02em;
-  color: var(--traco);
-}
-
-.arcade .bemvindo__titulo span {
-  display: block;
-  color: var(--rosa);
-}
-
-.arcade .bemvindo__linha {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 700;
-  color: #4B4460;
-}
-
-.arcade .bemvindo__lista {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.arcade .bemvindo__item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 13px 14px;
-  background: #FFFFFF;
-  border: 2.5px solid var(--traco);
-  border-radius: 15px;
-  box-shadow: 3px 3px 0 var(--traco);
-}
-
-.arcade .bemvindo__icone {
-  flex: 0 0 auto;
-  font-size: 22px;
-  line-height: 1.1;
-}
-
-.arcade .bemvindo__texto { display: flex; flex-direction: column; gap: 3px; }
-
-.arcade .bemvindo__nome {
-  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
-  font-size: 13px;
-  text-transform: uppercase;
-  color: var(--traco);
-}
-
-.arcade .bemvindo__desc {
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.45;
-  color: #6E6880;
-}
-
-.arcade .bemvindo__resposta {
-  margin: 0;
-  padding: 10px 12px;
-  background: var(--gelo);
-  border: 2.5px solid var(--traco);
-  border-radius: 12px;
-  font-size: 12.5px;
-  font-weight: 700;
-  line-height: 1.45;
-  color: #0E4256;
-}
-
 /* ── Plano da semana ──────────────────────────────────── */
 .arcade .plano {
   display: flex;
@@ -4184,6 +4095,12 @@ button {
    troca — o conteúdo desliza por baixo dela.
    ═══════════════════════════════════════════════════════ */
 
+/* O `display: grid` abaixo vence o `display: none` que o atributo
+   hidden traz do navegador, porque classe tem mais peso que a regra
+   padrão. Sem esta linha a barra continuava à vista nas telas em que
+   deve sumir — a execução do treino, entre elas. */
+.abas[hidden] { display: none; }
+
 .abas {
   position: fixed;
   left: 0;
@@ -4787,3 +4704,85 @@ body.temAbas .app {
   font-weight: 800;
   color: var(--traco);
 }
+
+/* ═══════════════════════════════════════════════════════
+   ATALHOS DA SÉRIE
+   Repetir a série anterior e subir a carga em degraus, sem
+   abrir o teclado. A série passa a ter duas linhas: os
+   campos em cima, os atalhos embaixo.
+   ═══════════════════════════════════════════════════════ */
+
+/* A série vira coluna; a linha de campos guarda o arranjo antigo. */
+.arcade .serie {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.arcade .serie__linha {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.arcade .serie__atalhos {
+  display: flex;
+  gap: 5px;
+  /* O "=" é o mais usado e ocupa o espaço que sobra; os degraus têm
+     largura própria e ficam na direita, onde o polegar alcança. */
+  align-items: stretch;
+}
+
+.arcade .rapido {
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 32px;
+  padding: 5px 9px;
+  display: grid;
+  place-items: center;
+  background: var(--gelo, #EFECFF);
+  border: 2px solid var(--traco);
+  border-radius: 9px;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  color: var(--traco);
+  white-space: nowrap;
+}
+
+/* O botão de repetir cresce e mostra o que vai copiar, então precisa
+   poder truncar em vez de empurrar os degraus para fora. */
+.arcade .rapido--igual {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  text-align: center;
+  line-height: 20px;
+  background: var(--papel, #E9E4FF);
+}
+
+.arcade .rapido:active {
+  transform: translate(1px, 1px);
+  background: var(--sol, #FFD23F);
+}
+
+/* Alvo de toque confortável sem engordar o botão: a área cresce por
+   baixo, como nos outros controles pequenos do app. */
+.arcade .rapido { position: relative; }
+
+.arcade .rapido::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  min-height: var(--toque);
+}
+
+/* Série já marcada não precisa mais de atalho: some para não competir
+   com a próxima, que é onde a atenção está. */
+.arcade .serie--feita .serie__atalhos { display: none; }

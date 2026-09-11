@@ -16,22 +16,54 @@ const Detalhe = (() => {
 
   /* ── Painel de execução ────────────────────────────── */
 
-  function serie(indice, dados) {
+  /* Atalhos de preenchimento da série.
+
+     Digitar número em teclado de celular é o gesto mais caro desta
+     tela, e é feito de pé, no meio do treino, muitas vezes com uma mão
+     só. Na prática a série seguinte quase sempre repete a anterior ou
+     sobe um degrau redondo — então os dois casos viram um toque.
+
+     O "=" só aparece da segunda série em diante, porque não há o que
+     repetir na primeira, e mostra o que vai copiar em vez de obrigar a
+     lembrar. Os degraus somam à carga; para baixar, o campo continua
+     digitável, que é o caso raro. */
+  function atalhos(indice, anterior) {
+    const repetir = anterior
+      ? `<button class="rapido rapido--igual" type="button" data-repetir="${indice}"
+                 aria-label="Repetir a série anterior: ${anterior.carga} kg e ${anterior.reps} repetições">
+           = ${anterior.carga} kg · ${anterior.reps}
+         </button>`
+      : '';
+
+    return `
+      <div class="serie__atalhos">
+        ${repetir}
+        <button class="rapido" type="button" data-somar="${indice}" data-quanto="5"
+                aria-label="Somar 5 kg à série ${indice + 1}">+5</button>
+        <button class="rapido" type="button" data-somar="${indice}" data-quanto="10"
+                aria-label="Somar 10 kg à série ${indice + 1}">+10</button>
+      </div>`;
+  }
+
+  function serie(indice, dados, anterior) {
     return `
       <li class="serie${dados.feita ? ' serie--feita' : ''}">
-        <span class="serie__num">${indice + 1}</span>
-        <label class="campo">
-          <input class="campo__valor" type="number" inputmode="numeric" min="1" step="1"
-                 value="${dados.reps}" data-reps="${indice}" aria-label="Repetições da série ${indice + 1}">
-          <span class="campo__un">reps</span>
-        </label>
-        <label class="campo">
-          <input class="campo__valor" type="number" inputmode="decimal" min="0" step="2.5"
-                 value="${dados.carga}" data-carga="${indice}" aria-label="Carga da série ${indice + 1}">
-          <span class="campo__un">kg</span>
-        </label>
-        <button class="serie__ok" data-serie="${indice}" aria-pressed="${dados.feita}"
-                aria-label="Marcar série ${indice + 1}">✓</button>
+        <div class="serie__linha">
+          <span class="serie__num">${indice + 1}</span>
+          <label class="campo">
+            <input class="campo__valor" type="number" inputmode="numeric" min="1" step="1"
+                   value="${dados.reps}" data-reps="${indice}" aria-label="Repetições da série ${indice + 1}">
+            <span class="campo__un">reps</span>
+          </label>
+          <label class="campo">
+            <input class="campo__valor" type="number" inputmode="decimal" min="0" step="2.5"
+                   value="${dados.carga}" data-carga="${indice}" aria-label="Carga da série ${indice + 1}">
+            <span class="campo__un">kg</span>
+          </label>
+          <button class="serie__ok" data-serie="${indice}" aria-pressed="${dados.feita}"
+                  aria-label="Marcar série ${indice + 1}">✓</button>
+        </div>
+        ${atalhos(indice, anterior)}
       </li>`;
   }
 
@@ -61,7 +93,7 @@ const Detalhe = (() => {
         <h2 class="bloco__titulo">Registrar séries${f.concluido ? ' · concluído' : ''}</h2>
 
         <ul class="exec__series">
-          ${f.series.map((s, i) => serie(i, s)).join('')}
+          ${f.series.map((s, i) => serie(i, s, i > 0 ? f.series[i - 1] : null)).join('')}
         </ul>
 
         <div class="exec__quantas">
@@ -197,6 +229,36 @@ const Detalhe = (() => {
     if (secao) {
       aberto[secao.dataset.secao] = !aberto[secao.dataset.secao];
       render();
+      return;
+    }
+
+    /* Copia carga e repetições da série de cima. Na maior parte dos
+       treinos as séries se repetem, e isso poupa dois teclados. */
+    const repetir = alvo('[data-repetir]');
+    if (repetir) {
+      const indice = Number(repetir.dataset.repetir);
+      const series = Execucao.ficha(tipoId, exercicio.id).series;
+      const de = series[indice - 1];
+      if (de) {
+        Execucao.definirSerie(tipoId, exercicio.id, indice, 'reps', de.reps);
+        Execucao.definirSerie(tipoId, exercicio.id, indice, 'carga', de.carga);
+        render();
+      }
+      return;
+    }
+
+    /* Degrau de carga. Anilha de 5 e de 10 é o que existe na academia,
+       e somar é mais rápido que abrir o teclado para trocar 40 por 45. */
+    const somar = alvo('[data-somar]');
+    if (somar) {
+      const indice = Number(somar.dataset.somar);
+      const quanto = Number(somar.dataset.quanto);
+      const atual = Execucao.ficha(tipoId, exercicio.id).series[indice];
+      if (atual) {
+        Execucao.definirSerie(tipoId, exercicio.id, indice, 'carga',
+          Math.round(((atual.carga || 0) + quanto) * 10) / 10);
+        render();
+      }
       return;
     }
 

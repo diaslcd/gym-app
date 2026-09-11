@@ -357,7 +357,11 @@ const Dados = (() => {
     'chest-press':         { id: 'chest-press',         nome: 'Chest press',              grupo: 'Peito', equipamento: 'Máquina sentada' },
     'supino-incl-halter':  { id: 'supino-incl-halter',  nome: 'Supino inclinado com halteres', grupo: 'Peito', equipamento: 'Halteres e banco inclinado' },
     'supino-declinado':    { id: 'supino-declinado',    nome: 'Supino declinado',         grupo: 'Peito', equipamento: 'Barra e banco declinado' },
-    'crucifixo-maquina':   { id: 'crucifixo-maquina',   nome: 'Crucifixo na máquina',     grupo: 'Peito', equipamento: 'Peck deck' },
+    // O nome que se usa na academia é "pec deck"; "crucifixo na
+    // máquina" é o mesmo movimento e só aparecia assim, o que fazia
+    // quem procurava pelo aparelho não encontrar.
+    'crucifixo-maquina':   { id: 'crucifixo-maquina',   nome: 'Pec deck (voador)',        grupo: 'Peito', equipamento: 'Máquina de peito' },
+    'supino-maquina':      { id: 'supino-maquina',      nome: 'Supino na máquina',        grupo: 'Peito', equipamento: 'Máquina com encosto' },
     'crucifixo-inclinado': { id: 'crucifixo-inclinado', nome: 'Crucifixo inclinado',      grupo: 'Peito', equipamento: 'Halteres e banco inclinado' },
     'crossover-baixo':     { id: 'crossover-baixo',     nome: 'Crossover baixo',          grupo: 'Peito', equipamento: 'Polia baixa' },
     'flexao':              { id: 'flexao',              nome: 'Flexão de braço',          grupo: 'Peito', equipamento: 'Peso corporal' },
@@ -369,6 +373,8 @@ const Dados = (() => {
     'triceps-maquina':     { id: 'triceps-maquina',     nome: 'Tríceps na máquina',       grupo: 'Tríceps', equipamento: 'Máquina sentada' },
     'mergulho-banco':      { id: 'mergulho-banco',      nome: 'Mergulho no banco',        grupo: 'Tríceps', equipamento: 'Peso corporal' },
     'triceps-unilateral':  { id: 'triceps-unilateral',  nome: 'Tríceps unilateral',       grupo: 'Tríceps', equipamento: 'Polia alta, um braço' },
+    'mergulho-maquina':    { id: 'mergulho-maquina',    nome: 'Mergulho assistido',       grupo: 'Tríceps', equipamento: 'Graviton' },
+    'paralelas':           { id: 'paralelas',           nome: 'Paralelas',                grupo: 'Tríceps', equipamento: 'Barras paralelas' },
 
     // Dorsais
     'barra-fixa':          { id: 'barra-fixa',          nome: 'Barra fixa',               grupo: 'Dorsais', equipamento: 'Peso corporal' },
@@ -378,6 +384,9 @@ const Dados = (() => {
     'remada-halteres':     { id: 'remada-halteres',     nome: 'Remada curvada com halteres', grupo: 'Dorsais', equipamento: 'Halteres' },
     'remada-unilateral':   { id: 'remada-unilateral',   nome: 'Remada unilateral',        grupo: 'Dorsais', equipamento: 'Máquina, um braço' },
     'pullover':            { id: 'pullover',            nome: 'Pullover na polia',        grupo: 'Dorsais', equipamento: 'Polia alta' },
+    'graviton':            { id: 'graviton',            nome: 'Barra fixa assistida',     grupo: 'Dorsais', equipamento: 'Graviton' },
+    'remada-maquina':      { id: 'remada-maquina',      nome: 'Remada na máquina',        grupo: 'Dorsais', equipamento: 'Máquina sentada com apoio' },
+    'puxada-articulada':   { id: 'puxada-articulada',   nome: 'Puxada articulada',        grupo: 'Dorsais', equipamento: 'Máquina articulada' },
 
     // Bíceps
     'rosca-scott':         { id: 'rosca-scott',         nome: 'Rosca scott',              grupo: 'Bíceps', equipamento: 'Banco scott e barra W' },
@@ -386,6 +395,7 @@ const Dados = (() => {
     'rosca-concentrada':   { id: 'rosca-concentrada',   nome: 'Rosca concentrada',        grupo: 'Bíceps', equipamento: 'Halter e banco' },
     'rosca-inversa':       { id: 'rosca-inversa',       nome: 'Rosca inversa',            grupo: 'Bíceps', equipamento: 'Barra W, pegada pronada' },
     'rosca-inclinada':     { id: 'rosca-inclinada',     nome: 'Rosca inclinada',          grupo: 'Bíceps', equipamento: 'Halteres e banco inclinado' },
+    'rosca-maquina':       { id: 'rosca-maquina',       nome: 'Rosca na máquina',         grupo: 'Bíceps', equipamento: 'Máquina scott' },
 
     // Quadríceps
     'agachamento-smith':   { id: 'agachamento-smith',   nome: 'Agachamento no Smith',     grupo: 'Quadríceps', equipamento: 'Smith' },
@@ -394,6 +404,13 @@ const Dados = (() => {
     'afundo':              { id: 'afundo',              nome: 'Afundo',                   grupo: 'Quadríceps', equipamento: 'Halteres' },
     'passada':             { id: 'passada',             nome: 'Passada',                  grupo: 'Quadríceps', equipamento: 'Halteres' },
     'extensora-unilateral':{ id: 'extensora-unilateral',nome: 'Extensora unilateral',     grupo: 'Quadríceps', equipamento: 'Máquina, uma perna' },
+    'leg-horizontal':      { id: 'leg-horizontal',      nome: 'Leg press horizontal',     grupo: 'Quadríceps', equipamento: 'Máquina sentada' },
+    'agachamento-maquina': { id: 'agachamento-maquina', nome: 'Agachamento na máquina',   grupo: 'Quadríceps', equipamento: 'Máquina pêndulo' },
+    /* Os adutores são um grupo à parte na anatomia, mas nas fichas de
+       academia a cadeira adutora entra no dia de perna junto com o
+       quadríceps — classificar assim é o que faz ela aparecer entre os
+       exercícios do treino de Perna, que é onde se procura por ela. */
+    'cadeira-adutora':     { id: 'cadeira-adutora',     nome: 'Cadeira adutora',          grupo: 'Quadríceps', equipamento: 'Máquina sentada, fecha as pernas' },
 
     // Posteriores
     'stiff':               { id: 'stiff',               nome: 'Stiff',                    grupo: 'Posteriores', equipamento: 'Barra' },
@@ -401,6 +418,14 @@ const Dados = (() => {
     'terra':               { id: 'terra',               nome: 'Levantamento terra',       grupo: 'Posteriores', equipamento: 'Barra' },
     'flexora-em-pe':       { id: 'flexora-em-pe',       nome: 'Flexora em pé',            grupo: 'Posteriores', equipamento: 'Máquina em pé' },
     'elevacao-pelvica':    { id: 'elevacao-pelvica',    nome: 'Elevação pélvica',         grupo: 'Posteriores', equipamento: 'Barra e banco' },
+    'flexora-unilateral':  { id: 'flexora-unilateral',  nome: 'Flexora unilateral',       grupo: 'Posteriores', equipamento: 'Máquina, uma perna' },
+
+    // Glúteos — a abdutora trabalha o glúteo médio, então é aqui que ela
+    // pertence de fato, e não no grupo do quadríceps.
+    'cadeira-abdutora':    { id: 'cadeira-abdutora',    nome: 'Cadeira abdutora',         grupo: 'Glúteos', equipamento: 'Máquina sentada, abre as pernas' },
+    'gluteo-maquina':      { id: 'gluteo-maquina',      nome: 'Glúteo na máquina',        grupo: 'Glúteos', equipamento: 'Máquina de coice' },
+    'gluteo-polia':        { id: 'gluteo-polia',        nome: 'Glúteo na polia',          grupo: 'Glúteos', equipamento: 'Polia baixa com caneleira' },
+    'hip-thrust-maquina':  { id: 'hip-thrust-maquina',  nome: 'Hip thrust na máquina',    grupo: 'Glúteos', equipamento: 'Máquina de elevação pélvica' },
 
     // Panturrilhas
     'panturrilha-sentado': { id: 'panturrilha-sentado', nome: 'Panturrilha sentado',      grupo: 'Panturrilhas', equipamento: 'Máquina sentada' },
@@ -416,6 +441,7 @@ const Dados = (() => {
     'elevacao-frontal':    { id: 'elevacao-frontal',    nome: 'Elevação frontal',         grupo: 'Ombros', equipamento: 'Halteres' },
     'elevacao-maquina':    { id: 'elevacao-maquina',    nome: 'Elevação lateral na máquina', grupo: 'Ombros', equipamento: 'Máquina' },
     'remada-alta':         { id: 'remada-alta',         nome: 'Remada alta',              grupo: 'Ombros', equipamento: 'Barra' },
+    'desenvolvimento-halt':{ id: 'desenvolvimento-halt',nome: 'Desenvolvimento com halteres', grupo: 'Ombros', equipamento: 'Halteres e banco' },
 
     // Trapézio
     'encolhimento':        { id: 'encolhimento',        nome: 'Encolhimento',             grupo: 'Trapézio', equipamento: 'Halteres' },
@@ -431,41 +457,42 @@ const Dados = (() => {
     'prancha':             { id: 'prancha',             nome: 'Prancha',                  grupo: 'Core', equipamento: 'Peso do corpo' },
     'elevacao-pernas':     { id: 'elevacao-pernas',     nome: 'Elevação de pernas',       grupo: 'Core', equipamento: 'Banco ou paralela' },
     'abdominal-maquina':   { id: 'abdominal-maquina',   nome: 'Abdominal na máquina',     grupo: 'Core', equipamento: 'Máquina sentada' },
-    'abdominal-infra':     { id: 'abdominal-infra',     nome: 'Abdominal infra',          grupo: 'Core', equipamento: 'Peso do corpo' }
+    'abdominal-infra':     { id: 'abdominal-infra',     nome: 'Abdominal infra',          grupo: 'Core', equipamento: 'Peso do corpo' },
+    'abdominal-polia':     { id: 'abdominal-polia',     nome: 'Abdominal na polia',       grupo: 'Core', equipamento: 'Polia alta com corda' }
   };
 
   /* Alternativas por exercício: mesmo grupo, movimento e estímulo
      equivalentes, variando o equipamento — que é o que costuma
      faltar na academia. */
   const alternativas = {
-    'supino-reto':       ['supino-halteres', 'chest-press', 'supino-smith', 'supino-declinado', 'flexao'],
+    'supino-reto':       ['supino-halteres', 'chest-press', 'supino-maquina', 'supino-smith', 'supino-declinado', 'flexao'],
     'supino-inclinado':  ['supino-incl-halter', 'crucifixo-inclinado', 'chest-press', 'supino-smith', 'flexao'],
     'crucifixo':         ['crucifixo-maquina', 'crucifixo-inclinado', 'crossover-baixo', 'supino-halteres', 'flexao'],
     'crossover':         ['crucifixo-maquina', 'crossover-baixo', 'crucifixo-inclinado', 'supino-halteres', 'chest-press'],
-    'triceps-pulley':    ['triceps-corda', 'triceps-maquina', 'triceps-unilateral', 'mergulho-banco', 'triceps-coice'],
+    'triceps-pulley':    ['triceps-corda', 'triceps-maquina', 'paralelas', 'mergulho-maquina', 'triceps-unilateral', 'mergulho-banco'],
     'triceps-frances':   ['triceps-testa-halt', 'triceps-corda', 'triceps-coice', 'triceps-maquina', 'mergulho-banco'],
     'triceps-testa':     ['triceps-testa-halt', 'triceps-corda', 'triceps-maquina', 'mergulho-banco', 'triceps-unilateral'],
 
-    'puxada-frontal':    ['barra-fixa', 'puxada-neutra', 'remada-unilateral', 'pullover', 'remada-cavalinho'],
+    'puxada-frontal':    ['barra-fixa', 'graviton', 'puxada-articulada', 'puxada-neutra', 'remada-unilateral', 'pullover'],
     'remada-baixa':      ['remada-serrote', 'remada-cavalinho', 'remada-halteres', 'remada-unilateral', 'barra-fixa'],
-    'remada-articulada': ['remada-serrote', 'remada-cavalinho', 'remada-halteres', 'remada-unilateral', 'barra-fixa'],
+    'remada-articulada': ['remada-maquina', 'remada-serrote', 'remada-cavalinho', 'remada-halteres', 'remada-unilateral'],
     'pulldown':          ['pullover', 'barra-fixa', 'puxada-neutra', 'remada-unilateral', 'remada-cavalinho'],
-    'rosca-direta':      ['rosca-scott', 'rosca-polia', 'rosca-concentrada', 'rosca-inclinada', 'rosca-inversa'],
+    'rosca-direta':      ['rosca-scott', 'rosca-maquina', 'rosca-polia', 'rosca-concentrada', 'rosca-inclinada', 'rosca-inversa'],
     'rosca-alternada':   ['rosca-inclinada', 'rosca-scott', 'rosca-concentrada', 'rosca-polia', 'rosca-corda'],
     'rosca-martelo':     ['rosca-corda', 'rosca-inversa', 'rosca-concentrada', 'rosca-polia', 'rosca-scott'],
 
     'agachamento':       ['agachamento-smith', 'agachamento-frontal', 'agachamento-bulgaro', 'afundo', 'passada'],
-    'leg-press':         ['agachamento-smith', 'afundo', 'agachamento-bulgaro', 'passada', 'agachamento-frontal'],
-    'cadeira-extensora': ['extensora-unilateral', 'agachamento-smith', 'afundo', 'agachamento-bulgaro', 'passada'],
+    'leg-press':         ['leg-horizontal', 'agachamento-maquina', 'agachamento-smith', 'afundo', 'agachamento-bulgaro', 'passada'],
+    'cadeira-extensora': ['extensora-unilateral', 'cadeira-adutora', 'leg-horizontal', 'agachamento-maquina', 'agachamento-smith', 'afundo'],
     'mesa-flexora':      ['stiff', 'stiff-halteres', 'flexora-em-pe', 'terra', 'elevacao-pelvica'],
-    'cadeira-flexora':   ['flexora-em-pe', 'stiff', 'stiff-halteres', 'elevacao-pelvica', 'terra'],
+    'cadeira-flexora':   ['flexora-unilateral', 'flexora-em-pe', 'stiff', 'stiff-halteres', 'elevacao-pelvica', 'terra'],
     'panturrilha':       ['panturrilha-sentado', 'panturrilha-leg', 'panturrilha-smith', 'panturrilha-livre'],
     'hack-squat':        ['agachamento-smith', 'agachamento-frontal', 'agachamento-bulgaro', 'afundo', 'passada'],
 
     'supino':            ['supino-halteres', 'chest-press', 'supino-smith', 'supino-incl-halter', 'flexao'],
     'remada':            ['remada-serrote', 'remada-cavalinho', 'remada-halteres', 'remada-unilateral', 'barra-fixa'],
     'puxada':            ['barra-fixa', 'puxada-neutra', 'pullover', 'remada-unilateral', 'remada-cavalinho'],
-    'desenvolvimento':   ['desenvolvimento-maq', 'desenvolvimento-barra', 'arnold', 'elevacao-frontal', 'remada-alta'],
+    'desenvolvimento':   ['desenvolvimento-maq', 'desenvolvimento-halt', 'desenvolvimento-barra', 'arnold', 'elevacao-frontal'],
     'elevacao-lateral':  ['elevacao-polia', 'elevacao-maquina', 'elevacao-frontal', 'arnold', 'remada-alta'],
     'rosca':             ['rosca-scott', 'rosca-polia', 'rosca-concentrada', 'rosca-inclinada', 'rosca-corda'],
     'triceps':           ['triceps-corda', 'triceps-maquina', 'mergulho-banco', 'triceps-coice', 'triceps-unilateral'],
@@ -483,11 +510,15 @@ const Dados = (() => {
     'rosca-scott':        ['rosca-concentrada', 'rosca-polia', 'rosca-inclinada', 'rosca-direta', 'rosca-corda'],
     'rosca-concentrada':  ['rosca-scott', 'rosca-alternada', 'rosca-polia', 'rosca-inclinada', 'rosca-corda'],
     'triceps-corda':      ['triceps-pulley', 'triceps-maquina', 'triceps-unilateral', 'mergulho-banco', 'triceps-coice'],
-    'elevacao-pelvica':   ['agachamento-bulgaro', 'stiff', 'afundo', 'mesa-flexora', 'passada'],
+    'elevacao-pelvica':   ['hip-thrust-maquina', 'gluteo-maquina', 'cadeira-abdutora', 'agachamento-bulgaro', 'stiff', 'afundo'],
     'agachamento-bulgaro': ['afundo', 'passada', 'elevacao-pelvica', 'leg-press', 'agachamento'],
     'afundo':             ['passada', 'agachamento-bulgaro', 'elevacao-pelvica', 'leg-press', 'agachamento'],
     'stiff':              ['stiff-halteres', 'terra', 'mesa-flexora', 'flexora-em-pe', 'elevacao-pelvica'],
-    'abdominal':          ['prancha', 'abdominal-maquina', 'elevacao-pernas', 'abdominal-infra']
+    'abdominal':          ['prancha', 'abdominal-maquina', 'abdominal-polia', 'elevacao-pernas', 'abdominal-infra'],
+
+    // As máquinas novas também levam a algum lugar quando são a origem.
+    'cadeira-abdutora':   ['gluteo-maquina', 'gluteo-polia', 'hip-thrust-maquina', 'elevacao-pelvica', 'cadeira-adutora'],
+    'cadeira-adutora':    ['cadeira-abdutora', 'cadeira-extensora', 'leg-horizontal', 'agachamento-bulgaro', 'afundo']
   };
 
   /** Procura um exercício em qualquer treino e, depois, no catálogo. */

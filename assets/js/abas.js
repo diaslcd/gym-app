@@ -43,12 +43,12 @@ const Abas = (() => {
 
   /* Telas onde a barra não aparece.
 
-     Entrada e boas-vindas ficam fora porque ainda não há para onde ir.
+     A entrada fica fora porque ainda não há para onde ir.
      A execução do treino fica fora por outro motivo: ali embaixo já mora
      a barra do treino em andamento, e duas barras empilhadas comem a
      tela do celular justamente na hora em que a pessoa está de pé, com o
      aparelho na mão, tentando marcar uma série. */
-  const SEM_BARRA = ['login', 'bemvindo', 'exercicios', 'detalhe'];
+  const SEM_BARRA = ['login', 'exercicios', 'detalhe'];
 
   function lista() {
     return abas;

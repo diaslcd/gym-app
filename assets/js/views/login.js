@@ -118,8 +118,10 @@ const Login = (() => {
       return;
     }
     Perfil.criar(rascunho.nome, comPin ? rascunho.pin : '');
-    // Perfil novo: passa pela tela que explica o que o app usa.
-    Router.ir('bemvindo');
+    // Perfil novo vai direto montar o plano da semana. A permissão de
+    // notificação é pedida quando o primeiro descanso começa, que é
+    // quando ela faz sentido — e não antes de existir treino algum.
+    Router.ir('plano', { primeiraVez: true });
   }
 
   function entrar() {
