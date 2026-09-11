@@ -145,72 +145,34 @@ button {
   flex-direction: column;
   gap: var(--gap);
 }
+/* A tela que entra é uma camada opaca por cima da que sai.
 
-/* A tela que entra é opaca e passa por cima da que sai. Animar a
-   opacidade das duas deixava as duas legíveis ao mesmo tempo, e o
-   resultado parecia defeito de renderização, não transição. */
-.tela--entraAvanca,
-.tela--entraVolta {
+   As duas ocupam a mesma célula da grade durante a troca. Sem fundo
+   próprio, o conteúdo da anterior apareceria através da nova e o
+   resultado leria como defeito de renderização, não como transição. */
+.tela--nova {
   position: relative;
   z-index: 1;
   background: var(--papel, #E9E4FF);
 }
 
-/* Curva de saída do Material: sai rápido, chega devagar. É o que faz o
-   movimento parecer que respeita a inércia em vez de frear de uma vez.
-   Um pouco mais longo que os 0,24s antigos — abaixo de 0,25s o olho
-   registra um corte, não um movimento. */
-.tela--entraAvanca { animation: tela-entraDireita 0.3s cubic-bezier(0.05, 0.7, 0.1, 1); }
-.tela--entraVolta  { animation: tela-entraEsquerda 0.3s cubic-bezier(0.05, 0.7, 0.1, 1); }
+/* A que está saindo não recebe mais toque: ela ainda ocupa a mesma
+   célula, e um dedo rápido acertaria o botão da tela que já foi. */
+.tela--saindo { pointer-events: none; }
 
-/* Troca de aba: nem esquerda nem direita.
+/* O movimento em si mora no router, em JavaScript, e não aqui.
 
-   As três áreas são irmãs, e deslizar sugeriria uma ordem entre elas
-   que não existe — ir do Treino para o Social pela direita e voltar
-   pela esquerda faria o Social parecer "depois". Aqui o movimento é de
-   profundidade: a que entra vem de trás, levemente menor, e cresce até
-   assumir o plano. */
-.tela--entraAba { animation: tela-entraAba 0.28s cubic-bezier(0.05, 0.7, 0.1, 1); }
-.tela--saiAba   { animation: tela-saiAba 0.16s ease-in forwards; }
+   Com `animation` no CSS, o primeiro quadro vira o estado do elemento
+   assim que a classe entra. Se a animação não avança — aba em segundo
+   plano, janela sem foco, aparelho economizando bateria, navegador
+   embutido que não compõe quadros — a tela nova fica presa no quadro
+   inicial, que é transparente. A tela que deveria aparecer some, a
+   antiga fica, e o app parece travado. Foi exatamente o que aconteceu.
 
-/* A que sai anda um pouco para o mesmo lado, por baixo: é o que dá
-   profundidade ao movimento sem aparecer através da outra. */
-.tela--saiAvanca,
-.tela--saiVolta { pointer-events: none; }
-
-.tela--saiAvanca { animation: tela-saiEsquerda 0.24s ease-out forwards; }
-.tela--saiVolta  { animation: tela-saiDireita  0.24s ease-out forwards; }
-
-@keyframes tela-entraDireita {
-  from { transform: translateX(38px); box-shadow: -14px 0 26px rgba(18, 16, 26, 0.22); }
-  to   { transform: translateX(0); box-shadow: -14px 0 26px rgba(18, 16, 26, 0); }
-}
-
-@keyframes tela-entraEsquerda {
-  from { transform: translateX(-38px); box-shadow: 14px 0 26px rgba(18, 16, 26, 0.22); }
-  to   { transform: translateX(0); box-shadow: 14px 0 26px rgba(18, 16, 26, 0); }
-}
-
-@keyframes tela-saiEsquerda { to { transform: translateX(-18px); opacity: 0.6; } }
-@keyframes tela-saiDireita  { to { transform: translateX(18px); opacity: 0.6; } }
-
-/* A que entra sobe de 96% e ganha opacidade nos primeiros instantes: o
-   grosso do movimento acontece enquanto ela ainda está translúcida, o
-   que evita o pulo que uma escala visível de ponta a ponta provoca. */
-@keyframes tela-entraAba {
-  from { opacity: 0; transform: scale(0.96); }
-  40%  { opacity: 1; }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-@keyframes tela-saiAba {
-  to { opacity: 0; transform: scale(1.02); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tela--entraAvanca, .tela--entraVolta,
-  .tela--saiAvanca, .tela--saiVolta { animation: none; }
-}
+   Pela Web Animations API o elemento não tem estado preso: sem `fill`,
+   ele usa estas regras antes e depois do movimento. Se a animação não
+   andar, o router a cancela e o elemento volta a ser o que é — visível,
+   no lugar. O pior caso vira "trocou sem animação". */
 
 
 .card {
@@ -6079,7 +6041,6 @@ body.temAbas .barra {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tela--entraAba, .tela--saiAba,
   .aba--on, .aba--on .aba__icone,
   .folha__painel, .folha__fundo { animation: none; }
 }
