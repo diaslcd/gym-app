@@ -15,10 +15,26 @@ const Router = (() => {
     telas[nome] = view;
   }
 
-  /* As duas telas convivem enquanto a troca acontece: a que sai desliza
-     para um lado, a que entra chega do outro. Animar só a que entra não
-     lê como transição — o olho vê a antiga sumir de uma vez. */
-  const DURACAO = 260;
+  /* Tempos separados por tipo de movimento.
+
+     As duas telas convivem enquanto a troca acontece: a que sai cede o
+     lugar e a que entra assume. Animar só a que entra não lê como
+     transição — o olho vê a antiga sumir de uma vez.
+
+     Os 260ms de antes serviam ao deslize, que percorre poucos pixels, e
+     ficavam curtos demais para a troca de aba: ela muda a tela inteira
+     de uma vez, e nesse tempo o olho registra um corte seco, não uma
+     transição. Trocar de aba agora é mais demorado do que navegar
+     dentro dela, que é a proporção certa — a mudança é maior.
+
+     A saída é sempre mais curta que a entrada: a tela velha precisa
+     liberar espaço antes, senão as duas disputam a atenção no meio. */
+  const TEMPOS = {
+    Avanca: { entra: 300, sai: 220 },
+    Volta:  { entra: 300, sai: 220 },
+    Aba:    { entra: 440, sai: 200 }
+  };
+
 
   /* Por que a animação é feita aqui e não só no CSS.
 
@@ -41,16 +57,22 @@ const Router = (() => {
     // Hierarquia: desliza do lado de onde se veio.
     Avanca: [{ transform: 'translateX(38px)' }, { transform: 'translateX(0)' }],
     Volta:  [{ transform: 'translateX(-38px)' }, { transform: 'translateX(0)' }],
-    // Aba: troca de plano, sem lado. Vem de trás e assume.
-    Aba:    [{ opacity: 0, transform: 'scale(0.96)' },
-             { opacity: 1, offset: 0.4 },
+    /* Aba: troca de plano, sem lado.
+
+       A escala é discreta de propósito — 0,985 em vez dos 0,96 de antes.
+       Encolher muito afasta a tela das beiradas e faz aparecer moldura,
+       além de dar a sensação de que algo saltou. O que carrega o
+       movimento é a opacidade; a escala só sugere profundidade. */
+    Aba:    [{ opacity: 0, transform: 'scale(0.985)' },
+             { opacity: 1, offset: 0.55 },
              { opacity: 1, transform: 'scale(1)' }]
   };
 
   const SAIDAS = {
     Avanca: [{ transform: 'translateX(0)', opacity: 1 }, { transform: 'translateX(-18px)', opacity: 0.6 }],
     Volta:  [{ transform: 'translateX(0)', opacity: 1 }, { transform: 'translateX(18px)', opacity: 0.6 }],
-    Aba:    [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(1.02)' }]
+    // Sem crescer na saída: passar de 1 revela as beiradas da janela.
+    Aba:    [{ opacity: 1 }, { opacity: 0 }]
   };
 
   /** Roda a animação e garante que ela não deixe o elemento preso. */
@@ -117,7 +139,7 @@ const Router = (() => {
     const tela = document.createElement('div');
     // A tela nasce pronta: opaca, no lugar e por cima. A animação é
     // aplicada depois, por cima desse estado, e some ao terminar.
-    tela.className = 'tela tela--nova';
+    tela.className = 'tela';
 
     if (anterior) {
       if (comMovimento) {
@@ -125,7 +147,7 @@ const Router = (() => {
            movimento. Mantém as classes que a view pôs — tirar .arcade
            agora apagaria o visual dela no meio da transição. */
         anterior.classList.add('tela--saindo');
-        animar(anterior, SAIDAS[lado], DURACAO, () => anterior.remove());
+        animar(anterior, SAIDAS[lado], TEMPOS[lado].sai, () => anterior.remove());
       } else {
         anterior.remove();
       }
@@ -138,7 +160,7 @@ const Router = (() => {
     // A animação entra depois de a view montar: animar um container
     // vazio e encher depois faz o conteúdo aparecer de supetão no meio
     // do movimento.
-    if (comMovimento) animar(tela, ENTRADAS[lado], DURACAO);
+    if (comMovimento) animar(tela, ENTRADAS[lado], TEMPOS[lado].entra);
 
     // A barra de abas fica fora da tela e não é repintada por ela:
     // avisamos aqui, no único ponto por onde toda troca passa.

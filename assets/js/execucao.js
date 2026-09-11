@@ -3,7 +3,7 @@
    então fechar o app no meio do treino não perde o que já foi feito. */
 const Execucao = (() => {
   const CHAVE = 'gym:execucao';
-  const SERIE_PADRAO = { reps: 10, carga: 0 };
+  const SERIE_PADRAO = { reps: 12, carga: 0 };
   const DESCANSO_PADRAO = 90;
   const PASSO_DESCANSO = 15;
   const DESCANSO_MIN = 15;

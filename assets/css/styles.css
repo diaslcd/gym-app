@@ -67,6 +67,10 @@ html, body { margin: 0; padding: 0; }
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* Mesma cor do body: o Android pinta a raiz na área que aparece ao
+     puxar a lista além do fim, e o preto ali dava o mesmo susto que a
+     moldura da troca de aba. */
+  background: #E9E4FF;
 }
 
 /* Filho de flex/grid não encolhe abaixo do próprio conteúdo por padrão:
@@ -80,8 +84,15 @@ body { overflow-wrap: break-word; }
    Se algo escapar, some em vez de virar uma tela que desliza de lado. */
 html, body { overflow-x: hidden; }
 
+/* O fundo da janela é o papel do app, não o preto original.
+
+   O claro vinha de um `::before` dentro da tela, e isso bastava
+   enquanto nada se movia. Quando a troca de aba passou a encolher a
+   tela levemente, o fundo encolheu junto e apareceu o preto do body nas
+   bordas — uma moldura escura piscando a cada toque. Pintar a janela
+   com a mesma cor resolve na origem: não há mais o que revelar. */
 body {
-  background: var(--bg);
+  background: #E9E4FF;
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
@@ -144,18 +155,15 @@ button {
   display: flex;
   flex-direction: column;
   gap: var(--gap);
-}
-/* A tela que entra é uma camada opaca por cima da que sai.
-
-   As duas ocupam a mesma célula da grade durante a troca. Sem fundo
-   próprio, o conteúdo da anterior apareceria através da nova e o
-   resultado leria como defeito de renderização, não como transição. */
-.tela--nova {
+  /* Toda tela é uma camada opaca. As duas ocupam a mesma célula da
+     grade durante a troca; sem fundo próprio, o conteúdo da que sai
+     apareceria através da que entra e leria como defeito de
+     renderização, não como transição. A ordem no DOM resolve quem fica
+     por cima: a que entra é sempre a última. */
   position: relative;
   z-index: 1;
   background: var(--papel, #E9E4FF);
 }
-
 /* A que está saindo não recebe mais toque: ela ainda ocupa a mesma
    célula, e um dedo rápido acertaria o botão da tela que já foi. */
 .tela--saindo { pointer-events: none; }
