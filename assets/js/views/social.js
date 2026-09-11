@@ -135,7 +135,31 @@ const Social = (() => {
         </p>
 
         ${a.recorde ? '<p class="post__recorde">🏅 Recorde pessoal de carga</p>' : ''}
+        ${a.legenda ? `<p class="post__legenda">${escapar(a.legenda)}</p>` : ''}
+        ${a.foto ? `<img class="post__foto" src="${a.foto}" alt="Foto do treino" loading="lazy">` : ''}
+
+        <div class="post__rodape">
+          ${a.publicada
+            ? `<span class="post__selo">${Privacidade.opcaoPorId(a.visibilidade).icone} ${Privacidade.opcaoPorId(a.visibilidade).nome}</span>`
+            : `<button class="post__acao" type="button" data-publicar="${a.id}">📷 Publicar</button>`}
+          <button class="post__curtir${a.curtidas ? ' post__curtir--on' : ''}" type="button"
+                  data-curtir="${a.id}" aria-pressed="${a.curtidas > 0}">
+            ❤️ ${a.curtidas || 0}
+          </button>
+        </div>
       </li>`;
+  }
+
+  /* A legenda é o único texto do feed escrito por alguém. Hoje esse
+     alguém é a própria pessoa e o app é local, então não há a quem
+     atacar — mas o dia em que o feed trouxer texto de outro aparelho, o
+     caminho já estará fechado. */
+  function escapar(texto) {
+    return String(texto)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
   function estadoVazio() {
@@ -159,7 +183,27 @@ const Social = (() => {
   }
 
   function aoClicar(evento) {
-    if (evento.target.closest('[data-treinar]')) Abas.ir('treino');
+    if (evento.target.closest('[data-treinar]')) {
+      Abas.ir('treino');
+      return;
+    }
+
+    const publicar = evento.target.closest('[data-publicar]');
+    if (publicar) {
+      Router.ir('publicar', { id: publicar.dataset.publicar });
+      return;
+    }
+
+    /* Curtir o próprio treino é estranho e vai deixar de existir quando
+       houver feed de outras pessoas. Fica por ora como marcador do
+       treino que valeu a pena — e o número já mora na atividade, que é
+       onde vai continuar quando a curtida vier de fora. */
+    const curtir = evento.target.closest('[data-curtir]');
+    if (curtir) {
+      const a = SocialDados.porId(curtir.dataset.curtir);
+      if (a) SocialDados.atualizar(a.id, { curtidas: a.curtidas ? 0 : 1 });
+      render();
+    }
   }
 
   function montar(elemento) {

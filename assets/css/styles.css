@@ -4707,72 +4707,171 @@ body.temAbas .app {
 
 /* ═══════════════════════════════════════════════════════
    ATALHOS DA SÉRIE
-   Repetir a série anterior e subir a carga em degraus, sem
-   abrir o teclado. A série passa a ter duas linhas: os
-   campos em cima, os atalhos embaixo.
+   Repetir a série anterior e ajustar a carga em degraus,
+   sem abrir o teclado. A série passa a ter duas linhas: os
+   campos em cima, os atalhos embaixo, separados por um
+   filete para não se confundirem com os campos.
    ═══════════════════════════════════════════════════════ */
 
-/* A série vira coluna; a linha de campos guarda o arranjo antigo. */
 .arcade .serie {
   flex-direction: column;
   align-items: stretch;
-  gap: 6px;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 .arcade .serie__linha {
   display: flex;
   align-items: center;
   gap: 6px;
+  padding: 7px 8px;
   min-width: 0;
 }
 
 .arcade .serie__atalhos {
   display: flex;
-  gap: 5px;
-  /* O "=" é o mais usado e ocupa o espaço que sobra; os degraus têm
-     largura própria e ficam na direita, onde o polegar alcança. */
-  align-items: stretch;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  /* Fundo levemente distinto e filete no topo: os atalhos são a
+     segunda camada da série, não mais campos para preencher. */
+  background: var(--gelo, #EFECFF);
+  border-top: 2px solid var(--traco);
 }
 
-.arcade .rapido {
+/* ── Repetir a série anterior ─────────────────────────── */
+.arcade .rapido--igual {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 9px 5px 7px;
+  background: #FFFFFF;
+  border: 2px solid var(--traco);
+  border-radius: 999px;
+  box-shadow: 2px 2px 0 var(--traco);
+  text-align: left;
+}
+
+.arcade .rapido--igual:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+  background: var(--sol, #FFD23F);
+}
+
+.arcade .rapido__seta {
   flex: 0 0 auto;
-  min-width: 44px;
-  min-height: 32px;
-  padding: 5px 9px;
+  width: 22px;
+  height: 22px;
   display: grid;
   place-items: center;
-  background: var(--gelo, #EFECFF);
+  background: var(--sol, #FFD23F);
   border: 2px solid var(--traco);
-  border-radius: 9px;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--traco);
+}
+
+.arcade .rapido__texto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.arcade .rapido__acao {
   font-size: var(--fs-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6E6880;
+}
+
+.arcade .rapido__valor {
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  color: var(--traco);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Na primeira série não há o que repetir; o espaço fica ocupado por
+   um rótulo apagado para os degraus não pularem de posição entre uma
+   série e outra. */
+.arcade .rapido__vazio {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-left: 4px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9A93AE;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Degraus de carga ─────────────────────────────────── */
+
+/* Grupo colado, com a unidade escrita uma vez à esquerda: assim fica
+   claro que os botões mexem no peso, e não nas repetições. */
+.arcade .degraus {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: stretch;
+  background: #FFFFFF;
+  border: 2px solid var(--traco);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 var(--traco);
+  overflow: hidden;
+}
+
+.arcade .degraus__un {
+  display: grid;
+  place-items: center;
+  padding: 0 6px;
+  background: var(--traco);
+  color: #FFFFFF;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.arcade .degrau {
+  position: relative;
+  min-width: 34px;
+  min-height: 30px;
+  padding: 4px 7px;
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-sm);
   font-weight: 800;
   color: var(--traco);
   white-space: nowrap;
 }
 
-/* O botão de repetir cresce e mostra o que vai copiar, então precisa
-   poder truncar em vez de empurrar os degraus para fora. */
-.arcade .rapido--igual {
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  text-align: center;
-  line-height: 20px;
-  background: var(--papel, #E9E4FF);
+.arcade .degrau + .degrau { border-left: 2px solid var(--traco); }
+
+/* Somar é o gesto comum; tirar é correção. A cor separa os dois sem
+   precisar de legenda. */
+.arcade .degrau--mais { background: var(--sol, #FFD23F); }
+
+.arcade .degrau:active {
+  background: var(--traco);
+  color: var(--sol, #FFD23F);
 }
 
-.arcade .rapido:active {
-  transform: translate(1px, 1px);
-  background: var(--sol, #FFD23F);
-}
-
-/* Alvo de toque confortável sem engordar o botão: a área cresce por
-   baixo, como nos outros controles pequenos do app. */
-.arcade .rapido { position: relative; }
-
-.arcade .rapido::after {
+/* Alvo de toque confortável sem engordar o botão, como nos demais
+   controles pequenos do app. */
+.arcade .degrau::after,
+.arcade .rapido--igual::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -4783,6 +4882,381 @@ body.temAbas .app {
   min-height: var(--toque);
 }
 
+.arcade .rapido--igual { position: relative; }
+
 /* Série já marcada não precisa mais de atalho: some para não competir
    com a próxima, que é onde a atenção está. */
 .arcade .serie--feita .serie__atalhos { display: none; }
+
+/* ═══════════════════════════════════════════════════════
+   PUBLICAR E FOTO NO FEED
+   ═══════════════════════════════════════════════════════ */
+
+.arcade .pub {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.arcade .pub__treino {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px;
+  background: var(--cor, #7C5CFF);
+  border: 3px solid var(--traco);
+  border-radius: 16px;
+  box-shadow: 4px 4px 0 var(--traco);
+  color: #FFFFFF;
+}
+
+.arcade .pub__icone { flex: 0 0 auto; width: 34px; height: 34px; }
+.arcade .pub__icone svg { width: 100%; height: 100%; display: block; }
+
+.arcade .pub__dados {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.arcade .pub__nome {
+  font-size: var(--fs-md);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  text-shadow: 1px 1px 0 rgba(18, 16, 26, 0.3);
+}
+
+.arcade .pub__meta { font-size: var(--fs-xs); font-weight: 700; opacity: 0.9; }
+
+.arcade .pub__pontos {
+  flex: 0 0 auto;
+  padding: 4px 9px;
+  background: var(--sol, #FFD23F);
+  border: 2px solid var(--traco);
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  color: var(--traco);
+  white-space: nowrap;
+}
+
+/* A frase que tira a pressão de publicar. */
+.arcade .pub__jaGarantido {
+  margin: 0;
+  padding: 10px 12px;
+  background: var(--gelo, #EFECFF);
+  border: 2px dashed var(--traco);
+  border-radius: 12px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  color: #6E6880;
+}
+
+.arcade .pub__semFoto {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 12px;
+  background: #FFFFFF;
+  border: 3px dashed var(--traco);
+  border-radius: 16px;
+}
+
+.arcade .pub__convite {
+  margin: 0;
+  text-align: center;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: #6E6880;
+}
+
+.arcade .pub__convite strong { color: var(--traco); font-weight: 800; }
+
+.arcade .pub__botoesFoto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(130px, 100%), 1fr));
+  gap: 9px;
+}
+
+.arcade .pub__foto--btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: var(--toque);
+  padding: 10px;
+  background: var(--sol, #FFD23F);
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 var(--traco);
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  color: var(--traco);
+  min-width: 0;
+}
+
+.arcade .pub__foto--btn:active { transform: translate(3px, 3px); box-shadow: none; }
+.arcade .pub__foto--btn[disabled] { opacity: 0.6; }
+
+.arcade .pub__foto {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.arcade .pub__imagem {
+  width: 100%;
+  max-height: 46vh;
+  object-fit: cover;
+  display: block;
+  border: 3px solid var(--traco);
+  border-radius: 16px;
+  box-shadow: 4px 4px 0 var(--traco);
+}
+
+.arcade .pub__trocarFoto {
+  min-height: var(--toque);
+  padding: 9px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  color: var(--traco);
+}
+
+.arcade .pub__peso {
+  margin: 0;
+  text-align: center;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: #9A93AE;
+}
+
+.arcade .pub__erro {
+  margin: 0;
+  padding: 10px 12px;
+  background: #FFE2EA;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: #8A1739;
+}
+
+.arcade .pub__legenda {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.arcade .pub__rotulo {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #6E6880;
+}
+
+.arcade .pub__opcional {
+  padding: 2px 7px;
+  background: var(--gelo, #EFECFF);
+  border: 1.5px solid #C9C4D8;
+  border-radius: 999px;
+  font-size: 0.9em;
+  letter-spacing: 0.04em;
+  color: #9A93AE;
+}
+
+.arcade .pub__texto {
+  width: 100%;
+  padding: 10px 12px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 var(--traco);
+  font-family: inherit;
+  /* 16px impede o zoom automático do iOS ao focar o campo. */
+  font-size: max(16px, var(--fs-sm));
+  font-weight: 600;
+  color: var(--traco);
+  resize: none;
+  outline: none;
+}
+
+.arcade .pub__contador {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  color: #9A93AE;
+}
+
+.arcade .pub__quemVe {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.arcade .opcoesVer {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.arcade .verOpcao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-height: var(--toque);
+  padding: 9px 5px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  min-width: 0;
+}
+
+.arcade .verOpcao--on {
+  background: var(--social, #7C5CFF);
+  color: #FFFFFF;
+  box-shadow: 3px 3px 0 var(--traco);
+}
+
+.arcade .verOpcao__icone { font-size: var(--fs-md); line-height: 1; }
+
+.arcade .verOpcao__nome {
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.arcade .pub__enviar {
+  min-height: var(--toque);
+  padding: 14px;
+  background: var(--social, #7C5CFF);
+  color: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 16px;
+  box-shadow: 5px 5px 0 var(--traco);
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: var(--fs-md);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.arcade .pub__enviar:active { transform: translate(4px, 4px); box-shadow: 1px 1px 0 var(--traco); }
+
+.arcade .pub__pular {
+  min-height: var(--toque);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: #6E6880;
+  text-decoration: underline;
+}
+
+/* ── Botão de publicar na folha de resultado ──────────── */
+.arcade .ganho__publicar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--toque);
+  padding: 13px;
+  background: var(--sol, #FFD23F);
+  color: var(--traco);
+  border: 3px solid var(--traco);
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 var(--traco);
+  font-weight: 800;
+  font-size: var(--fs-sm);
+}
+
+.arcade .ganho__publicar:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--traco); }
+
+.arcade .ganho__ir {
+  background: transparent;
+  color: #6E6880;
+  border: 0;
+  box-shadow: none;
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+.arcade .ganho__ir:active { transform: none; box-shadow: none; }
+
+/* ── Foto e interações no feed ────────────────────────── */
+.arcade .post__legenda {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--traco);
+  overflow-wrap: anywhere;
+}
+
+.arcade .post__foto {
+  width: 100%;
+  max-height: 58vh;
+  object-fit: cover;
+  display: block;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+}
+
+.arcade .post__rodape {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 2px solid #EFECF6;
+  flex-wrap: wrap;
+}
+
+.arcade .post__selo,
+.arcade .post__acao,
+.arcade .post__curtir {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.arcade .post__selo {
+  background: var(--gelo, #EFECFF);
+  color: #6E6880;
+}
+
+.arcade .post__acao {
+  background: var(--sol, #FFD23F);
+  border: 2px solid var(--traco);
+  color: var(--traco);
+}
+
+.arcade .post__curtir {
+  background: #FFFFFF;
+  border: 2px solid var(--traco);
+  color: #9A93AE;
+  margin-left: auto;
+}
+
+.arcade .post__curtir--on { background: #FFE2EA; color: var(--traco); }
+.arcade .post__acao:active,
+.arcade .post__curtir:active { transform: translate(1px, 1px); }

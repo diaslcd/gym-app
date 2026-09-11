@@ -394,7 +394,10 @@ const Dashboard = (() => {
                 <ul class="ganho__conquistas">${conquistas}</ul>
               </div>` : ''}
 
-            <button class="ganho__ir" data-ver-social type="button">Ver no Social</button>
+            <button class="ganho__publicar" data-publicar type="button">
+              <span aria-hidden="true">📷</span> Publicar com foto
+            </button>
+            <button class="ganho__ir" data-ver-social type="button">Só ver no Social</button>
           </div>
         </div>
       </div>`;
@@ -435,6 +438,14 @@ const Dashboard = (() => {
     if (evento.target.closest('[data-fechar-resultado]')) {
       resultado = null;
       render();
+      return;
+    }
+
+    if (evento.target.closest('[data-publicar]')) {
+      const id = resultado && resultado.atividadeId;
+      resultado = null;
+      if (id) Router.ir('publicar', { id: id });
+      else Abas.ir('social');
       return;
     }
 

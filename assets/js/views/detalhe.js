@@ -28,20 +28,36 @@ const Detalhe = (() => {
      lembrar. Os degraus somam à carga; para baixar, o campo continua
      digitável, que é o caso raro. */
   function atalhos(indice, anterior) {
+    /* O botão de repetir mostra o valor que vai copiar e o rótulo do
+       que faz. Só "=" não dizia nada a quem abre a tela pela primeira
+       vez; com a seta de repetição e a palavra, a ação fica óbvia sem
+       precisar tocar para descobrir. */
     const repetir = anterior
       ? `<button class="rapido rapido--igual" type="button" data-repetir="${indice}"
                  aria-label="Repetir a série anterior: ${anterior.carga} kg e ${anterior.reps} repetições">
-           = ${anterior.carga} kg · ${anterior.reps}
+           <span class="rapido__seta" aria-hidden="true">↻</span>
+           <span class="rapido__texto">
+             <span class="rapido__acao">repetir</span>
+             <span class="rapido__valor">${anterior.carga} kg · ${anterior.reps}</span>
+           </span>
          </button>`
-      : '';
+      : '<span class="rapido__vazio">primeira série</span>';
 
+    /* Os degraus vêm num grupo colado, com a unidade escrita uma vez
+       no começo. Antes eram "+5" e "+10" soltos, e não se sabia se
+       mexiam na carga ou nas repetições. */
     return `
       <div class="serie__atalhos">
         ${repetir}
-        <button class="rapido" type="button" data-somar="${indice}" data-quanto="5"
-                aria-label="Somar 5 kg à série ${indice + 1}">+5</button>
-        <button class="rapido" type="button" data-somar="${indice}" data-quanto="10"
-                aria-label="Somar 10 kg à série ${indice + 1}">+10</button>
+        <div class="degraus" role="group" aria-label="Ajustar a carga da série ${indice + 1}">
+          <span class="degraus__un" aria-hidden="true">kg</span>
+          <button class="degrau" type="button" data-somar="${indice}" data-quanto="-5"
+                  aria-label="Tirar 5 kg da série ${indice + 1}">−5</button>
+          <button class="degrau degrau--mais" type="button" data-somar="${indice}" data-quanto="5"
+                  aria-label="Somar 5 kg à série ${indice + 1}">+5</button>
+          <button class="degrau degrau--mais" type="button" data-somar="${indice}" data-quanto="10"
+                  aria-label="Somar 10 kg à série ${indice + 1}">+10</button>
+        </div>
       </div>`;
   }
 
@@ -248,15 +264,18 @@ const Detalhe = (() => {
     }
 
     /* Degrau de carga. Anilha de 5 e de 10 é o que existe na academia,
-       e somar é mais rápido que abrir o teclado para trocar 40 por 45. */
+       e somar é mais rápido que abrir o teclado para trocar 40 por 45.
+       O piso é zero: carga negativa não existe, e deixar o número virar
+       -5 por um toque a mais seria só confusão. */
     const somar = alvo('[data-somar]');
     if (somar) {
       const indice = Number(somar.dataset.somar);
       const quanto = Number(somar.dataset.quanto);
       const atual = Execucao.ficha(tipoId, exercicio.id).series[indice];
       if (atual) {
+        const novo = Math.max(0, (atual.carga || 0) + quanto);
         Execucao.definirSerie(tipoId, exercicio.id, indice, 'carga',
-          Math.round(((atual.carga || 0) + quanto) * 10) / 10);
+          Math.round(novo * 10) / 10);
         render();
       }
       return;

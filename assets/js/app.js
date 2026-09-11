@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   Router.registrar('nutricao', NutricaoView);
   Router.registrar('alimento', Alimento);
   Router.registrar('social', Social);
+  Router.registrar('publicar', Publicar);
 
   // Perfil sem PIN entra direto; com PIN, passa pela tela de entrada.
   const inicial = Perfil.dentro() ? 'dashboard' : 'login';

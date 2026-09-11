@@ -87,6 +87,8 @@ assets/js/
   nutricao.js                tabela de alimentos, pratos e busca
   abas.js                    as três áreas e a barra inferior
   social.js                  pontos, atividades, conquistas e fair play
+  privacidade.js             quem pode ver o quê
+  foto.js                    captura e redução de imagem
   icones.js                  ícones de interface e músculo
   icones-exercicios.js       pictogramas dos exercícios
   guia.js                    guia de execução por família de movimento
