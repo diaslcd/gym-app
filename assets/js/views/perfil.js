@@ -116,7 +116,7 @@ const TelaPerfil = (() => {
   }
 
   function publicacoes() {
-    const lista = SocialDados.todas().filter((a) => a.publicada);
+    const lista = SocialDados.porData().filter((a) => a.publicada);
     if (!lista.length) return '';
 
     return `

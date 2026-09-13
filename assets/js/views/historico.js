@@ -162,7 +162,7 @@ const Historico = (() => {
             <span class="hist__data">${dia}</span>
             <span class="hist__nome">${tipo ? tipo.nome : 'Treino'}</span>
             <span class="hist__meta">
-              ${registro.exercicios.length} exercícios · ${series} séries · ${registro.duracao} min${carga ? ` · até ${carga} kg` : ''}
+              ${registro.exercicios.length} exercícios · ${series} séries · ${registro.duracao} min${carga ? ` · até ${carga} kg` : ''}${registro.anotado ? ' · anotado' : ''}
             </span>
           </span>
           <span class="hist__seta" aria-hidden="true">→</span>
@@ -207,6 +207,9 @@ const Historico = (() => {
             Nenhum treino registrado ainda. Termine um treino e ele aparece
             aqui, com as séries, as cargas e o tempo.
           </p>
+          <button class="cal__anotar" type="button" data-anotar>
+            <span aria-hidden="true">＋</span> Registrar treino anterior
+          </button>
         </section>`;
     }
 
@@ -226,6 +229,9 @@ const Historico = (() => {
         ${filtros(lista)}
         <ul class="hist__lista">${visiveis.map(treino).join('')}</ul>
         ${botao}
+        <button class="cal__anotar" type="button" data-anotar>
+          <span aria-hidden="true">＋</span> Registrar treino anterior
+        </button>
       </section>`;
   }
 
@@ -252,6 +258,11 @@ const Historico = (() => {
       filtro = ficha.dataset.filtro || null;
       aberta = false;
       render();
+      return;
+    }
+
+    if (evento.target.closest('[data-anotar]')) {
+      Router.ir('registrar');
       return;
     }
 
@@ -285,6 +296,7 @@ const Historico = (() => {
 
     if (diaAberto) {
       const acao = Componentes.cliqueNaFolha(evento, diaAberto);
+      if (acao === 'saiu') return;
       if (acao === 'fechar') {
         diaAberto = null;
         render();

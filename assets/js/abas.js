@@ -21,7 +21,7 @@ const Abas = (() => {
       icone: '🏋️',
       raiz: 'dashboard',
       // Telas que pertencem a esta aba, para a barra saber qual acender.
-      telas: ['dashboard', 'selecao', 'exercicios', 'detalhe', 'historico', 'plano']
+      telas: ['dashboard', 'selecao', 'exercicios', 'detalhe', 'historico', 'plano', 'registrar']
     },
     {
       id: 'nutricao',

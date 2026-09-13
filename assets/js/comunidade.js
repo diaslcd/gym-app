@@ -238,10 +238,14 @@ const Comunidade = (() => {
     }
   ];
 
+  /* Desafio mede o que foi treinado com o app aberto. Treino anotado
+     depois fica de fora: senão bastaria digitar trinta dias para trás
+     e fechar o desafio no mesmo minuto em que entrou nele. */
   function diasComTreino(inicio, fim) {
+    const validos = Dados.treinosValidos();
     let total = 0;
     for (let d = new Date(inicio); d <= fim; d = Utils.somarDias(d, 1)) {
-      if (Dados.registrosDe(Utils.iso(d)).length) total++;
+      if (validos.has(Utils.iso(d))) total++;
     }
     return total;
   }
@@ -249,10 +253,11 @@ const Comunidade = (() => {
   /* Quantos dias desde o início sem que houvesse três dias seguidos sem
      treino. Para no primeiro buraco grande: é essa a regra do desafio. */
   function diasSemFalhaLonga(inicio, fim) {
+    const validos = Dados.treinosValidos();
     let seguidosSemTreino = 0;
     let dias = 0;
     for (let d = new Date(inicio); d <= fim; d = Utils.somarDias(d, 1)) {
-      if (Dados.registrosDe(Utils.iso(d)).length) seguidosSemTreino = 0;
+      if (validos.has(Utils.iso(d))) seguidosSemTreino = 0;
       else seguidosSemTreino++;
       if (seguidosSemTreino > 2) break;
       dias++;

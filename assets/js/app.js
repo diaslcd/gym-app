@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   Router.registrar('exercicios', Exercicios);
   Router.registrar('detalhe', Detalhe);
   Router.registrar('historico', Historico);
+  Router.registrar('registrar', TelaRegistrar);
   Router.registrar('nutricao', NutricaoView);
   Router.registrar('alimento', Alimento);
   Router.registrar('social', Social);

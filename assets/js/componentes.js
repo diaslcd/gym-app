@@ -62,7 +62,7 @@ const Componentes = (() => {
         <span class="dia__icone">${Icones.musculo(registro.tipoId)}</span>
         <span class="dia__dados">
           <span class="dia__nome">${tipo ? tipo.nome : 'Treino'}</span>
-          <span class="dia__resumo">${feitos.length} exercícios · ${registro.duracao} min</span>
+          <span class="dia__resumo">${feitos.length} exercícios · ${registro.duracao} min${registro.anotado ? ' · anotado depois' : ''}</span>
         </span>
       </div>
 
@@ -87,13 +87,45 @@ const Componentes = (() => {
       ${acaoDeExcluir(registro, indice)}`;
   }
 
+  /* Botão de anotar treino naquele dia. Só aparece em data que aceita
+     registro — nem futuro, nem além da janela de um ano. */
+  function botaoDeAnotar(dataIso, texto) {
+    if (!Dados.dataPermitida(dataIso)) return '';
+    return `
+      <button class="dia__anotar" data-anotar-dia="${dataIso}" type="button">
+        <span aria-hidden="true">＋</span> ${texto}
+      </button>`;
+  }
+
   function folhaDoDia(dataIso, fecharAtributo) {
     const doDia = Dados.registrosDe(dataIso);
-    if (!doDia.length) return '';
-
-    const primeiro = Dados.tipoPorId(doDia[0].tipoId);
     const data = new Date(dataIso + 'T00:00:00');
     const fechar = fecharAtributo || 'data-fechar-dia';
+
+    /* Dia sem treino: a folha explica e oferece o registro. Abrir direto
+       o formulário a partir de um toque no calendário seria agressivo —
+       o dedo passa por dia vazio sem querer, e cair num formulário sem
+       saber por quê confunde mais do que ajuda. */
+    if (!doDia.length) {
+      if (!Dados.dataPermitida(dataIso)) return '';
+      return `
+        <div class="folha">
+          <div class="folha__fundo" ${fechar}></div>
+          <div class="folha__painel">
+            <div class="folha__topo">
+              <span class="folha__titulo">${Utils.dataPorExtenso(data)}</span>
+              <button class="folha__fechar" ${fechar} aria-label="Fechar">✕</button>
+            </div>
+            <p class="dia__vazio">
+              Nenhum treino registrado neste dia. Se você treinou e esqueceu de
+              marcar, dá para anotar agora — ele entra no calendário e na sequência.
+            </p>
+            ${botaoDeAnotar(dataIso, 'Registrar treino deste dia')}
+          </div>
+        </div>`;
+    }
+
+    const primeiro = Dados.tipoPorId(doDia[0].tipoId);
     // Dois treinos no mesmo dia aparecem um embaixo do outro, na ordem
     // em que foram feitos.
     const quantos = doDia.length > 1 ? `<p class="dia__quantos">${doDia.length} treinos neste dia</p>` : '';
@@ -108,6 +140,7 @@ const Componentes = (() => {
           </div>
           ${quantos}
           ${doDia.map(blocoDoTreino).join('')}
+          ${botaoDeAnotar(dataIso, 'Anotar outro treino neste dia')}
         </div>
       </div>`;
   }
@@ -117,7 +150,8 @@ const Componentes = (() => {
    * Cliques da folha do dia, num lugar só — painel e histórico abrem a
    * mesma folha. Devolve o que a view deve fazer: 'fechar' quando o dia
    * acabou ou o usuário fechou, 'repintar' quando só mudou o conteúdo,
-   * e null quando o clique não era daqui.
+   * 'saiu' quando o clique levou a outra tela, e null quando o clique
+   * não era daqui.
    */
   function cliqueNaFolha(evento, dataIso) {
     const alvo = (seletor) => evento.target.closest(seletor);
@@ -125,6 +159,13 @@ const Componentes = (() => {
     if (alvo('[data-fechar-dia]')) {
       aConfirmar = null;
       return 'fechar';
+    }
+
+    const anotar = alvo('[data-anotar-dia]');
+    if (anotar) {
+      aConfirmar = null;
+      Router.ir('registrar', { data: anotar.dataset.anotarDia });
+      return 'saiu';
     }
 
     const pedir = alvo('[data-excluir]');
@@ -201,7 +242,9 @@ const Componentes = (() => {
       tipoId: tipoId,
       minutos: minutos,
       series: series,
-      sequencia: Utils.sequenciaAtual(Dados.treinos),
+      // Bônus de sequência conta só dias treinados no app: anotar dias
+      // para trás preenche o calendário, mas não engorda os pontos.
+      sequencia: Utils.sequenciaAtual(Dados.treinosValidos()),
       recorde: bateuRecorde
     });
 

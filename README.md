@@ -1,6 +1,3 @@
-| `gym:social:privacidade` | quem pode ver o quê |
-| `gym:social:grupos` | grupos criados e de quem participa |
-| `gym:social:desafios` | data de entrada em cada desafio |
 # BunnyGym
 
 Aplicativo web de treino de academia, feito para uso no celular. Acompanha a
@@ -55,6 +52,21 @@ séries marcáveis, observação e cronômetro de descanso ajustável por exerc�
 **Histórico** — treinos realizados com data, tipo, duração, exercícios e cada
 série executada. Mais dois gráficos: **volume por treino** (repetições × carga)
 e **evolução de carga** por exercício.
+
+**Treino anotado depois** — para o dia em que se treinou sem abrir o app, ou
+para trazer o histórico de antes. Entra pelo botão *Registrar treino que ficou
+de fora* (painel e histórico) ou tocando num dia vazio do calendário. Escolhe-se
+o dia (até um ano para trás, nunca no futuro), o treino e a duração; os
+exercícios já vêm marcados com 3 × 12 e a última carga conhecida, e cada um
+pode ser ajustado. O registro leva `anotado: true` e sempre **conta** no calendário, na sequência,
+no histórico, na evolução de carga e nas conquistas de volume.
+
+*Pontos:* anotado de **ontem ou anteontem** pontua como treino normal e conta em
+desafios — sem bônus de recorde (carga digitada), sem a regra de intervalo, e
+somando no limite de treinos e no teto do dia do treino. Mais para trás, **não
+vale pontos** nem conta em desafios. A marca `valePontos: true` é gravada no
+registro na hora (não recalculada) e `Dados.treinosValidos()` separa o que vale
+para a competição do resto.
 
 **Nutrição** — consulta de calorias e macros, na segunda aba. Busca por
 alimento ou por refeição inteira: digitar `frango com arroz e feijão` encontra o
@@ -154,6 +166,9 @@ registra de verdade ficam no `localStorage` e entram por cima:
 | `gym:nutri:recentes` | os últimos consultados na Nutrição |
 | `gym:social:atividades` | treinos registrados como atividade, com pontos |
 | `gym:social:conquistas` | quando cada conquista caiu |
+| `gym:social:privacidade` | quem pode ver o quê |
+| `gym:social:grupos` | grupos criados e de quem participa |
+| `gym:social:desafios` | data de entrada em cada desafio |
 
 Todo acesso ao storage é protegido: em navegação privada o app funciona igual,
 só não persiste.

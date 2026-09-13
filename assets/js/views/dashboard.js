@@ -237,9 +237,16 @@ const Dashboard = (() => {
       if (treinou) enfeite = `<span class="cal__fogo">${Icones.chama}</span>`;
     }
 
-    // Dia com treino vira botão: abre o que foi feito.
-    const tag = treinou ? 'button' : 'span';
-    const extra = treinou ? ` type="button" data-dia="${dataIso}"` : '';
+    /* Dia com treino vira botão: abre o que foi feito. Dia passado sem
+       treino também, e abre a folha que oferece anotar o que ficou de
+       fora — é ali, olhando o buraco no calendário, que a pessoa lembra
+       que treinou. Hoje fica de fora: o treino de hoje se começa pelo
+       botão principal, com cronômetro. */
+    const anotavel = !treinou && dataIso < hojeIso && Dados.dataPermitida(dataIso);
+    const tag = treinou || anotavel ? 'button' : 'span';
+    const extra = treinou
+      ? ` type="button" data-dia="${dataIso}"`
+      : (anotavel ? ` type="button" data-dia="${dataIso}" aria-label="${Utils.dataPorExtenso(data)}: sem treino registrado"` : '');
 
     return `<${tag} class="${classes.join(' ')}"${extra} style="--i:${ordem}">` +
       `${faixa}${enfeite}<span class="cal__dot">${dia}${marca}</span></${tag}>`;
@@ -280,6 +287,9 @@ const Dashboard = (() => {
           ${SEMANA.map((d) => `<span class="cal__wd">${d}</span>`).join('')}
           ${diasDoMes()}
         </div>
+        <button class="cal__anotar" type="button" data-anotar>
+          <span aria-hidden="true">＋</span> Registrar treino que ficou de fora
+        </button>
       </section>`;
   }
 
@@ -372,7 +382,7 @@ const Dashboard = (() => {
         <div class="folha__fundo" data-fechar-resultado></div>
         <div class="folha__painel">
           <div class="folha__topo">
-            <span class="folha__titulo">${r.nome} concluído</span>
+            <span class="folha__titulo">${r.nome} ${r.anotadoEm ? 'anotado' : 'concluído'}</span>
             <button class="folha__fechar" data-fechar-resultado aria-label="Fechar">✕</button>
           </div>
 
@@ -432,6 +442,11 @@ const Dashboard = (() => {
 
     if (evento.target.closest('[data-plano]')) {
       Router.ir('plano');
+      return;
+    }
+
+    if (evento.target.closest('[data-anotar]')) {
+      Router.ir('registrar');
       return;
     }
 
@@ -501,6 +516,7 @@ const Dashboard = (() => {
 
     if (diaAberto) {
       const acao = Componentes.cliqueNaFolha(evento, diaAberto);
+      if (acao === 'saiu') return;
       if (acao === 'fechar') {
         diaAberto = null;
         render();
@@ -539,12 +555,36 @@ const Dashboard = (() => {
 
     // Chega com o resultado quando o usuário acabou de encerrar um
     // treino: a folha abre sozinha e espera ser fechada.
-    if (params && params.registrado) {
-      resultado = params.registrado;
-    }
+    // Sem resultado novo, zera: a folha que não foi fechada na visita
+    // anterior não pode reaparecer por cima de outra coisa.
+    resultado = params && params.registrado ? params.registrado : null;
 
     const h = Utils.hoje();
     mesRef = new Date(h.getFullYear(), h.getMonth(), 1);
+
+    // Treino anotado que pontuou: o calendário já abre no mês dele, por
+    // trás da folha de resultado.
+    if (resultado && resultado.anotadoEm) {
+      const quando = new Date(resultado.anotadoEm + 'T00:00:00');
+      mesRef = new Date(quando.getFullYear(), quando.getMonth(), 1);
+    }
+
+    /* Chega de um treino anotado: o calendário abre no mês dele, com o
+       dia aberto. A confirmação é ver o treino no lugar certo — melhor do
+       que uma frase dizendo que deu certo. */
+    if (params && params.anotado && Dados.registrosDe(params.anotado.data).length) {
+      const quando = new Date(params.anotado.data + 'T00:00:00');
+      mesRef = new Date(quando.getFullYear(), quando.getMonth(), 1);
+      diaAberto = params.anotado.data;
+      Componentes.abrirFolha();
+      const nova = (params.anotado.conquistas || [])[0];
+      aviso = nova ? `${nova.icone} ${nova.nome}` : `${params.anotado.nome} anotado`;
+      relogioAviso = setTimeout(() => {
+        aviso = null;
+        const faixa = raiz && raiz.querySelector('.aviso');
+        if (faixa) faixa.remove();
+      }, 3500);
+    }
     diasEmSequencia = Utils.diasDaSequenciaAtual(Dados.treinos);
     inicioDeUso = Dados.inicioDeUso();
     raiz.addEventListener('click', aoClicar);

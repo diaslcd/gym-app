@@ -278,6 +278,77 @@ const SocialDados = (() => {
     };
   }
 
+  /**
+   * Registra como atividade um treino anotado depois, e devolve no mesmo
+   * formato de `registrarTreino` — { atividade, conta, permissao }.
+   *
+   * Anotado de ontem ou anteontem pontua como treino normal, com três
+   * diferenças, todas pelo mesmo motivo — o que foi digitado não tem
+   * como ser conferido:
+   *   - sem bônus de recorde: carga digitada é a mais fácil de inflar;
+   *   - sem a regra de intervalo, que mede hora de encerramento, e um
+   *     treino anotado não tem hora;
+   *   - o limite de treinos e o teto do dia valem para o dia DO treino,
+   *     somando com o que já pontuou nele. Anotar não abre um dia novo.
+   *
+   * Mais para trás, vale zero: quem anota trinta dias seguidos subiria
+   * no ranking sem pisar na academia. O treino continua sendo dele —
+   * aparece no feed, pode ser publicado e conta nas conquistas de volume.
+   */
+  function registrarAnotado(dados) {
+    let permissao = {
+      pode: false,
+      motivo: 'Treinos anotados de mais de 2 dias atrás entram no histórico, mas não valem pontos.',
+      tipo: 'anotado-antigo'
+    };
+    if (dados.valePontos) {
+      // Carimbo bem no passado: a regra de intervalo não se aplica.
+      permissao = podePontuar(dados.data, dados.minutos, Number.MAX_SAFE_INTEGER);
+      if (!permissao.pode && permissao.tipo === 'limite-diario') {
+        permissao.motivo = `Esse dia já tem ${REGRAS.TREINOS_PONTUAVEIS_POR_DIA} treinos pontuados. O treino fica registrado, mas sem pontos.`;
+      }
+    }
+
+    const conta = permissao.pode
+      ? calcularPontos(Object.assign({}, dados, { recorde: false }))
+      : { linhas: [], bruto: 0, total: 0, limitado: false };
+
+    let pontos = conta.total;
+    if (permissao.pode && permissao.jaHoje) {
+      pontos = Math.min(pontos, REGRAS.TETO_DIARIO - permissao.jaHoje);
+    }
+
+    const atividade = {
+      id: novoId(),
+      tipo: 'treino',
+      autor: 'eu',
+      data: dados.data,
+      em: Date.now(),
+      titulo: dados.titulo || 'Treino',
+      tipoId: dados.tipoId || null,
+      minutos: dados.minutos || 0,
+      series: dados.series || 0,
+      pontos: pontos,
+      recorde: false,
+      anotado: true,
+      foto: null,
+      legenda: '',
+      publicada: false,
+      curtidas: 0
+    };
+
+    salvarTodas(todas().concat([atividade]));
+    return { atividade: atividade, conta: conta, permissao: permissao };
+  }
+
+  /* O feed segue a data do treino, não a ordem em que foi gravado: um
+     treino de semana passada anotado hoje vai para o lugar dele, e não
+     para o topo como se fosse novidade. */
+  function porData() {
+    return todas().slice().sort((a, b) =>
+      a.data === b.data ? (a.em || 0) - (b.em || 0) : (a.data < b.data ? -1 : 1));
+  }
+
   /** Atualiza uma atividade — usado ao publicar, anexar foto ou legenda. */
   function atualizar(id, mudancas) {
     const lista = todas();
@@ -421,8 +492,8 @@ const SocialDados = (() => {
   return {
     REGRAS,
     calcularPontos, podePontuar,
-    registrarTreino, atualizar, porId, remover,
-    todas, atividadesDe,
+    registrarTreino, registrarAnotado, atualizar, porId, remover,
+    todas, porData, atividadesDe,
     pontosTotais, pontosDe, pontosPorDia, totalDeTreinos,
     conquistas, conferirConquistas
   };

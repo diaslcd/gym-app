@@ -6052,3 +6052,398 @@ body.temAbas .barra {
   .aba--on, .aba--on .aba__icone,
   .folha__painel, .folha__fundo { animation: none; }
 }
+
+
+/* ══ REGISTRAR TREINO ANTERIOR ════════════════════════════ */
+
+/* Entrada pelo calendário e pelo histórico: tracejado, como as outras
+   ações secundárias — está ali para quando precisar, sem competir com
+   "Iniciar treino". */
+.arcade .cal__anotar {
+  width: 100%;
+  min-height: var(--toque);
+  margin-top: 12px;
+  padding: 10px;
+  background: #FFFFFF;
+  border: 2.5px dashed var(--traco);
+  border-radius: 13px;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #4B4460;
+  transition: transform 0.1s;
+}
+
+.arcade .cal__anotar:active { transform: scale(0.99); }
+
+.dia__anotar {
+  width: 100%;
+  min-height: var(--toque);
+  margin-top: 12px;
+  padding: 11px;
+  background: var(--sol);
+  border: 2.5px solid var(--traco);
+  border-radius: 13px;
+  box-shadow: 3px 3px 0 var(--traco);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--traco);
+}
+
+.dia__anotar:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--traco); }
+
+.dia__vazio {
+  margin: 4px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #4B4460;
+}
+
+/* ── Formulário ── */
+.arcade .anotar { min-width: 0; }
+
+.arcade .anotar__dias {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.arcade .anotar__dia {
+  min-height: var(--toque);
+  padding: 8px 4px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  color: var(--traco);
+  overflow-wrap: anywhere;
+}
+
+.arcade .anotar__dia--on {
+  background: var(--traco);
+  color: var(--sol);
+  box-shadow: 3px 3px 0 var(--rosa);
+}
+
+.arcade .anotar__campoData {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+}
+
+.arcade .anotar__rotulo,
+.arcade .ajuste__rotulo {
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6E6880;
+}
+
+.arcade .anotar__data {
+  flex: 0 1 auto;
+  min-width: 0;
+  min-height: var(--toque);
+  padding: 6px 10px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  font-family: inherit;
+  /* 16px evita o zoom automático ao focar, no iOS. */
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--traco);
+}
+
+.arcade .anotar__extenso {
+  margin: 0;
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: var(--fs-md);
+  color: var(--traco);
+}
+
+.arcade .anotar__extenso::first-letter { text-transform: uppercase; }
+
+.arcade .anotar__tipos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.arcade .anotar__tipo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: var(--toque);
+  padding: 7px 9px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  text-align: left;
+  color: var(--traco);
+}
+
+.arcade .anotar__tipoIcone {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--cor);
+  color: var(--tinta);
+}
+
+.arcade .anotar__tipoIcone svg { width: 20px; height: 20px; }
+
+.arcade .anotar__tipoNome {
+  min-width: 0;
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+/* O escolhido veste a cor do treino, como as fichas do histórico. */
+.arcade .anotar__tipo--on {
+  background: var(--cor);
+  color: var(--tinta);
+  box-shadow: 3px 3px 0 var(--traco);
+}
+
+.arcade .anotar__tipo--on .anotar__tipoIcone {
+  background: #FFFFFF;
+  color: var(--traco);
+}
+
+/* ── Controle − valor + ── */
+.arcade .ajuste {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.arcade .ajuste__ctrl {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 11px;
+  box-shadow: 2px 2px 0 var(--traco);
+  overflow: hidden;
+}
+
+.arcade .ajuste__btn {
+  flex: 0 0 auto;
+  width: 38px;
+  min-height: 40px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--traco);
+}
+
+.arcade .ajuste__btn--mais { background: var(--sol); }
+.arcade .ajuste__btn:first-child { border-right: 2px solid var(--traco); }
+.arcade .ajuste__btn--mais { border-left: 2px solid var(--traco); }
+.arcade .ajuste__btn:active { background: var(--traco); color: var(--sol); }
+.arcade .ajuste__btn:disabled { color: #C9C4D8; background: #F4F2F8; }
+
+.arcade .ajuste__valor {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  padding: 0 2px;
+  border: 0;
+  background: transparent;
+  text-align: center;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--traco);
+  outline: none;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.arcade .ajuste__valor::-webkit-outer-spin-button,
+.arcade .ajuste__valor::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.arcade .ajuste__valor:focus { background: #FFF6D1; }
+
+/* ── Exercícios marcáveis ── */
+.arcade .anotar__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.arcade .anotarEx {
+  min-width: 0;
+  border: 2.5px solid #C9C4D8;
+  border-radius: 14px;
+  background: #FFFFFF;
+}
+
+.arcade .anotarEx--on {
+  border-color: var(--traco);
+  box-shadow: 3px 3px 0 var(--traco);
+}
+
+.arcade .anotarEx__linha {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.arcade .anotarEx__linha .anotarEx__marca { flex: 1 1 auto; min-width: 0; }
+
+.arcade .anotarEx__ajustar {
+  position: relative;
+  flex: 0 0 auto;
+  margin-right: 9px;
+  padding: 6px 9px;
+  background: #FFFFFF;
+  border: 2px solid var(--traco);
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--traco);
+}
+
+.arcade .anotarEx__ajustar::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, var(--toque));
+  height: var(--toque);
+  transform: translate(-50%, -50%);
+}
+
+.arcade .anotarEx__ajustar--on { background: var(--traco); color: var(--sol); }
+
+.arcade .anotarEx__marca {
+  width: 100%;
+  min-height: var(--toque);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  text-align: left;
+  color: var(--traco);
+}
+
+.arcade .anotarEx__caixa {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 2.5px solid var(--traco);
+  border-radius: 7px;
+  background: #FFFFFF;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.arcade .anotarEx--on .anotarEx__caixa { background: var(--menta); }
+
+.arcade .anotarEx__img {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+}
+
+.arcade .anotarEx__img svg { width: 36px; height: 36px; }
+
+.arcade .anotarEx:not(.anotarEx--on) .anotarEx__img { opacity: 0.5; }
+
+.arcade .anotarEx__texto {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.arcade .anotarEx__nome {
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.arcade .anotarEx__meta {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: #6E6880;
+}
+
+/* Séries e repetições dividem a linha; a carga ganha a sua, porque é
+   o número com mais dígitos e o que mais se ajusta. */
+.arcade .anotarEx__numeros {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 9px;
+  padding: 2px 10px 11px;
+}
+
+.arcade .ajuste--largo { grid-column: 1 / -1; }
+
+/* ── Regra e ação ── */
+.arcade .anotar__regra {
+  display: flex;
+  gap: 9px;
+  margin: 0;
+  padding: 11px 13px;
+  background: #FFFFFF;
+  border: 2.5px dashed var(--traco);
+  border-radius: 14px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  color: #4B4460;
+}
+
+.arcade .anotar__regra strong { color: var(--traco); }
+
+/* Quando a data escolhida pontua, o aviso deixa de ser ressalva e vira
+   boa notícia: fundo amarelo, borda cheia. */
+.arcade .anotar__regra--vale {
+  background: #FFF6D1;
+  border-style: solid;
+}
+
+.arcade .btn--primary:disabled {
+  background: #C9C4D8;
+  border-color: #8B85A0;
+  color: #FFFFFF;
+  box-shadow: none;
+  cursor: default;
+}
+
+.arcade .anotar__falta {
+  margin: -4px 0 0;
+  text-align: center;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: #6E6880;
+}

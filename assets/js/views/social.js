@@ -96,7 +96,7 @@ const Social = (() => {
   }
 
   function atividades() {
-    const lista = SocialDados.todas().slice().reverse();
+    const lista = SocialDados.porData().reverse();
     if (!lista.length) return '';
 
     return `
@@ -126,7 +126,7 @@ const Social = (() => {
           </span>
           ${a.pontos > 0
             ? `<span class="post__pontos">+${a.pontos}</span>`
-            : '<span class="post__pontos post__pontos--zero">sem pontos</span>'}
+            : `<span class="post__pontos post__pontos--zero">${a.anotado ? 'anotado depois' : 'sem pontos'}</span>`}
         </div>
 
         <p class="post__treino">

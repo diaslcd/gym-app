@@ -583,26 +583,94 @@ const Dados = (() => {
     }
     return hoje;
   }
-  /** Acrescenta o treino de hoje ao calendário e ao armazenamento local. */
-  function registrarTreino(tipoId, exercicioIds, minutos, fichas) {
+  /* Quanto para trás dá para registrar um treino esquecido. Um ano cobre
+     quem está passando a limpo o caderno da academia; mais que isso é
+     memória, não registro. */
+  const DIAS_PARA_TRAS = 365;
+
+  /** Menor data aceita para um treino registrado depois. */
+  function dataMaisAntiga() {
+    return Utils.iso(Utils.somarDias(Utils.hoje(), -DIAS_PARA_TRAS));
+  }
+
+  /** A data serve para registrar um treino? Nem futuro, nem longe demais. */
+  function dataPermitida(dataIso) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dataIso || '')) return false;
+    return dataIso <= Utils.iso(Utils.hoje()) && dataIso >= dataMaisAntiga();
+  }
+
+  /* Até quantos dias atrás um treino anotado ainda vale pontos.
+
+     Ontem e anteontem são o esquecimento comum: treinou, saiu correndo,
+     lembrou no dia seguinte. Tratar isso como treino de segunda classe
+     castiga justamente quem treina. Mais para trás já não é esquecimento
+     — é passar histórico a limpo, ou encher o ranking —, e aí o treino
+     entra no calendário sem pontos. Hoje fica de fora de propósito: o
+     treino de hoje se registra com o cronômetro. */
+  const DIAS_QUE_PONTUAM = 2;
+
+  /** Um treino anotado nesta data vale pontos? Só ontem e anteontem. */
+  function anotadoPontua(dataIso) {
+    const hoje = Utils.hoje();
+    return dataIso < Utils.iso(hoje) &&
+      dataIso >= Utils.iso(Utils.somarDias(hoje, -DIAS_QUE_PONTUAM));
+  }
+
+  /**
+   * Acrescenta um treino ao calendário e ao armazenamento local.
+   *
+   * Sem `opcoes.data`, é o treino que acabou de acontecer. Com ela, é um
+   * treino que a pessoa anota depois — esqueceu de abrir o app, ou está
+   * trazendo o histórico de antes. Esse registro leva `anotado: true`.
+   *
+   * Se a data cai na janela que pontua, leva também `valePontos: true`.
+   * A marca é gravada agora, e não recalculada depois, porque "ontem"
+   * deixa de ser ontem amanhã: o treino que valeu não pode perder a
+   * validade só porque o calendário andou.
+   */
+  function registrarTreino(tipoId, exercicioIds, minutos, fichas, opcoes) {
     const hoje = Utils.iso(Utils.hoje());
+    const anotado = !!(opcoes && opcoes.data);
+    const data = anotado ? opcoes.data : hoje;
+    if (!dataPermitida(data)) return null;
+
     const registro = {
       tipoId: tipoId,
       exercicios: exercicioIds.slice(),
       fichas: fichas || {},
       duracao: Math.max(1, minutos)
     };
+    if (anotado) {
+      registro.anotado = true;
+      if (anotadoPontua(data)) registro.valePontos = true;
+    }
 
     // Empilha: o segundo treino do dia não apaga o primeiro.
-    const doDia = registrosDe(hoje).concat([registro]);
-    treinos.set(hoje, doDia);
+    const doDia = registrosDe(data).concat([registro]);
+    treinos.set(data, doDia);
     invalidarCache();
 
     const mapa = historicoSalvo();
-    mapa[hoje] = doDia;
+    mapa[data] = doDia;
     guardarHistorico(mapa);
 
-    return hoje;
+    return data;
+  }
+
+  /* Dias com pelo menos um treino que vale para a competição: os
+     cronometrados no app e os anotados dentro da janela que pontua.
+
+     É o mesmo formato de `treinos` — um Map por data —, então serve às
+     mesmas contas de sequência. Existe para o que vale pontos: anotar
+     dez dias para trás não pode render bônus de sequência no treino de
+     hoje, nem completar desafio. */
+  function treinosValidos() {
+    const mapa = new Map();
+    treinos.forEach((lista, data) => {
+      const feitos = lista.filter((r) => !r.anotado || r.valePontos);
+      if (feitos.length) mapa.set(data, feitos);
+    });
+    return mapa;
   }
 
 
@@ -669,7 +737,7 @@ const Dados = (() => {
   return {
     app, treinos, tipos, porSistema, tipoPorId, exerciciosDe, exercicioGlobal,
     alternativasDe, registroDe, registrosDe, registrarTreino, removerTreino, candidatosPara,
-    totalDeTreinos, inicioDeUso,
+    totalDeTreinos, inicioDeUso, treinosValidos, anotadoPontua, dataPermitida, dataMaisAntiga,
     historico, volumeDoTreino, evolucaoDe, exerciciosComEvolucao,
     titulos, tituloDaSequencia, proximoTitulo
   };
