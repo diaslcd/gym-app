@@ -1,7 +1,7 @@
 /* Service worker: guarda o app para funcionar sem sinal na academia.
    Estratégia de rede primeiro — o app é pequeno e assim uma versão
    nova chega logo; o cache entra quando a conexão falha. */
-const CACHE = 'bunnygym-v1-28';
+const CACHE = 'bunnygym-v1-29';
 
 const ARQUIVOS = [
   './',
@@ -25,10 +25,16 @@ const ARQUIVOS = [
   './assets/js/guia.js',
   './assets/js/demonstracao.js',
   './assets/js/ilustracoes.js',
-  './assets/treinos/peito-triceps.webp',
-  './assets/treinos/costas-biceps.webp',
-  './assets/treinos/perna.webp',
-  './assets/treinos/superiores.webp',
+  './assets/treinos/peito-triceps.jpg',
+  './assets/treinos/costas-biceps.jpg',
+  './assets/treinos/perna.jpg',
+  './assets/treinos/superiores.jpg',
+  './assets/treinos/empurrar.jpg',
+  './assets/treinos/puxar.jpg',
+  './assets/treinos/ombro-trapezio.jpg',
+  './assets/treinos/bracos.jpg',
+  './assets/treinos/gluteos-posterior.jpg',
+  './assets/treinos/corpo-inteiro.jpg',
   './assets/js/componentes.js',
   './assets/js/privacidade.js',
   './assets/js/foto.js',

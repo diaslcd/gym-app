@@ -1,10 +1,12 @@
-Arte dos tipos de treino, no ícone da tela de seleção.
+Arte dos tipos de treino, no quadro de 72 px do cartão na tela de seleção.
 
-Os arquivos .webp aqui são recortes gerados a partir dos renders em
-arte-fonte/. Para regerá-los, rode o workflow "Imagens" na aba Actions
-e baixe o artefato treinos-webp para esta pasta. O enquadramento do
-recorte fica em .github/workflows/imagens.yml.
+Os .jpg aqui são recortes de 224 px dos renders em arte-fonte/, gerados
+por scripts/recortar-treinos.ps1 — roda no próprio Windows:
 
-Para trocar a arte de um treino, ponha o render novo em arte-fonte/ com
-o mesmo nome e rode o workflow. Sem o .webp correspondente, a tela de
-seleção volta a mostrar o pictograma do músculo — nada quebra.
+  powershell -ExecutionPolicy Bypass -File scripts/recortar-treinos.ps1
+
+Para trocar ou acrescentar a arte de um treino: ponha o render em
+arte-fonte/ com o id do treino (ex.: puxar.jpg), confira a linha dele
+na tabela do script (o enquadramento é automático), rode, e registre o arquivo em assets/js/ilustracoes.js
+e na lista do sw.js. Sem registro, a tela de seleção mostra o pictograma
+do músculo — nada quebra.
