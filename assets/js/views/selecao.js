@@ -19,7 +19,7 @@ const Selecao = (() => {
         <span class="opcao__texto">
           <span class="opcao__nome">${tipo.nome}</span>
           <span class="opcao__desc">${tipo.descricao}</span>
-          <span class="opcao__tag">${Dados.exerciciosDe(tipo.id).length} exercícios</span>
+          <span class="opcao__tag">${Programa.base(tipo.id).length} exercícios</span>
         </span>
         <span class="opcao__seta" aria-hidden="true">→</span>
       </button>`;

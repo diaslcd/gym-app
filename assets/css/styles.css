@@ -6447,3 +6447,302 @@ body.temAbas .barra {
   font-weight: 700;
   color: #6E6880;
 }
+
+
+/* ══ PROGRAMA: PERGUNTAS E CICLO ══════════════════════════ */
+
+.arcade .perguntas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* Colunas pelo número de opções: 3 lado a lado, 4 em 2x2. Com auto-fit
+   as de 3 quebravam em 2 + 1, e a que sobra parece menos importante. */
+.arcade .pergunta__opcoes {
+  display: grid;
+  grid-template-columns: repeat(var(--colunas, 2), minmax(0, 1fr));
+  gap: 7px;
+}
+
+/* Resposta: um toque, e o escolhido fica amarelo e afundado — o mesmo
+   gesto dos dias do plano da semana. */
+.arcade .resp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  min-height: var(--toque);
+  padding: 9px 6px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--traco);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 var(--traco);
+  color: var(--traco);
+  text-align: center;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.arcade .resp--on {
+  background: var(--sol);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--traco);
+}
+
+.arcade .resp__nome {
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.arcade .resp__detalhe {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: #6E6880;
+  overflow-wrap: anywhere;
+}
+
+.arcade .resp--on .resp__detalhe { color: #4B4460; }
+
+/* Resumo: a conta refeita a cada toque. */
+.arcade .resumoTreino {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  background: var(--traco);
+  color: #FFFFFF;
+  border: 3px solid var(--traco);
+  border-radius: 18px;
+  box-shadow: 5px 5px 0 var(--rosa);
+}
+
+.arcade .resumoTreino__titulo {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sol);
+}
+
+.arcade .resumoTreino__nums {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.arcade .resumoTreino__num {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  padding: 8px 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-align: center;
+}
+
+.arcade .resumoTreino__num strong {
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-size: var(--fs-lg);
+  color: #FFFFFF;
+}
+
+.arcade .resumoTreino__tempo {
+  margin: 0;
+  text-align: center;
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  color: var(--menta);
+}
+
+.arcade .resumoTreino__aviso {
+  margin: 0;
+  padding: 8px 10px;
+  background: var(--sol);
+  color: var(--traco);
+  border-radius: 10px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.arcade .resumoTreino__nota {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  color: #CFC9E0;
+}
+
+.arcade .resumoTreino__ciclo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: var(--fs-xs);
+  font-weight: 800;
+}
+
+.arcade .resumoTreino__renovar {
+  min-height: 36px;
+  padding: 6px 12px;
+  background: transparent;
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.arcade .resumoTreino__renovar--confirma {
+  background: var(--rosa);
+  border-color: var(--rosa);
+}
+
+/* Faixa do painel: "renovado" chama atenção enquanto é novidade. */
+.arcade .planoFaixa__acao--novo { background: var(--menta); }
+
+/* Nota do programa na lista de exercícios. */
+.arcade .programaNota {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  width: 100%;
+  min-height: var(--toque);
+  padding: 8px 12px;
+  background: #FFFFFF;
+  border: 2px solid var(--traco);
+  border-radius: 12px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: #4B4460;
+  text-align: left;
+}
+
+.arcade .programaNota--vazia { border-style: dashed; }
+.arcade .programaNota strong { color: var(--traco); }
+
+.arcade .programaNota__renova {
+  padding: 1px 8px;
+  background: var(--sol);
+  border: 2px solid var(--traco);
+  border-radius: 999px;
+  font-weight: 800;
+  color: var(--traco);
+}
+
+.arcade .item__novo {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--traco);
+  background: var(--menta);
+  border: 2px solid var(--traco);
+  border-radius: 999px;
+  padding: 1px 7px;
+  margin-top: 4px;
+  align-self: flex-start;
+}
+
+
+/* ══ ANIMAÇÃO DOS EXERCÍCIOS ══════════════════════════════ */
+
+/* Quadros empilhados; cada um aceso na sua vez. A duração do ciclo é o
+   passo vezes o número de quadros, e cada quadro entra com atraso de
+   passo × posição. step-end: a troca é seca, de stop motion — combina com
+   o boneco de massinha e não borra a pose no meio da transição. */
+.anim {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.anim__q {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  animation-timing-function: step-end;
+  animation-iteration-count: infinite;
+}
+
+.anim--2 .anim__q { animation-name: anim-2; animation-duration: calc(var(--passo) * 2); }
+.anim--3 .anim__q { animation-name: anim-3; animation-duration: calc(var(--passo) * 3); }
+.anim--4 .anim__q { animation-name: anim-4; animation-duration: calc(var(--passo) * 4); }
+.anim--5 .anim__q { animation-name: anim-5; animation-duration: calc(var(--passo) * 5); }
+.anim--6 .anim__q { animation-name: anim-6; animation-duration: calc(var(--passo) * 6); }
+
+@keyframes anim-2 { 0% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes anim-3 { 0% { opacity: 1; } 33.333%, 100% { opacity: 0; } }
+@keyframes anim-4 { 0% { opacity: 1; } 25%, 100% { opacity: 0; } }
+@keyframes anim-5 { 0% { opacity: 1; } 20%, 100% { opacity: 0; } }
+@keyframes anim-6 { 0% { opacity: 1; } 16.666%, 100% { opacity: 0; } }
+
+/* Sem movimento pedido pelo sistema: fica a pose inicial, parada. */
+@media (prefers-reduced-motion: reduce) {
+  .anim__q { animation: none; }
+  .anim__q:first-child { opacity: 1; }
+}
+
+.anim__estatica {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Na lista e nas folhas, a arte ocupa o quadro inteiro, no fundo lilás
+   dos renders, em vez de flutuar no branco como o pictograma. */
+.arcade .item__img:has(.anim, .anim__estatica),
+.arcade .alt__img:has(.anim__estatica) {
+  overflow: hidden;
+  background: #E9E4FF;
+}
+
+/* Palco da tela do exercício. */
+.arcade .demo--anim {
+  align-self: center;
+  width: 100%;
+  max-width: 340px;
+  min-height: 0;
+  aspect-ratio: 1;
+  padding: 0;
+  background: #E9E4FF;
+}
+
+.arcade .demo--anim::before { display: none; }
+
+/* Vídeo manda no formato: o do Veo é mais largo que alto, e forçar o
+   quadrado cortaria a barra e a cabeça. */
+.arcade .demo--anim:has(.anim__video) { aspect-ratio: auto; max-width: 420px; }
+.arcade .demo--anim:has(.anim__video) .anim__video { height: auto; }
+
+.arcade .demo--compacto { max-width: 180px; }
+.arcade .demo--compacto:has(.anim__video) { max-width: 240px; }
+
+.arcade .anim__video,
+.arcade .anim__palco {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

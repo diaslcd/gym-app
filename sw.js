@@ -1,7 +1,7 @@
 /* Service worker: guarda o app para funcionar sem sinal na academia.
    Estratégia de rede primeiro — o app é pequeno e assim uma versão
    nova chega logo; o cache entra quando a conexão falha. */
-const CACHE = 'bunnygym-v1-29';
+const CACHE = 'bunnygym-v1-30';
 
 const ARQUIVOS = [
   './',
@@ -13,6 +13,7 @@ const ARQUIVOS = [
   './assets/js/utils.js',
   './assets/js/alerta.js',
   './assets/js/plano.js',
+  './assets/js/programa.js',
   './assets/js/perfil.js',
   './assets/js/biometria.js',
   './assets/js/data.js',
@@ -22,6 +23,8 @@ const ARQUIVOS = [
   './assets/js/nutricao.js',
   './assets/js/icones.js',
   './assets/js/icones-exercicios.js',
+  './assets/js/animacoes.js',
+  './assets/js/animacoes-lista.js',
   './assets/js/guia.js',
   './assets/js/demonstracao.js',
   './assets/js/ilustracoes.js',
@@ -44,6 +47,7 @@ const ARQUIVOS = [
   './assets/js/router.js',
   './assets/js/views/login.js',
   './assets/js/views/plano.js',
+  './assets/js/views/perguntas.js',
   './assets/js/views/dashboard.js',
   './assets/js/views/selecao.js',
   './assets/js/views/exercicios.js',
@@ -86,7 +90,9 @@ self.addEventListener('fetch', (evento) => {
     fetch(evento.request)
       .then((resposta) => {
         // Guarda só o que é do próprio app; fontes externas ficam de fora.
-        if (resposta.ok && evento.request.url.startsWith(self.location.origin)) {
+        // Só resposta inteira (200): o vídeo chega em pedaços (206) e o
+        // cache recusa pedaço — a gravação falhava e sujava o console.
+        if (resposta.status === 200 && evento.request.url.startsWith(self.location.origin)) {
           const copia = resposta.clone();
           caches.open(CACHE).then((cache) => cache.put(evento.request, copia));
         }

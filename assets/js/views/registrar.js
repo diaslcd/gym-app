@@ -51,7 +51,7 @@ const TelaRegistrar = (() => {
     return {
       id: exercicio.id,
       on: marcado,
-      series: PADRAO.series,
+      series: Programa.respondido() ? Programa.seriesPadrao() : PADRAO.series,
       reps: PADRAO.reps,
       carga: ultimaCarga(exercicio.id),
       extra: !!extra
@@ -62,7 +62,8 @@ const TelaRegistrar = (() => {
     if (id === tipoId) return;
     tipoId = id;
     mostrarMais = false;
-    itens = Dados.exerciciosDe(id).map((e) => novoItem(e, true, false));
+    // A ficha atual do programa: é o que a pessoa costuma fazer agora.
+    itens = Programa.base(id).map((e) => novoItem(e, true, false));
   }
 
   function itemPorId(id) {

@@ -1,0 +1,455 @@
+[
+    {
+        "treino":  "Peito e Tríceps"
+    },
+    {
+        "id":  "supino-reto",
+        "nome":  "Supino reto",
+        "reuso":  "supino",
+        "camera":  "vista lateral, com a cabeça do personagem à esquerda",
+        "equipamento":  "banco reto e barra olímpica com uma anilha de cada lado",
+        "inicial":  "deitado de costas no banco, pés apoiados no chão, costas e cabeça no banco, braços estendidos segurando a barra acima do meio do peito, mãos um pouco mais afastadas que os ombros",
+        "final":  "a barra desceu e encosta levemente no meio do peito, cotovelos dobrados e abertos cerca de 45 graus em relação ao tronco",
+        "musculos":  "peitoral na cor rosa (#FF3D81); tríceps e parte da frente do ombro em rosa mais claro",
+        "movem":  "os braços e a barra"
+    },
+    {
+        "id":  "supino-inclinado",
+        "nome":  "Supino inclinado",
+        "camera":  "vista lateral, com a cabeça do personagem à esquerda",
+        "equipamento":  "banco inclinado a cerca de 40 graus e barra olímpica com uma anilha de cada lado",
+        "inicial":  "recostado no banco inclinado, pés no chão, braços estendidos segurando a barra acima da parte alta do peito",
+        "final":  "a barra desceu até a altura das clavículas, cotovelos dobrados abaixo da linha da barra",
+        "musculos":  "parte alta do peitoral na cor rosa (#FF3D81); ombro da frente e tríceps em rosa mais claro",
+        "movem":  "os braços e a barra"
+    },
+    {
+        "id":  "crucifixo",
+        "nome":  "Crucifixo",
+        "camera":  "vista frontal levemente de cima, a partir dos pés do banco",
+        "equipamento":  "banco reto e dois halteres",
+        "inicial":  "deitado de costas no banco, braços estendidos acima do peito com os halteres quase se tocando, cotovelos com leve flexão",
+        "final":  "braços abertos em arco para os lados até a linha dos ombros, cotovelos mantendo a mesma leve flexão",
+        "musculos":  "peitoral na cor rosa (#FF3D81); parte da frente do ombro em rosa mais claro",
+        "movem":  "os braços e os halteres",
+        "veo":  "os braços abrem em arco para os lados, com os cotovelos QUASE RETOS e sempre na mesma leve flexão, até a linha dos ombros, e fecham pelo mesmo arco até os halteres quase se tocarem acima do peito. ATENÇÃO: não é supino — os cotovelos NÃO dobram e os halteres NÃO descem em linha reta até o peito; o braço inteiro gira no ombro como uma asa"
+    },
+    {
+        "id":  "crossover",
+        "nome":  "Crossover",
+        "camera":  "vista frontal",
+        "equipamento":  "estação de crossover com duas polias altas e alças",
+        "inicial":  "em pé no centro da estação, um pé um pouco à frente, tronco levemente inclinado, braços abertos para os lados e para cima segurando as alças",
+        "final":  "braços fechados em arco à frente do corpo, mãos se encontrando na altura do abdômen, cotovelos com leve flexão",
+        "musculos":  "peitoral na cor rosa (#FF3D81)",
+        "movem":  "os braços e os cabos",
+        "veo":  "os braços, com os cotovelos quase retos e fixos, fecham em arco à frente do corpo até as mãos se encontrarem na altura do abdômen e voltam abrindo pelo mesmo arco. ATENÇÃO: não é um empurrar — os cotovelos não dobram e estendem; o braço inteiro gira no ombro"
+    },
+    {
+        "id":  "triceps-pulley",
+        "nome":  "Tríceps pulley",
+        "reuso":  "triceps",
+        "camera":  "vista lateral",
+        "equipamento":  "polia alta com barra reta curta",
+        "inicial":  "em pé de frente para a polia, cotovelos colados ao corpo e dobrados a 90 graus, barra na altura do peito",
+        "final":  "braços estendidos para baixo, barra na frente das coxas, cotovelos parados ao lado do corpo",
+        "musculos":  "tríceps na cor verde (#8AC926)",
+        "movem":  "os antebraços e a barra"
+    },
+    {
+        "id":  "triceps-frances",
+        "nome":  "Tríceps francês",
+        "camera":  "vista lateral",
+        "equipamento":  "banco com encosto e um halter",
+        "inicial":  "sentado no banco, costas retas, braços estendidos acima da cabeça segurando um halter com as duas mãos",
+        "final":  "cotovelos dobrados apontando para cima, halter desceu atrás da cabeça",
+        "musculos":  "tríceps na cor verde (#8AC926)",
+        "movem":  "os antebraços e o halter"
+    },
+    {
+        "id":  "triceps-testa",
+        "nome":  "Tríceps testa",
+        "camera":  "vista lateral, com a cabeça do personagem à esquerda",
+        "equipamento":  "banco reto e barra W",
+        "inicial":  "deitado de costas no banco, braços estendidos acima do peito segurando a barra W",
+        "final":  "cotovelos dobrados e parados apontando para cima, barra desceu até perto da testa",
+        "musculos":  "tríceps na cor verde (#8AC926)",
+        "movem":  "os antebraços e a barra"
+    },
+    {
+        "treino":  "Costas e Bíceps"
+    },
+    {
+        "id":  "puxada-frontal",
+        "nome":  "Puxada frontal",
+        "camera":  "vista de costas, com o boneco de costas para a câmera (é a única vista em que os dorsais aparecem)",
+        "reuso":  "puxada",
+        "equipamento":  "máquina de puxada com polia alta, banco e apoio para as coxas, barra longa",
+        "inicial":  "sentado com as coxas presas sob o apoio, braços estendidos acima da cabeça segurando a barra com pegada aberta",
+        "final":  "barra puxada até a parte alta do peito, cotovelos para baixo e para trás, peito aberto",
+        "musculos":  "os dorsais nas COSTAS em azul (#2B4BFF), formando o V das costas; bíceps em azul mais claro",
+        "movem":  "os braços e a barra",
+        "naopinte":  "o peito nem o abdômen — eles não trabalham neste exercício"
+    },
+    {
+        "id":  "remada-baixa",
+        "nome":  "Remada baixa",
+        "camera":  "vista lateral",
+        "equipamento":  "polia baixa com banco, plataforma para os pés e puxador triângulo",
+        "inicial":  "sentado, pés apoiados na plataforma, joelhos levemente dobrados, tronco ereto, braços estendidos à frente segurando o triângulo",
+        "final":  "triângulo puxado até o abdômen, cotovelos para trás rentes ao corpo, peito aberto",
+        "musculos":  "dorsais e meio das costas na cor azul (#2B4BFF); bíceps em azul mais claro",
+        "movem":  "os braços e o cabo"
+    },
+    {
+        "id":  "remada-articulada",
+        "nome":  "Remada articulada",
+        "camera":  "vista lateral, com o boneco de perfil e a máquina à direita dele",
+        "equipamento":  "máquina de remada sentada com apoio acolchoado alto para o PEITO na frente do assento e duas pegadas com alavancas",
+        "inicial":  "sentado DE FRENTE PARA A MÁQUINA, montado no banco com o PEITO e a barriga encostados no apoio acolchoado que fica à frente do corpo, queixo acima do apoio, pés no chão; braços estendidos à frente segurando as duas pegadas",
+        "final":  "as pegadas foram puxadas para TRÁS até a lateral das costelas, cotovelos apontando para trás e passando da linha do tronco, escápulas juntas; o peito continua encostado no apoio e o tronco não se mexe",
+        "musculos":  "dorsais e meio das costas na cor azul (#2B4BFF); bíceps em azul mais claro",
+        "movem":  "os braços e as alavancas da máquina",
+        "naopinte":  "o peito nem o abdômen — o apoio cobre o peito e quem trabalha são as costas",
+        "veo":  "as mãos puxam as pegadas para trás, rente às costelas, e voltam à frente com o braço estendido. ATENÇÃO: não é supino nem desenvolvimento — o boneco NÃO empurra nada para a frente; o peito fica colado no apoio o tempo todo e só os braços se movem",
+        "correcao":  "O apoio acolchoado ficou ATRÁS das costas e o boneco está recostado, como num supino sentado. O apoio tem que ficar NA FRENTE do peito: o boneco senta de frente para a máquina e apoia o peito e a barriga na almofada, como quem abraça a almofada, com o queixo acima dela. Os braços saem por cima do apoio, estendidos à frente, segurando as pegadas. Refaça assim, mantendo o mesmo personagem, a mesma câmera e o mesmo enquadramento."
+    },
+    {
+        "id":  "pulldown",
+        "nome":  "Pulldown",
+        "camera":  "vista lateral",
+        "equipamento":  "polia alta com corda",
+        "inicial":  "em pé de frente para a polia, tronco levemente inclinado à frente, braços quase estendidos à frente e para cima segurando a corda",
+        "final":  "braços ainda quase estendidos, corda empurrada em arco para baixo até ao lado das coxas",
+        "musculos":  "dorsais na cor azul (#2B4BFF)",
+        "movem":  "os braços e a corda"
+    },
+    {
+        "id":  "rosca-direta",
+        "nome":  "Rosca direta",
+        "camera":  "vista de três quartos pela frente, com o boneco girado uns 30 graus para o lado, mostrando o peito, a frente dos dois braços e as palmas das mãos",
+        "reuso":  "rosca",
+        "equipamento":  "barra W",
+        "inicial":  "em pé de frente para a câmera, braços estendidos para baixo com os cotovelos colados no tronco, segurando a barra W na frente das coxas por baixo, com as palmas das mãos viradas para a frente e para cima; o boneco nunca aparece de costas nem de perfil puro, porque o bíceps tem que ficar à vista",
+        "final":  "cotovelos dobrados e ainda colados ao tronco, sem sair do lugar, e a barra subida até a altura do peito, perto dos ombros, com as palmas viradas para cima em direção ao rosto",
+        "musculos":  "o bíceps na cor verde (#8AC926) — o músculo da FRENTE do braço, entre o cotovelo e o ombro, nos dois braços",
+        "naopinte":  "o ombro, o tríceps (a parte de trás do braço) nem o antebraço — neste exercício quem trabalha é só o bíceps, na frente do braço",
+        "movem":  "os antebraços e a barra, girando no cotovelo",
+        "veo":  "os antebraços sobem girando no cotovelo e levam a barra das coxas até a altura do peito, e descem devagar pelo mesmo caminho até os braços ficarem estendidos. ATENÇÃO: os cotovelos ficam colados ao tronco e parados no lugar o tempo todo — não vão para a frente nem para trás; o tronco fica reto e firme, sem balançar nem jogar o corpo para trás; os ombros não sobem",
+        "correcao":  "O boneco ficou de costas/de perfil para a câmera: não dá para ver o bíceps nem as palmas das mãos, e o verde acabou na parte de trás do braço. Refaça com o boneco DE FRENTE para a câmera, girado só uns 30 graus para o lado, mostrando o peito, a frente dos dois braços e as palmas viradas para cima. O verde (#8AC926) vai na FRENTE do braço, entre o cotovelo e o ombro — o ombro e a parte de trás do braço ficam na cor normal da pele. A barra W fica na frente das coxas, segura por baixo, e os cotovelos colados ao tronco. Mantenha o mesmo personagem, o mesmo enquadramento e o mesmo fundo."
+    },
+    {
+        "id":  "rosca-alternada",
+        "nome":  "Rosca alternada",
+        "camera":  "vista frontal, com o boneco de frente para a câmera, mostrando o peito e a frente dos dois braços",
+        "equipamento":  "dois halteres",
+        "inicial":  "em pé de frente para a câmera, braços estendidos para baixo ao lado do corpo com os cotovelos colados no tronco, um halter em cada mão, palmas viradas para dentro (uma de frente para a outra); o boneco nunca aparece de costas nem de perfil, porque o bíceps tem que ficar à vista",
+        "final":  "o braço DIREITO dobrado, com o cotovelo ainda colado ao tronco e o halter subido até a altura do ombro, com a palma girada para cima em direção ao rosto; o braço ESQUERDO continua totalmente estendido para baixo, com a palma virada para dentro, exatamente como estava",
+        "musculos":  "o bíceps na cor verde (#8AC926) — o músculo da FRENTE do braço, entre o cotovelo e o ombro, nos dois braços",
+        "naopinte":  "o ombro, o tríceps (a parte de trás do braço) nem o antebraço — neste exercício quem trabalha é só o bíceps, na frente do braço",
+        "movem":  "um braço de cada vez — só o antebraço e o halter daquele lado, girando no cotovelo",
+        "veo":  "sobe o halter DIREITO até a altura do ombro, girando a palma para cima durante a subida, e desce devagar até o braço ficar estendido; depois faz o mesmo com o ESQUERDO, alternando. ATENÇÃO: sobe um braço de cada vez, nunca os dois juntos — enquanto um sobe, o outro fica parado e estendido ao lado do corpo. Os cotovelos ficam colados ao tronco e parados no lugar, o tronco fica reto e firme, sem balançar",
+        "correcao":  "A posição não está certa. O correto é: o boneco DE FRENTE para a câmera, em pé, os dois braços estendidos para baixo ao lado do corpo, cotovelos colados no tronco, um halter em cada mão com as palmas viradas para dentro, uma de frente para a outra. O verde (#8AC926) vai na FRENTE do braço, entre o cotovelo e o ombro — o ombro e a parte de trás do braço ficam na cor normal da pele. Refaça mantendo o mesmo personagem, o mesmo enquadramento e o mesmo fundo."
+    },
+    {
+        "id":  "rosca-martelo",
+        "nome":  "Rosca martelo",
+        "camera":  "vista frontal, com o boneco de frente para a câmera, mostrando o peito e a frente dos dois braços",
+        "equipamento":  "dois halteres",
+        "inicial":  "em pé de frente para a câmera, braços estendidos para baixo ao lado do corpo com os cotovelos colados no tronco, um halter em cada mão segurado como quem segura um martelo, com as palmas viradas para dentro, uma de frente para a outra; o boneco nunca aparece de costas nem de perfil, porque o bíceps tem que ficar à vista",
+        "final":  "os dois cotovelos dobrados ao mesmo tempo, ainda colados ao tronco, com os halteres subidos até a altura dos ombros e as palmas AINDA viradas para dentro, uma de frente para a outra — as mãos não giram em nenhum momento, os halteres continuam na vertical como dois martelos em pé",
+        "musculos":  "o bíceps e o antebraço na cor verde (#8AC926) — a frente do braço, entre o cotovelo e o ombro, e a parte de cima do antebraço, nos dois braços",
+        "naopinte":  "o ombro nem o tríceps (a parte de trás do braço) — eles não trabalham neste exercício",
+        "movem":  "os antebraços e os halteres, girando no cotovelo, sem as mãos rodarem",
+        "veo":  "os dois antebraços sobem juntos, girando no cotovelo, e levam os halteres até a altura dos ombros, e descem devagar pelo mesmo caminho até os braços ficarem estendidos. ATENÇÃO: não é rosca direta — as palmas ficam viradas para DENTRO o tempo todo e os halteres continuam na vertical, sem girar nem na subida nem na descida. Os cotovelos ficam colados ao tronco e parados no lugar, o tronco fica reto e firme, sem balançar",
+        "correcao":  "As mãos giraram e as palmas ficaram para cima: assim virou rosca direta. Na rosca martelo os halteres são segurados como martelos, com as palmas viradas para DENTRO, uma de frente para a outra, e continuam assim do começo ao fim. Refaça com o boneco de frente para a câmera, em pé, braços estendidos para baixo, cotovelos colados no tronco e os halteres na vertical. Mantenha o mesmo personagem, o mesmo enquadramento e o mesmo fundo."
+    },
+    {
+        "treino":  "Perna"
+    },
+    {
+        "id":  "agachamento",
+        "nome":  "Agachamento",
+        "camera":  "vista lateral",
+        "equipamento":  "barra olímpica com uma anilha de cada lado",
+        "inicial":  "em pé, barra apoiada sobre os ombros atrás do pescoço, pés na largura dos ombros, tronco ereto",
+        "final":  "agachado com as coxas paralelas ao chão, quadril para trás, tronco inclinado à frente com as costas retas, joelhos na direção da ponta dos pés",
+        "musculos":  "quadríceps na cor roxa (#9B5CFF); glúteos em magenta (#B5179E)",
+        "movem":  "o corpo inteiro subindo e descendo"
+    },
+    {
+        "id":  "leg-press",
+        "nome":  "Leg press",
+        "camera":  "vista lateral",
+        "equipamento":  "máquina de leg press 45 graus com plataforma para os pés",
+        "inicial":  "recostado no encosto da máquina, pés apoiados na plataforma na largura dos ombros, pernas estendidas sem travar os joelhos",
+        "final":  "joelhos dobrados a 90 graus, plataforma desceu em direção ao peito",
+        "musculos":  "quadríceps na cor roxa (#9B5CFF); glúteos em magenta (#B5179E)",
+        "movem":  "as pernas e a plataforma"
+    },
+    {
+        "id":  "cadeira-extensora",
+        "nome":  "Cadeira extensora",
+        "camera":  "vista lateral",
+        "equipamento":  "máquina cadeira extensora com rolo acolchoado",
+        "inicial":  "sentado, costas no encosto, joelhos dobrados a 90 graus, rolo apoiado na frente dos tornozelos",
+        "final":  "pernas estendidas à frente, rolo erguido",
+        "musculos":  "quadríceps na cor roxa (#9B5CFF)",
+        "movem":  "as pernas e o rolo"
+    },
+    {
+        "id":  "mesa-flexora",
+        "nome":  "Mesa flexora",
+        "camera":  "vista lateral",
+        "equipamento":  "máquina mesa flexora com rolo acolchoado",
+        "inicial":  "deitado de bruços na máquina, segurando as pegadas, pernas estendidas, rolo atrás dos tornozelos",
+        "final":  "joelhos dobrados, calcanhares puxados em direção aos glúteos",
+        "musculos":  "parte de trás das coxas na cor roxa (#9B5CFF)",
+        "movem":  "as pernas e o rolo"
+    },
+    {
+        "id":  "cadeira-flexora",
+        "nome":  "Cadeira flexora",
+        "camera":  "vista lateral",
+        "equipamento":  "máquina cadeira flexora com rolo acolchoado",
+        "inicial":  "sentado, costas no encosto, pernas estendidas à frente, rolo atrás dos tornozelos",
+        "final":  "joelhos dobrados, rolo empurrado para baixo e para trás",
+        "musculos":  "parte de trás das coxas na cor roxa (#9B5CFF)",
+        "movem":  "as pernas e o rolo"
+    },
+    {
+        "id":  "panturrilha",
+        "nome":  "Panturrilha",
+        "camera":  "vista lateral",
+        "equipamento":  "máquina de panturrilha em pé com apoios nos ombros e degrau",
+        "inicial":  "em pé sob os apoios dos ombros, ponta dos pés no degrau, calcanhares abaixo da linha do degrau",
+        "final":  "na ponta dos pés, calcanhares elevados ao máximo",
+        "musculos":  "panturrilhas na cor roxa (#9B5CFF)",
+        "movem":  "os tornozelos, subindo e descendo o corpo"
+    },
+    {
+        "id":  "hack-squat",
+        "nome":  "Hack squat",
+        "camera":  "vista lateral",
+        "equipamento":  "máquina hack squat com encosto inclinado e apoios nos ombros",
+        "inicial":  "costas no encosto inclinado, ombros sob os apoios, pés na plataforma, pernas estendidas",
+        "final":  "agachado, coxas paralelas à plataforma, costas coladas no encosto",
+        "musculos":  "quadríceps na cor roxa (#9B5CFF); glúteos em magenta (#B5179E)",
+        "movem":  "as pernas e o carrinho da máquina"
+    },
+    {
+        "treino":  "Superiores, Empurrar, Puxar e Ombro"
+    },
+    {
+        "id":  "remada",
+        "nome":  "Remada curvada",
+        "camera":  "vista lateral",
+        "equipamento":  "barra olímpica com uma anilha de cada lado",
+        "inicial":  "em pé, joelhos levemente dobrados, tronco inclinado à frente cerca de 45 graus com as costas retas, braços estendidos segurando a barra abaixo dos joelhos",
+        "final":  "barra puxada até o abdômen, cotovelos para trás, tronco parado",
+        "musculos":  "costas na cor azul (#2B4BFF); bíceps em azul mais claro",
+        "movem":  "os braços e a barra"
+    },
+    {
+        "id":  "desenvolvimento",
+        "nome":  "Desenvolvimento",
+        "camera":  "vista frontal",
+        "equipamento":  "banco com encosto vertical e dois halteres",
+        "inicial":  "sentado com as costas no encosto, halteres na altura das orelhas, cotovelos dobrados a 90 graus, palmas para frente",
+        "final":  "braços estendidos acima da cabeça, halteres quase se tocando",
+        "musculos":  "ombros na cor vermelha (#E63946); tríceps em vermelho mais claro",
+        "movem":  "os braços e os halteres"
+    },
+    {
+        "id":  "elevacao-lateral",
+        "nome":  "Elevação lateral",
+        "camera":  "vista frontal",
+        "equipamento":  "dois halteres",
+        "inicial":  "em pé, braços ao lado do corpo segurando os halteres, cotovelos levemente dobrados",
+        "final":  "braços abertos para os lados até a altura dos ombros, formando um T, cotovelos levemente dobrados",
+        "musculos":  "ombros na cor vermelha (#E63946)",
+        "movem":  "os braços e os halteres",
+        "veo":  "os braços sobem abertos para os lados, com os cotovelos quase retos, até a altura dos ombros formando um T, e descem devagar pelo mesmo caminho. ATENÇÃO: os halteres não passam da altura dos ombros e os cotovelos não dobram"
+    },
+    {
+        "id":  "supino-incl-halter",
+        "nome":  "Supino inclinado com halteres",
+        "camera":  "vista lateral, com a cabeça do personagem à esquerda",
+        "equipamento":  "banco inclinado a cerca de 40 graus e dois halteres",
+        "inicial":  "recostado no banco inclinado, braços estendidos segurando os halteres acima da parte alta do peito",
+        "final":  "halteres desceram ao lado da parte alta do peito, cotovelos dobrados",
+        "musculos":  "parte alta do peitoral na cor rosa (#FF3D81); ombro da frente e tríceps em rosa mais claro",
+        "movem":  "os braços e os halteres"
+    },
+    {
+        "id":  "barra-fixa",
+        "nome":  "Barra fixa",
+        "camera":  "vista de costas",
+        "equipamento":  "barra fixa alta",
+        "inicial":  "pendurado na barra com pegada aberta, braços estendidos, pernas levemente dobradas e cruzadas",
+        "final":  "corpo puxado para cima, queixo acima da barra, cotovelos apontando para baixo",
+        "musculos":  "dorsais na cor azul (#2B4BFF); bíceps em azul mais claro",
+        "movem":  "o corpo inteiro subindo e descendo"
+    },
+    {
+        "id":  "remada-serrote",
+        "nome":  "Remada serrote",
+        "camera":  "vista lateral",
+        "equipamento":  "banco reto e um halter",
+        "inicial":  "joelho e mão esquerdos apoiados no banco, tronco paralelo ao chão, costas retas, braço direito estendido para baixo segurando o halter",
+        "final":  "halter puxado até a lateral da cintura, cotovelo direito para trás e para cima",
+        "musculos":  "dorsais na cor azul (#2B4BFF); bíceps em azul mais claro",
+        "movem":  "o braço direito e o halter"
+    },
+    {
+        "id":  "encolhimento",
+        "nome":  "Encolhimento",
+        "camera":  "vista frontal",
+        "equipamento":  "dois halteres",
+        "inicial":  "em pé, braços estendidos ao lado do corpo segurando os halteres, ombros relaxados",
+        "final":  "ombros elevados em direção às orelhas, braços continuam estendidos",
+        "musculos":  "trapézio na cor vermelha (#E63946)",
+        "movem":  "os ombros e os halteres"
+    },
+    {
+        "id":  "desenvolvimento-barra",
+        "nome":  "Desenvolvimento com barra",
+        "camera":  "vista lateral",
+        "equipamento":  "banco com encosto vertical e barra olímpica com uma anilha de cada lado",
+        "inicial":  "sentado com as costas no encosto, barra na frente do corpo na altura do queixo, cotovelos dobrados abaixo da barra",
+        "final":  "braços estendidos acima da cabeça, barra alinhada acima da cabeça",
+        "musculos":  "ombros na cor vermelha (#E63946); tríceps em vermelho mais claro",
+        "movem":  "os braços e a barra"
+    },
+    {
+        "id":  "elevacao-frontal",
+        "nome":  "Elevação frontal",
+        "camera":  "vista lateral",
+        "equipamento":  "dois halteres",
+        "inicial":  "em pé, braços estendidos segurando os halteres na frente das coxas",
+        "final":  "braços estendidos elevados à frente até a altura dos ombros",
+        "musculos":  "parte da frente dos ombros na cor vermelha (#E63946)",
+        "movem":  "os braços e os halteres"
+    },
+    {
+        "id":  "crucifixo-inverso",
+        "nome":  "Crucifixo inverso",
+        "camera":  "vista de costas, a partir de trás do banco (é a vista em que a parte de trás do ombro aparece)",
+        "equipamento":  "banco inclinado e dois halteres",
+        "inicial":  "deitado de bruços no banco inclinado com o peito apoiado, braços pendurados para baixo segurando os halteres, cotovelos levemente dobrados",
+        "final":  "braços abertos para os lados até a linha dos ombros, escápulas juntas",
+        "musculos":  "a parte de TRÁS dos ombros em vermelho (#E63946); trapézio entre as escápulas em vermelho mais claro",
+        "movem":  "os braços e os halteres",
+        "veo":  "os braços, com os cotovelos quase retos, abrem em arco para os lados até a linha dos ombros, juntando as escápulas, e descem devagar pelo mesmo arco. ATENÇÃO: não é remada — os cotovelos não dobram puxando para trás; o braço inteiro gira no ombro",
+        "naopinte":  "a parte da frente do ombro nem o peito"
+    },
+    {
+        "id":  "desenvolvimento-maq",
+        "nome":  "Desenvolvimento na máquina",
+        "camera":  "vista lateral",
+        "equipamento":  "máquina de desenvolvimento sentado com duas pegadas",
+        "inicial":  "sentado com as costas no encosto, segurando as pegadas na altura dos ombros, cotovelos dobrados",
+        "final":  "braços estendidos acima da cabeça empurrando as pegadas",
+        "musculos":  "ombros na cor vermelha (#E63946); tríceps em vermelho mais claro",
+        "movem":  "os braços e as alavancas da máquina"
+    },
+    {
+        "id":  "remada-alta",
+        "nome":  "Remada alta",
+        "camera":  "vista frontal",
+        "equipamento":  "barra olímpica curta",
+        "inicial":  "em pé, braços estendidos segurando a barra na frente das coxas com as mãos próximas",
+        "final":  "barra puxada rente ao corpo até a altura do peito, cotovelos abertos para os lados e acima das mãos",
+        "musculos":  "ombros e trapézio na cor vermelha (#E63946)",
+        "movem":  "os braços e a barra"
+    },
+    {
+        "treino":  "Braços"
+    },
+    {
+        "id":  "rosca-scott",
+        "nome":  "Rosca scott",
+        "camera":  "vista lateral",
+        "equipamento":  "banco scott com apoio inclinado para os braços e barra W",
+        "inicial":  "sentado no banco scott, parte de trás dos braços apoiada no apoio inclinado, braços quase estendidos segurando a barra W embaixo",
+        "final":  "cotovelos dobrados, barra perto dos ombros, braços continuam apoiados",
+        "musculos":  "bíceps na cor verde (#8AC926)",
+        "movem":  "os antebraços e a barra"
+    },
+    {
+        "id":  "rosca-concentrada",
+        "nome":  "Rosca concentrada",
+        "camera":  "vista 3/4 frontal",
+        "equipamento":  "banco reto e um halter",
+        "inicial":  "sentado na ponta do banco, pernas afastadas, tronco inclinado à frente, cotovelo direito apoiado na parte interna da coxa direita, braço estendido para baixo segurando o halter",
+        "final":  "cotovelo direito dobrado, halter na altura do ombro, cotovelo continua apoiado na coxa",
+        "musculos":  "bíceps na cor verde (#8AC926)",
+        "movem":  "o antebraço direito e o halter"
+    },
+    {
+        "id":  "triceps-corda",
+        "nome":  "Tríceps na corda",
+        "camera":  "vista lateral",
+        "equipamento":  "polia alta com corda",
+        "inicial":  "em pé de frente para a polia, cotovelos colados ao corpo e dobrados a 90 graus, segurando as pontas da corda na altura do peito",
+        "final":  "braços estendidos para baixo, pontas da corda afastadas para os lados na altura das coxas",
+        "musculos":  "tríceps na cor verde (#8AC926)",
+        "movem":  "os antebraços e a corda"
+    },
+    {
+        "treino":  "Glúteos e Posterior"
+    },
+    {
+        "id":  "elevacao-pelvica",
+        "nome":  "Elevação pélvica",
+        "camera":  "vista lateral",
+        "equipamento":  "banco reto e barra olímpica com uma anilha de cada lado",
+        "inicial":  "sentado no chão com a parte alta das costas apoiada na lateral do banco, joelhos dobrados, pés no chão, barra sobre o quadril, quadril baixo perto do chão",
+        "final":  "quadril elevado, tronco e coxas alinhados paralelos ao chão, joelhos dobrados a 90 graus",
+        "musculos":  "glúteos na cor magenta (#B5179E); parte de trás das coxas em roxo (#9B5CFF)",
+        "movem":  "o quadril e a barra"
+    },
+    {
+        "id":  "agachamento-bulgaro",
+        "nome":  "Agachamento búlgaro",
+        "camera":  "vista lateral",
+        "equipamento":  "banco reto atrás do personagem e dois halteres",
+        "inicial":  "em pé, peito do pé de trás apoiado no banco, pé da frente plantado no chão à frente, braços estendidos segurando os halteres ao lado do corpo",
+        "final":  "agachado, joelho da frente dobrado a 90 graus, joelho de trás perto do chão, tronco levemente inclinado à frente",
+        "musculos":  "glúteos na cor magenta (#B5179E); quadríceps em roxo (#9B5CFF)",
+        "movem":  "o corpo inteiro subindo e descendo"
+    },
+    {
+        "id":  "afundo",
+        "nome":  "Afundo",
+        "camera":  "vista lateral",
+        "equipamento":  "dois halteres",
+        "inicial":  "em pé com as pernas afastadas, uma à frente e outra atrás, tronco ereto, braços estendidos segurando os halteres ao lado do corpo",
+        "final":  "os dois joelhos dobrados a 90 graus, joelho de trás perto do chão, tronco continua ereto",
+        "musculos":  "glúteos na cor magenta (#B5179E); quadríceps em roxo (#9B5CFF)",
+        "movem":  "o corpo inteiro subindo e descendo"
+    },
+    {
+        "id":  "stiff",
+        "nome":  "Stiff",
+        "camera":  "vista lateral",
+        "equipamento":  "barra olímpica com uma anilha de cada lado",
+        "inicial":  "em pé, joelhos levemente dobrados, barra segura na frente das coxas com os braços estendidos",
+        "final":  "quadril empurrado para trás, tronco inclinado à frente com as costas retas, barra desceu rente às pernas até a altura das canelas",
+        "musculos":  "parte de trás das coxas na cor roxa (#9B5CFF); glúteos em magenta (#B5179E)",
+        "movem":  "o tronco e a barra, dobrando no quadril"
+    },
+    {
+        "treino":  "Corpo Inteiro"
+    },
+    {
+        "id":  "abdominal",
+        "nome":  "Abdominal",
+        "camera":  "vista lateral",
+        "equipamento":  "colchonete no chão",
+        "inicial":  "deitado de costas no colchonete, joelhos dobrados, pés no chão, mãos cruzadas sobre o peito",
+        "final":  "tronco enrolado para cima, ombros e parte alta das costas fora do chão, lombar continua no chão",
+        "musculos":  "abdômen na cor menta (#00E5A0)",
+        "movem":  "o tronco"
+    }
+]

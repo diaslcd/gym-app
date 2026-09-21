@@ -44,11 +44,17 @@ const Execucao = (() => {
     return { reps: base.reps, carga: base.carga, feita: false };
   }
 
+  /* Quantas séries e quanto descanso a ficha nasce com vem do programa:
+     quem respondeu que treina há anos começa com 4 séries, quem está
+     começando, com 3 e descanso mais curto. */
   function fichaNova() {
+    const quantas = typeof Programa !== 'undefined' ? Programa.seriesPadrao() : 3;
+    const series = [];
+    for (let i = 0; i < quantas; i++) series.push(novaSerie());
     return {
-      series: [novaSerie(), novaSerie(), novaSerie()],
+      series: series,
       concluido: false,
-      descanso: DESCANSO_PADRAO
+      descanso: typeof Programa !== 'undefined' ? Programa.descansoPadrao() : DESCANSO_PADRAO
     };
   }
 

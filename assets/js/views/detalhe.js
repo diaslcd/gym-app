@@ -177,11 +177,34 @@ const Detalhe = (() => {
       </div>`;
   }
 
+  /* Palco da animação do exercício.
+
+     A tela é repintada a cada série marcada e a cada tique do descanso.
+     Repintar o vídeo junto faria ele voltar ao começo toda vez — então o
+     palco é montado uma vez e só trocado de lugar entre uma pintura e
+     outra. Tirar e recolocar o nó no mesmo instante não pausa o vídeo.
+
+     Com o treino rodando ele encolhe: ali o que importa são as séries, e
+     a animação vira lembrete do movimento, não a atração da tela. */
+  function palco() {
+    const conteudo = Animacoes.palco(exercicio);
+    if (!conteudo) return null;
+    const no = document.createElement('div');
+    no.className = 'demo demo--anim';
+    no.dataset.exercicio = exercicio.id;
+    no.innerHTML = conteudo;
+    return no;
+  }
+
   function render() {
     const guia = Guia.para(exercicio);
+    const anterior = raiz.querySelector('.demo--anim');
+    const noPalco = anterior && anterior.dataset.exercicio === exercicio.id ? anterior : palco();
 
     raiz.innerHTML =
       Componentes.topo(exercicio.nome, `${exercicio.grupo} · ${exercicio.equipamento}`) +
+
+      (noPalco ? '<div data-palco></div>' : '') +
 
       (executando() ? painelDeExecucao() : '') +
 
@@ -204,6 +227,12 @@ const Detalhe = (() => {
 
       acao() +
       (aviso ? `<div class="aviso"><span>✓ ${aviso}</span></div>` : '');
+
+    const lugar = raiz.querySelector('[data-palco]');
+    if (lugar && noPalco) {
+      noPalco.classList.toggle('demo--compacto', executando());
+      lugar.replaceWith(noPalco);
+    }
 
     // Um tique só: atualiza o descanso enquanto o treino corre.
     Sessao.observar(() => {

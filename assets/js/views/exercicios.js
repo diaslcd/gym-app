@@ -31,11 +31,12 @@ const Exercicios = (() => {
     return `
       <li class="item">
         <button class="item__abrir" data-exercicio="${exercicio.id}">
-          <span class="item__img">${IconesExercicios.porId(exercicio.id)}</span>
+          <span class="item__img">${Animacoes.miniatura(exercicio)}</span>
           <span class="item__texto">
             <span class="item__nome">${exercicio.nome}${Execucao.estaConcluido(tipo.id, exercicio.id) ? ' <span class="item__ok">feito</span>' : ''}</span>
             <span class="item__meta">${exercicio.grupo} · ${exercicio.equipamento}</span>
             ${exercicio.origem ? `<span class="item__trocado">no lugar de ${exercicio.origem.nome}</span>` : ''}
+            ${exercicio.novo && !exercicio.origem ? '<span class="item__novo">novo neste ciclo</span>' : ''}
           </span>
         </button>
         <span class="item__acoes">
@@ -50,7 +51,7 @@ const Exercicios = (() => {
   function opcaoDaFolha(exercicio, acao, rotulo) {
     return `
       <li class="alt">
-        <span class="alt__img">${IconesExercicios.porId(exercicio.id)}</span>
+        <span class="alt__img">${Animacoes.estatica(exercicio)}</span>
         <span class="alt__texto">
           <span class="alt__nome">${exercicio.nome}</span>
           <span class="alt__meta">${exercicio.grupo} · ${exercicio.equipamento}</span>
@@ -143,10 +144,30 @@ const Exercicios = (() => {
 
   /* ── Render ────────────────────────────────────────── */
 
+  /* Nota do programa sobre a lista: para quanto tempo ela foi montada e
+     em que ciclo está. Tocar leva às perguntas, onde isso se muda. */
+  function notaDoPrograma() {
+    if (!Programa.respondido()) {
+      return `
+        <button class="programaNota programaNota--vazia" type="button" data-perguntas>
+          Lista padrão · <strong>ajustar ao seu tempo</strong>
+        </button>`;
+    }
+    const v = Programa.volume();
+    const info = Programa.infoCiclo();
+    return `
+      <button class="programaNota" type="button" data-perguntas>
+        <span>${v.series} séries · ${v.descanso}s de descanso · ciclo ${info.numero}</span>
+        <span class="programaNota__renova">${info.recente ? 'renovado' : `renova em ${info.diasParaRenovar}d`}</span>
+      </button>`;
+  }
+
   function render() {
     const lista = Treino.lista(tipo.id);
+    const minutos = Programa.respondido() ? ` · ~${Programa.volume().minutos} min` : '';
     raiz.innerHTML =
-      Componentes.topo(tipo.nome, `${lista.length} exercícios`) +
+      Componentes.topo(tipo.nome, `${lista.length} exercícios${minutos}`) +
+      notaDoPrograma() +
       `<ul class="lista" style="--cor:${tipo.cor}">${lista.map(item).join('')}</ul>` +
       '<button class="adicionar" data-adicionar>+ Adicionar exercício</button>' +
       (Treino.ajustado(tipo.id)
@@ -182,6 +203,13 @@ const Exercicios = (() => {
 
     if (alvo('[data-voltar]')) {
       Router.ir('selecao');
+      return;
+    }
+
+    if (alvo('[data-perguntas]')) {
+      // Com treino rodando, mudar a ficha agora confundiria a sessão.
+      if (Sessao.emAndamento()) { avisar('Termine o treino para mudar a ficha'); render(); return; }
+      Router.ir('perguntas', { depois: 'selecao' });
       return;
     }
 

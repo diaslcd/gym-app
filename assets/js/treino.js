@@ -1,7 +1,8 @@
 /* Ajustes do treino na sessão.
    O usuário adapta o treino do dia — remove o que não vai fazer, troca
    o que a academia não tem livre, acrescenta o que quiser. Nada aqui
-   altera Dados.exercicios: o treino programado volta com restaurar(). */
+   altera o programado: ele vem de Programa.base (montado pelas respostas
+   e pelo ciclo de renovação) e volta com restaurar(). */
 const Treino = (() => {
   const CHAVE = 'gym:ajustes';
 
@@ -42,7 +43,7 @@ const Treino = (() => {
   function lista(tipoId) {
     const { removidos, trocas, extras } = estado(tipoId);
 
-    const programados = Dados.exerciciosDe(tipoId)
+    const programados = Programa.base(tipoId)
       .filter((exercicio) => removidos.indexOf(exercicio.id) === -1)
       .map((exercicio) => {
         const substituto = trocas[exercicio.id] && Dados.exercicioGlobal(trocas[exercicio.id]);
@@ -108,8 +109,15 @@ const Treino = (() => {
     guardar();
   }
 
+  /* Na virada de ciclo os ajustes de todos os treinos caem: eles apontam
+     para exercícios que saíram da ficha. */
+  function limparTodos() {
+    Object.keys(ajustes).forEach((tipoId) => { delete ajustes[tipoId]; });
+    guardar();
+  }
+
   return {
     lista, remover, devolver, acrescentar, trocar, desfazerTroca,
-    ajustado, restaurar
+    ajustado, restaurar, limparTodos
   };
 })();

@@ -1,0 +1,12 @@
+Animações dos exercícios. Nada aqui é editado à mão.
+
+Os arquivos são gerados por scripts/preparar-animacoes.ps1 a partir do
+que está em arte-fonte/exercicios/ (prompts em arte-fonte/exercicios/PROMPTS.md):
+
+  <id>-N.jpg   poses, 480 px — alternando, viram a animação da lista
+  <id>.mp4     vídeo, 480 px, sem som — toca na tela do exercício
+
+  powershell -ExecutionPolicy Bypass -File scripts/preparar-animacoes.ps1
+
+O script também reescreve assets/js/animacoes-lista.js, que diz ao app o
+que existe. Exercício sem arquivo continua com o pictograma.

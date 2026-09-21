@@ -20,6 +20,12 @@ desktop.ini
 # APK baixado do Actions
 apk/
 
+# Originais das animações (poses e vídeos do Gemini): pesam centenas de MB
+# somados. O app usa só as versões reduzidas em assets/exercicios/.
+# Guarde os originais fora do git.
+arte-fonte/exercicios/*
+!arte-fonte/exercicios/PROMPTS.md
+
 
 # PNGs derivados na compilação (as fontes fonte-*.png ficam versionadas)
 assets-android/icon-*.png

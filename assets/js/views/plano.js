@@ -51,7 +51,7 @@ const TelaPlano = (() => {
         ${sugestao()}
 
         <button class="entrada__ir" data-seguir type="button" ${escolha ? '' : 'disabled'}>
-          ${primeiraVez ? 'Bora treinar' : 'Salvar'}
+          ${primeiraVez ? 'Continuar' : 'Salvar'}
         </button>
       </div>`;
   }
@@ -71,7 +71,10 @@ const TelaPlano = (() => {
     }
 
     if (evento.target.closest('[data-seguir]') && escolha) {
-      Router.ir('dashboard');
+      // Quem está chegando responde em seguida como treina: é o que
+      // monta a ficha antes do primeiro treino.
+      if (primeiraVez && !Programa.respondido()) Router.ir('perguntas', { primeiraVez: true });
+      else Router.ir('dashboard');
     }
   }
 

@@ -172,6 +172,29 @@ const Dashboard = (() => {
         <span class="planoFaixa__pontos">${pontos}</span>
       </button>`;
   }
+  /** Faixa do programa: como o treino está montado e quando renova. */
+  function programaDoTreino() {
+    if (!Programa.respondido()) {
+      return `
+        <button class="planoFaixa planoFaixa--vazia" data-perguntas type="button">
+          <span class="planoFaixa__texto">Ajuste o treino ao seu tempo</span>
+          <span class="planoFaixa__acao">responder</span>
+        </button>`;
+    }
+
+    const v = Programa.volume();
+    const info = Programa.infoCiclo();
+    const renova = info.recente
+      ? 'renovado'
+      : `renova em ${info.diasParaRenovar}d`;
+
+    return `
+      <button class="planoFaixa" data-perguntas type="button">
+        <span class="planoFaixa__texto">${v.exercicios} exercícios · ~${v.minutos} min</span>
+        <span class="planoFaixa__acao${info.recente ? ' planoFaixa__acao--novo' : ''}">${renova}</span>
+      </button>`;
+  }
+
   function acaoPrincipal() {
     if (Sessao.emAndamento()) {
       const tipo = Dados.tipoPorId(Sessao.tipoEmAndamento());
@@ -415,7 +438,7 @@ const Dashboard = (() => {
 
   function render() {
     raiz.innerHTML =
-      cabecalho() + indicadores() + planoDaSemana() + acaoPrincipal() + calendario() +
+      cabecalho() + indicadores() + planoDaSemana() + programaDoTreino() + acaoPrincipal() + calendario() +
       folhaDoDia() + folhaDeTitulos() + folhaDaConta() + folhaDoResultado() + faixaDeAviso();
 
     Sessao.observar((segundos) => {
@@ -431,7 +454,15 @@ const Dashboard = (() => {
 
   function aoClicar(evento) {
     if (evento.target.closest('[data-acao="iniciar"]')) {
-      Router.ir('selecao');
+      // As perguntas vêm antes do primeiro treino: sem elas a ficha seria
+      // a genérica, de 7 exercícios para qualquer um.
+      if (Programa.respondido()) Router.ir('selecao');
+      else Router.ir('perguntas', { depois: 'selecao' });
+      return;
+    }
+
+    if (evento.target.closest('[data-perguntas]')) {
+      Router.ir('perguntas');
       return;
     }
 
@@ -561,6 +592,18 @@ const Dashboard = (() => {
 
     const h = Utils.hoje();
     mesRef = new Date(h.getFullYear(), h.getMonth(), 1);
+
+    /* O painel é a porta de entrada do dia: é aqui que a virada de ciclo
+       é aplicada, fora de qualquer treino, e avisada uma vez. */
+    const renovouAgora = Programa.verificarCiclo();
+    if ((renovouAgora || (params && params.renovado)) && !resultado) {
+      aviso = 'Treino renovado: exercícios novos';
+      relogioAviso = setTimeout(() => {
+        aviso = null;
+        const faixa = raiz && raiz.querySelector('.aviso');
+        if (faixa) faixa.remove();
+      }, 4000);
+    }
 
     // Treino anotado que pontuou: o calendário já abre no mês dele, por
     // trás da folha de resultado.

@@ -46,8 +46,36 @@ e **acrescentar** exercício. Cada exercício tem pelo menos 4 alternativas do
 mesmo grupo muscular, variando o equipamento — para quando a máquina está
 ocupada. Os ajustes valem para a sessão e um botão devolve o treino programado.
 
+**Treino sob medida** — antes do primeiro treino o app pergunta quanto tempo a
+pessoa fica na academia, quantos exercícios costuma fazer, há quanto tempo treina,
+se prefere máquinas ou pesos livres e de quanto em quanto tempo quer renovar a
+ficha (2 ou 3 meses). Com isso calcula séries, descanso e quantos exercícios cabem
+no tempo — tirando primeiro uma série e encurtando o descanso, e só depois
+exercício. O corte é por rodízio de grupo: Peito e Tríceps com 4 exercícios fica
+com 2 de cada. As respostas mudam pela faixa do painel, que mostra o resumo.
+
+**Renovação do treino** — a cada ciclo cada exercício é trocado por uma
+alternativa do mesmo grupo, respeitando a preferência de equipamento e sem repetir
+na ficha; os que mudaram aparecem com a marca *novo neste ciclo*. A virada é
+aplicada ao abrir o painel, nunca com treino em andamento, e dá para renovar antes
+da data. Histórico e evolução de carga seguem por exercício. Regras em
+`assets/js/programa.js`.
+
 **Execução** — cronômetro do treino, cada série com repetições e carga próprias,
 séries marcáveis, observação e cronômetro de descanso ajustável por exercício.
+
+**Animação dos exercícios** — na lista do treino, cada exercício alterna as poses
+do boneco em stop motion, como um GIF; ao tocar, a tela do exercício mostra o
+vídeo do movimento (ou as poses, maiores, quando ainda não há vídeo). Durante o
+treino a animação encolhe e não reinicia ao marcar série. Exercício sem arquivo
+continua com o pictograma. Para cada exercício basta a pose inicial e o vídeo,
+feitos no Gemini com os prompts de `arte-fonte/exercicios/PROMPTS.md`;
+`scripts/preparar-animacoes.ps1` (ffmpeg) mede o movimento do vídeo, corta uma
+repetição em loop entre duas pausas, tira a marca do Gemini e o som, e extrai do
+próprio vídeo as poses alto, meio e fundo da lista — pedir poses separadas ao
+Gemini devolvia imagens iguais. A lista `assets/js/animacoes-lista.js` é
+reescrita no fim. Supino, Puxada, Rosca e Tríceps reaproveitam a animação do
+exercício equivalente.
 
 **Histórico** — treinos realizados com data, tipo, duração, exercícios e cada
 série executada. Mais dois gráficos: **volume por treino** (repetições × carga)
@@ -94,6 +122,7 @@ assets/css/styles.css        tokens + componentes, tudo num arquivo
 assets/js/
   utils.js                   datas e regra de sequência
   data.js                    exercícios, alternativas e registro de treinos
+  programa.js                perguntas, montagem da ficha e ciclo de renovação
   treino.js                  ajustes do treino na sessão
   sessao.js                  cronômetro do treino
   execucao.js                séries, cargas e descanso
@@ -109,6 +138,7 @@ assets/js/
   icones-exercicios.js       pictogramas dos exercícios
   guia.js                    guia de execução por família de movimento
   demonstracao.js            encaixe de mídia da demonstração
+  animacoes.js               animação dos exercícios: poses na lista, vídeo no detalhe
   componentes.js             peças compartilhadas entre telas
   router.js                  troca de telas
   views/                     painel, seleção, exercícios, detalhe, histórico,
@@ -160,6 +190,7 @@ registra de verdade ficam no `localStorage` e entram por cima:
 | `gym:sessao` | treino em andamento |
 | `gym:execucao` | séries e descanso do treino atual |
 | `gym:ajustes` | remoções, trocas e acréscimos |
+| `gym:programa` | respostas das perguntas e ciclo de renovação em uso |
 | `gym:perfil` | nome e PIN de quem usa o aparelho |
 | `gym:biometria` | id público da credencial da digital — nada biométrico |
 | `gym:nutri:favoritos` | alimentos e pratos marcados com estrela |
