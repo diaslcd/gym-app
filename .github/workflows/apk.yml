@@ -72,7 +72,12 @@ jobs:
       # assinatura mudou: toda versão exigia desinstalar a anterior, o que
       # apaga os dados. Com a chave fixa vinda do segredo, uma versão passa
       # por cima da outra e o histórico de treinos fica onde está.
-      - name: Restaurar a chave de assinatura
+      #
+      # Deixar a chave em ~/.android não basta: o Gradle procura o keystore
+      # padrão em outro lugar no runner e gerou a dele assim mesmo. Por isso
+      # a assinatura é declarada no próprio projeto, apontando para o
+      # arquivo — aí não sobra ambiguidade sobre qual chave vale.
+      - name: Assinar com a chave fixa
         env:
           CHAVE: ${{ secrets.ANDROID_KEYSTORE }}
         run: |
@@ -80,22 +85,47 @@ jobs:
             echo "::error::falta o segredo ANDROID_KEYSTORE — o APK sairia com uma chave nova e não atualizaria a versão instalada"
             exit 1
           fi
-          mkdir -p ~/.android
-          echo "$CHAVE" | base64 -d > ~/.android/debug.keystore
-          echo "chave restaurada em ~/.android/debug.keystore"
-          # O Gradle troca a chave em silêncio quando não consegue lê-la:
-          # o `validateSigningDebug` apaga o arquivo e gera outro. Listar
-          # aqui mostra no log se o Java abriu o keystore e com qual
-          # impressão digital — que é a mesma do APK quando dá certo.
-          keytool -list -v -keystore ~/.android/debug.keystore \
-            -storepass android -alias androiddebugkey \
-            | grep -E "Alias|SHA256|Tipo|Type|Valid" || echo "AVISO: o Java nao conseguiu ler o keystore"
+          echo "$CHAVE" | base64 -d > android/app/debug.keystore
+          cat > android/app/assinatura.gradle <<'FIM'
+          android {
+              signingConfigs {
+                  debug {
+                      storeFile file('debug.keystore')
+                      storePassword 'android'
+                      keyAlias 'androiddebugkey'
+                      keyPassword 'android'
+                  }
+              }
+          }
+          FIM
+          echo "apply from: 'assinatura.gradle'" >> android/app/build.gradle
+          keytool -list -v -keystore android/app/debug.keystore \
+            -storepass android -alias androiddebugkey | grep SHA256
 
       - name: Compilar o APK de depuração
         working-directory: android
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
+
+      # A conferência que fecha o ciclo: se o APK não sair com a chave do
+      # segredo, ele não instala por cima da versão anterior, e é melhor o
+      # build falhar aqui do que a descoberta acontecer no celular.
+      - name: Conferir a assinatura do APK
+        run: |
+          esperado=$(keytool -list -v -keystore android/app/debug.keystore \
+            -storepass android -alias androiddebugkey \
+            | grep -o 'SHA256: [0-9A-F:]*' | cut -d' ' -f2)
+          obtido=$(unzip -p android/app/build/outputs/apk/debug/app-debug.apk 'META-INF/*.RSA' \
+            | openssl pkcs7 -inform DER -print_certs \
+            | openssl x509 -noout -fingerprint -sha256 | cut -d= -f2)
+          echo "esperado: $esperado"
+          echo "obtido:   $obtido"
+          if [ "$esperado" != "$obtido" ]; then
+            echo "::error::o APK saiu com outra chave — ele não atualizaria a versão instalada"
+            exit 1
+          fi
+          echo "assinatura confere"
 
       - name: Nomear o APK com a versão
         run: mv android/app/build/outputs/apk/debug/app-debug.apk bunnygym-${{ steps.versao.outputs.v }}.apk
