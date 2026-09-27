@@ -127,6 +127,31 @@ button {
   padding-right: calc(var(--pad) + env(safe-area-inset-right));
 }
 
+/* A faixa embaixo da barra de status.
+
+   O recuo do `.app` tira o conteúdo de baixo do relógio, mas só na
+   posição inicial: assim que a página rola, o conteúdo sobe e passa por
+   trás da barra, que é transparente. O título do card fica ilegível com
+   o relógio e a bateria desenhados por cima — no navegador isso não
+   aparece, porque lá não existe barra de status.
+
+   No Android 15 não dá para fugir: o modo borda a borda é obrigatório a
+   partir do targetSdk 35. Então a saída é pintar a faixa com o papel do
+   app e deixá-la fixa, cobrindo o que passar por baixo.
+
+   Fica acima da barra pegajosa (10) e abaixo da folha (20) e dos avisos
+   (30 e 40), que cobrem a tela inteira de propósito. Onde não há
+   entalhe o inset é zero e a faixa simplesmente não existe. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: env(safe-area-inset-top);
+  background: #E9E4FF;
+  z-index: 15;
+  pointer-events: none;
+}
+
 /* As duas telas ocupam a mesma célula da grade durante a troca, então
    se sobrepõem sem sair do fluxo e sem perder o recuo do app.
 
