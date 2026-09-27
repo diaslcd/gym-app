@@ -66,6 +66,24 @@ jobs:
       - name: Sincronizar os arquivos do app
         run: npx cap sync android
 
+      # O runner começa limpo, e o Gradle cria um debug.keystore novo e
+      # aleatório quando não encontra nenhum. Cada build saía assinado com
+      # uma chave diferente, e o Android recusa atualizar um app cuja
+      # assinatura mudou: toda versão exigia desinstalar a anterior, o que
+      # apaga os dados. Com a chave fixa vinda do segredo, uma versão passa
+      # por cima da outra e o histórico de treinos fica onde está.
+      - name: Restaurar a chave de assinatura
+        env:
+          CHAVE: ${{ secrets.ANDROID_KEYSTORE }}
+        run: |
+          if [ -z "$CHAVE" ]; then
+            echo "::error::falta o segredo ANDROID_KEYSTORE — o APK sairia com uma chave nova e não atualizaria a versão instalada"
+            exit 1
+          fi
+          mkdir -p ~/.android
+          echo "$CHAVE" | base64 -d > ~/.android/debug.keystore
+          echo "chave restaurada em ~/.android/debug.keystore"
+
       - name: Compilar o APK de depuração
         working-directory: android
         run: |
