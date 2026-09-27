@@ -83,6 +83,13 @@ jobs:
           mkdir -p ~/.android
           echo "$CHAVE" | base64 -d > ~/.android/debug.keystore
           echo "chave restaurada em ~/.android/debug.keystore"
+          # O Gradle troca a chave em silêncio quando não consegue lê-la:
+          # o `validateSigningDebug` apaga o arquivo e gera outro. Listar
+          # aqui mostra no log se o Java abriu o keystore e com qual
+          # impressão digital — que é a mesma do APK quando dá certo.
+          keytool -list -v -keystore ~/.android/debug.keystore \
+            -storepass android -alias androiddebugkey \
+            | grep -E "Alias|SHA256|Tipo|Type|Valid" || echo "AVISO: o Java nao conseguiu ler o keystore"
 
       - name: Compilar o APK de depuração
         working-directory: android
